@@ -7,3 +7,7 @@ __pycache__/
 *$py.class
 
 *.ruff_cache
+
+# Build
+dist/
+*.egg-info/
