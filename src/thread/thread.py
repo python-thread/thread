@@ -8,7 +8,7 @@ from typing import (
   Any, List,
   Callable, Concatenate,
   Optional, Literal,
-  Iterable, Mapping, Sequence
+  Mapping, Sequence
 )
 
 
@@ -19,7 +19,8 @@ class JoinTerminatedStatus:
 
 
 ThreadStatus = Literal['Idle', 'Running', 'Invoking hooks', 'Completed', 'Errored']
-Data_In = Any; Data_Out = Any
+Data_In = Any
+Data_Out = Any
 Overflow_In = Any
 
 class Thread:
@@ -56,7 +57,8 @@ class Thread:
 
     name: Optional[str] = None,
     daemon: bool = False,
-    *overflow_args: Overflow_In, **overflow_kwargs: Overflow_In
+    *overflow_args: Overflow_In,
+    **overflow_kwargs: Overflow_In
   ) -> None:
     """
     Initializes a thread
@@ -100,14 +102,17 @@ class Thread:
     def wrapper(*args: Any, **kwargs: Any) -> Any:
       self.status = 'Running'
 
-      try: self.returned_value = target(*args, **kwargs)
+      try:
+        self.returned_value = target(*args, **kwargs)
       except Exception as e:
         if e not in self.ignore_errors:
           self.status = 'Errored'
           self.errors.append(e)
 
-          if not self.suppress_errors: raise
-          else: return
+          if not self.suppress_errors:
+            raise
+          else:
+            return
       
       self.status = 'Invoking hooks'
       self._invoke_hooks()
@@ -118,7 +123,8 @@ class Thread:
   def _invoke_hooks(self) -> None:
     trace = exceptions.HookRuntimeError()
     for hook in self.hooks:
-      try: hook(self.returned_value)
+      try:
+        hook(self.returned_value)
       except Exception as e:
         if not self.suppress_errors and (e not in self.ignore_errors):
           trace.add_exception_case(
@@ -234,7 +240,8 @@ class ParallelProcessing:
     dataset: Sequence[Data_In],
     max_threads: int = 8,
 
-    *overflow_args: Overflow_In, **overflow_kwargs: Overflow_In
+    *overflow_args: Overflow_In,
+    **overflow_kwargs: Overflow_In
   ) -> None:
     """
     Initializes a new Multi-Threaded Pool\n
@@ -278,7 +285,7 @@ class ParallelProcessing:
         try:
           v = function(data_entry, *args, **kwargs)
           computed.append(v)
-        except Exception as e:
+        except Exception:
           pass
 
       self._completed += 1

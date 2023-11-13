@@ -33,4 +33,4 @@ class HookRuntimeError(ThreadErrorBase):
 
     self.add_note(f'\n{self.count}. {func_name}\n>>>>>>>>>>')
     self.add_note(f'{trace}\n{error}')
-    self.add_note(f'<<<<<<<<<<')
+    self.add_note('<<<<<<<<<<')
