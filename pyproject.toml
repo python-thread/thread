@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "thread"
-version = "0.1.0"
+version = "0.1.1"
 description = "Threading module extension"
 authors = ["Alex <taboez4life@gmail.com>"]
 license = "MIT"
