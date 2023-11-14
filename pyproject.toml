@@ -3,6 +3,7 @@ name = "thread"
 version = "0.0.1"
 description = "Threading module extension"
 authors = ["Alex <taboez4life@gmail.com>"]
+license = "MIT"
 readme = "README.md"
 packages = [{include = "thread", from = "src"}]
 
