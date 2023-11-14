@@ -1,11 +1,24 @@
 [tool.poetry]
 name = "thread"
-version = "0.0.1"
+version = "0.1.0"
 description = "Threading module extension"
 authors = ["Alex <taboez4life@gmail.com>"]
 license = "MIT"
 readme = "README.md"
 packages = [{include = "thread", from = "src"}]
+include = [{ path = "tests", format = "sdist" }]
+homepage = "https://github.com/caffeine-addictt/thread"
+repository = "https://github.com/caffeine-addictt/thread"
+documentation = "https://github.com/caffeine-addictt/thread/blob/main/docs/getting-started.md"
+keywords = ["threading", "extension", "multiprocessing"]
+classifiers = [
+  "Development Status :: 1 - Planning",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: MIT License"
+]
+
+[tool.poetry.urls]
+"Bug Tracker" = "https://github.com/caffeine-addictt/thread/issues"
 
 [tool.poetry.dependencies]
 python = "^3.11"
