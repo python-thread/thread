@@ -63,9 +63,6 @@ Please include screenshots and/or code snippets if applicable
 Include as many relevant details about the environment you experienced the bug in
 -->
 * Version used:
-* Browser Name and version:
-* Operating System and version (desktop or mobile):
-* Link to your project:
-* Node version:
 * Python version:
-* Tailwind CLI version:
+* Link to your project:
+* Operating System and version (desktop or mobile):
