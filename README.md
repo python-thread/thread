@@ -107,6 +107,7 @@ _Below is an example of how you can instruct your audience on installing and set
 - [x] 0.0.1 Release
 - [x] Bug fixes
 - [x] 0.1.0 Release
+- [x] 0.1.1 Hotfix
 - [ ] New Features
 - [ ] 0.1.1 Release
 
