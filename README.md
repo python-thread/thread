@@ -105,8 +105,10 @@ _Below is an example of how you can instruct your audience on installing and set
 ## Roadmap
 
 - [x] 0.0.1 Release
-- [ ] Bug fixes
-- [ ] 0.1.0 Release
+- [x] Bug fixes
+- [x] 0.1.0 Release
+- [ ] New Features
+- [ ] 0.1.1 Release
 
 See the [open issues](https://github.com/caffeine-addictt/thread/issues) for a full list of proposed features (and known issues).
 
