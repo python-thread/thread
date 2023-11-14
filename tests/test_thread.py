@@ -63,6 +63,17 @@ def test_ignoreSpecificError():
   new.join()
   assert len(new.errors) == 0
 
+def test_ignoreAll():
+  """This test is for testing that all errors are ignored properly"""
+  new = Thread(
+    target = _dummy_raiseException,
+    args = [ValueError()],
+    ignore_errors = [Exception],
+  )
+  new.start()
+  new.join()
+  assert len(new.errors) == 0
+
 
 
 

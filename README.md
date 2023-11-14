@@ -44,7 +44,7 @@ Fully compatible with the threading library, this project hopes to provide a mor
 <br />
 
 **!! Important !!**<br />
-THis project is in it's very early stages of development and bugs are to be expected.
+This project is in it's very early stages of development and bugs are to be expected.
 
 <br />
 
@@ -105,7 +105,10 @@ _Below is an example of how you can instruct your audience on installing and set
 ## Roadmap
 
 - [x] 0.0.1 Release
-- [ ] Bug fixes
+- [x] Bug fixes
+- [x] 0.1.0 Release
+- [ ] New Features
+- [ ] 0.1.1 Release
 
 See the [open issues](https://github.com/caffeine-addictt/thread/issues) for a full list of proposed features (and known issues).
 
