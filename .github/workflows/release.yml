@@ -23,9 +23,29 @@ jobs:
       id-token: write
 
     steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.x"
+
       - name: Build distribution
+        uses: |
+          python3 -m pip install -U pip
+          python3 -m pip install -U build --user
+          python3 -m build
+
+      - name: Store the distribution packages
+        uses: actions/upload-artifact@v3
+        with:
+          name: python-package-distributions
+          path: dist/
+
+
+      - name: Download distribution packages
         uses: actions/download-artifact@v3
         with:
+          name: python-package-distributions
           path: dist/
 
       - name: Publish package distributions to PyPI
