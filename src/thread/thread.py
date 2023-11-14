@@ -107,7 +107,7 @@ class Thread:
       try:
         self.returned_value = target(*args, **kwargs)
       except Exception as e:
-        if type(e) not in self.ignore_errors:
+        if not any(isinstance(e, ignore) for ignore in self.ignore_errors):
           self.status = 'Errored'
           self.errors.append(e)
           return
@@ -124,7 +124,7 @@ class Thread:
       try:
         hook(self.returned_value)
       except Exception as e:
-        if type(e) not in self.ignore_errors:
+        if not any(isinstance(e, ignore) for ignore in self.ignore_errors):
           trace.add_exception_case(
             hook.__name__,
             e
@@ -317,6 +317,7 @@ class ParallelProcessing:
     self.overflow_args = overflow_args
     self.overflow_kwargs = overflow_kwargs
 
+
   def _wrap_function(
     self,
     function: Callable[Concatenate[Data_In, ...], Data_Out]
@@ -353,7 +354,24 @@ class ParallelProcessing:
     results: List[Data_Out] = []
     for thread in self._threads:
       results += thread.result
+      if thread.status == 'Idle':
+        raise exceptions.ThreadNotRunningError()
+      elif thread.status == 'Running':
+        raise exceptions.ThreadStillRunningError()
     return results
+  
+
+  def is_alive(self) -> bool:
+    """
+    See if any threads are still alive
+
+    Raises
+    ------
+    ThreadNotInitializedError: If the thread is not intialized
+    """
+    if len(self._threads) == 0:
+      raise exceptions.ThreadNotInitializedError()
+    return any(thread.is_alive() for thread in self._threads)
   
 
   def get_return_values(self) -> List[Data_Out]:
