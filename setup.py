@@ -8,23 +8,33 @@ DESCRIPTION = 'Threading module extension'
 
 # Setting up
 setup(
-  name = 'threads',
+  name = 'thread',
   version = VERSION,
   author = 'caffeine-addictt (Jun Xiang)',
   author_email = '<junxiangng63@gmail.com>',
   description = DESCRIPTION,
   long_description_content_type = 'text/markdown',
   long_description = long_description,
+
   packages = find_packages(where = 'src'),
-  install_requires = [],
+  package_dir = {'': 'src'},
+  install_requires = ['numpy==1.26.2'],
   keywords = ['python', 'threading', 'multiprocessing'],
   classifiers = [
     'Development Status :: 1 - Planning',
     'Intended Audience :: Developers',
-    'Programming Language :: Python :: 3',
+    'License :: OSI Approved :: MIT License',
+    'Programming Language :: Python :: 3.10',
+    'Programming Language :: Python :: 3.11',
+    'Programming Language :: Python :: 3 :: Only',
     'Operating System :: Unix',
     'Operating System :: MacOS :: MacOS X',
     'Operating System :: Microsoft :: Windows',
   ],
-  python_requires = '>=3.10'
+  python_requires = '>=3.11',
+
+  project_urls = {
+    'Bug Reports': 'https://github.com/caffeine-addictt/thread/issues',
+    'Source': 'https://github.com/caffeine-addictt/thread/'
+  }
 )
