@@ -3,8 +3,9 @@ name: Upload Python Package
 
 on:
   workflow_dispatch:
-  release:
-    types: [ published ]
+  push:
+    tags:
+      - v*.*.*
 
 
 permissions:
@@ -16,39 +17,47 @@ jobs:
     name: Upload release to PyPI
     runs-on: ubuntu-latest
 
-    # Specifying a GitHub environment is optional, but strongly encouraged
-    environment: release
-    permissions:
-      # IMPORTANT: this permission is mandatory for trusted publishing
-      id-token: write
-
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Python
-        uses: actions/setup-python@v4
+      - uses: actions/checkout@v3
+      - name: Build and publish
+        uses: JRubics/poetry-publish@v1.17
         with:
-          python-version: "3.x"
-
-      - name: Build distribution
-        uses: |
-          python3 -m pip install -U pip
-          python3 -m pip install -U build --user
-          python3 -m build
-
-      - name: Store the distribution packages
-        uses: actions/upload-artifact@v3
-        with:
-          name: python-package-distributions
-          path: dist/
+          pypi_token: ${{ secrets.PYPI_TOKEN }}
 
 
-      - name: Download distribution packages
-        uses: actions/download-artifact@v3
-        with:
-          name: python-package-distributions
-          path: dist/
+    # # Specifying a GitHub environment is optional, but strongly encouraged
+    # environment: release
+    # permissions:
+    #   # IMPORTANT: this permission is mandatory for trusted publishing
+    #   id-token: write
 
-      - name: Publish package distributions to PyPI
-        uses: pypa/gh-action-pypi-publish@release/v1
+    # steps:
+    #   - name: Checkout
+    #     uses: actions/checkout@v4
+
+    #   - name: Setup Python
+    #     uses: actions/setup-python@v4
+    #     with:
+    #       python-version: "3.x"
+
+    #   - name: Build distribution
+    #     uses: |
+    #       python3 -m pip install -U pip
+    #       python3 -m pip install -U build --user
+    #       python3 -m build
+
+    #   - name: Store the distribution packages
+    #     uses: actions/upload-artifact@v3
+    #     with:
+    #       name: python-package-distributions
+    #       path: dist/
+
+
+    #   - name: Download distribution packages
+    #     uses: actions/download-artifact@v3
+    #     with:
+    #       name: python-package-distributions
+    #       path: dist/
+
+    #   - name: Publish package distributions to PyPI
+    #     uses: pypa/gh-action-pypi-publish@release/v1
