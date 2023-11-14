@@ -44,7 +44,7 @@ Fully compatible with the threading library, this project hopes to provide a mor
 <br />
 
 **!! Important !!**<br />
-THis project is in it's very early stages of development and bugs are to be expected.
+This project is in it's very early stages of development and bugs are to be expected.
 
 <br />
 
