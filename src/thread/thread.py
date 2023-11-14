@@ -166,6 +166,19 @@ class Thread:
     else:
       raise exceptions.ThreadStillRunningError()
     
+  
+  def is_alive(self) -> bool:
+    """
+    See if thread is still alive
+
+    Raises
+    ------
+    ThreadNotInitializedError: If the thread is not intialized
+    """
+    if not self._thread:
+      raise exceptions.ThreadNotInitializedError()
+    return self._thread.is_alive()
+    
 
   def add_hook(self, hook: Callable[[Data_Out], Any | None]) -> None:
     """
