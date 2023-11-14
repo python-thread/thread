@@ -8,6 +8,9 @@ I will lay out how to use the `thread.Thread` class!
   <ul>
     <li><a href='#importing-the-class'> Import the class</a></li>
     <li><a href='#initializing-a-thread'> Initialize a thread </a></li>
+    <li><a href='#parameters'> Parameters </a></li>
+    <li><a href='#attributes'> Attributes </a></li>
+    <li><a href='#methods'> Class Methods </a></li>
   </ul>
 </details>
 

@@ -6,8 +6,11 @@ I will lay out how to use the `thread.ParallelProcessing` class!
 <details>
   <summary>Jump to</summary>
   <ul>
-    <li><a href='#importing-the-class'> Import the class</a></li>
-    <li><a href='#initializing-a-thread'> Initialize a thread </a></li>
+    <li><a href='#how-does-it-work'> How it works </a></li>
+    <li><a href='#initializing-a-parallel-process'> Initialize a Parallel Process </a></li>
+    <li><a href='#parameters'> Parameters </a></li>
+    <li><a href='#attributes'> Attributes </a></li>
+    <li><a href='#methods'> Class Methods </a></li>
   </ul>
 </details>
 
@@ -135,6 +138,6 @@ These are methods of [`ParallelProcessing`](#importing-the-class) class
 <br />
 
 
-Now you know how to use the [`Thread`](#importing-the-class) class!
+Now you know how to use the [`ParallelProcessing`](#importing-the-class) class!
 
 [See here](./parallel-processing.md) for how to using the `thread.ParallelProcessing` class!
