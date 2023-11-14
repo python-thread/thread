@@ -75,13 +75,11 @@ If applicable, provide screenshots, videos and/or code snippets
 Any other extra context or information
 -->
 
-### **Your environment**
+### Your Environment
 <!--
-Use all the applicable bulleted list elements for this specific issue
-Remove all the bulleted list elements that are not relevant for this issue
+Include as many relevant details about the environment you experienced the bug in
 -->
-
-* OS: <!--[e.g. Ubuntu 5.4.0-26-generic x86_64 / Windows 1904 ...]-->
-* Node version:
-* Npm version:
-* Browser name and version:
+* Version used:
+* Python version:
+* Link to your project:
+* Operating System and version (desktop or mobile):
