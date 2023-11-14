@@ -1,8 +1,21 @@
-[project]
+[tool.poetry]
 name = "thread"
 version = "0.0.1"
 description = "Threading module extension"
+authors = ["Alex <taboez4life@gmail.com>"]
+readme = "README.md"
+packages = [{include = "thread", from = "src"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+numpy = "^1.26.2"
+
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.4.3"
+coverage = "^7.3.2"
+ruff = "^0.1.5"
 
 [build-system]
-requires = ["setuptools", "wheel"]
-build-backend = "setuptools.build_meta"
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
