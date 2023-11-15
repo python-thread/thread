@@ -104,12 +104,12 @@ _Below is an example of how you can instruct your audience on installing and set
 <!-- ROADMAP -->
 ## Roadmap
 
-- [x] 0.0.1 Release
-- [x] Bug fixes
-- [x] 0.1.0 Release
-- [x] 0.1.1 Hotfix
+- [ ] Bug fixes
+- [ ] Set Thread class to inherit from threading.Thread
+- [ ] Add kill method
 - [ ] New Features
-- [ ] 0.1.1 Release
+- [ ] Bug fixes
+- [ ] v0.1.2 Release
 
 See the [open issues](https://github.com/caffeine-addictt/thread/issues) for a full list of proposed features (and known issues).
 
