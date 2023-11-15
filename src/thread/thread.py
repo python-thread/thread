@@ -36,7 +36,7 @@ class Thread:
   hooks          : List[Callable[[Data_Out], Any | None]]
   returned_value : Data_Out
 
-  target         : Callable[Concatenate[Data_In, ...], Data_Out]
+  target         : Callable[..., Data_Out]
   args           : Sequence[Data_In]
   kwargs         : Mapping[str, Data_In]
 
@@ -49,7 +49,7 @@ class Thread:
 
   def __init__(
     self,
-    target: Callable[Concatenate[Data_In, ...], Data_Out],
+    target: Callable[..., Data_Out],
     args: Sequence[Data_In] = (),
     kwargs: Mapping[str, Data_In] = {},
     ignore_errors: Sequence[type[Exception]] = (),
@@ -98,8 +98,8 @@ class Thread:
 
   def _wrap_target(
     self,
-    target: Callable[Concatenate[Data_In, ...], Data_Out]
-  ) -> Callable[Concatenate[Data_In, ...], Data_Out]:
+    target: Callable[..., Data_Out]
+  ) -> Callable[..., Data_Out]:
     @wraps(target)
     def wrapper(*args: Any, **kwargs: Any) -> Any:
       self.status = 'Running'
