@@ -90,12 +90,10 @@ _Below is an example of how you can instruct your audience on installing and set
 
 
 
-<!-- USAGE EXAMPLES -->
-## Usage
+<!-- DOCS -->
+## Documentation
 
-```bash
-# Docs soon!!
-```
+Our docs are [here!](/docs/getting-started.md)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
