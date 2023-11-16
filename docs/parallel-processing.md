@@ -94,7 +94,7 @@ my_processor.start()
 
 * **overflow_kwargs : Overflow_In
   > These are arguments parsed to [**thread.Thread**](./threading.md#parameters)<br />
-  > [!NOTE]
+  > [!NOTE]<br />
   > If `args` is present, then it will automatically be removed from kwargs and joined with `overflow_args`
 
 * **Raises** AssertionError: max_threads is invalid
@@ -107,9 +107,9 @@ my_processor.start()
 These are attributes of [`ParallelProcessing`](#importing-the-class) class
 
 * results : List[Data_Out]
-  > The result value
-  > **Raises** [`ThreadNotInitializedError`](./exceptions.md#threadNotInitializedError)
-  > **Raises** [`ThreadNotRunningError`](./exceptions.md#threadnotrunningerror)
+  > The result value<br />
+  > **Raises** [`ThreadNotInitializedError`](./exceptions.md#threadNotInitializedError)<br />
+  > **Raises** [`ThreadNotRunningError`](./exceptions.md#threadnotrunningerror)<br />
   > **Raises** [`ThreadStillRunningError`](./exceptions.md#threadStillRunningError)
 
 <br />
@@ -131,9 +131,17 @@ These are methods of [`ParallelProcessing`](#importing-the-class) class
   > Halts the current thread execution until the thread completes
 
 * join : () -> JoinTerminatedStatus
-  > Halts the current thread execution until a thread completes or exceeds the timeout
-  > **Raises** [`ThreadNotInitializedError`](./exceptions.md#threadNotInitializedError)
+  > Halts the current thread execution until a thread completes or exceeds the timeout<br />
+  > **Raises** [`ThreadNotInitializedError`](./exceptions.md#threadNotInitializedError)<br />
   > **Raises** [`ThreadNotRunningError`](./exceptions.md#threadnotrunningerror)
+
+* kill : (yielding: bool = False, timeout: float = 5) -> bool
+  > Schedules the thread to be killed<br />
+  > If yielding is True, it halts the current thread execution until the thread is killed or the timeout is exceeded<br />
+  > **Raises** [`ThreadNotInitializedError`](./exceptions.md#threadnotinitializederror)<br />
+  > **Raises** [`ThreadNotRunningError`](./exceptions.md#threadnotrunningerror)<br />
+  > [!NOTE]<br />
+  > This only schedules the thread to be killed, and does not immediately kill the thread
 
 <br />
 
