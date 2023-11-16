@@ -12,12 +12,6 @@ from typing import (
 )
 
 
-@dataclass
-class JoinTerminatedStatus:
-  """How the `Thread.join()` method terminated"""
-  status: Literal['Timeout Exceeded', 'Thread terminated']
-
-
 ThreadStatus = Literal['Idle', 'Running', 'Invoking hooks', 'Completed', 'Errored']
 Data_In = Any
 Data_Out = Any
@@ -194,7 +188,7 @@ class Thread:
     self.hooks.append(hook)
 
 
-  def join(self, timeout: Optional[float] = None) -> 'JoinTerminatedStatus':
+  def join(self, timeout: Optional[float] = None) -> bool:
     """
     Halts the current thread execution until a thread completes or exceeds the timeout
 
@@ -204,7 +198,7 @@ class Thread:
 
     Returns
     -------
-    :returns JoinTerminatedStatus: Why the method stoped halting the thread
+    :returns bool: True if the thread is no-longer alive
 
     Raises
     ------
@@ -219,7 +213,7 @@ class Thread:
 
     self._thread.join(timeout)
     self._handle_exceptions()
-    return JoinTerminatedStatus(self._thread.is_alive() and 'Timeout Exceeded' or 'Thread terminated')
+    return not self._thread.is_alive()
   
 
   def get_return_value(self) -> Data_Out:
@@ -389,13 +383,13 @@ class ParallelProcessing:
     return results
   
 
-  def join(self) -> 'JoinTerminatedStatus':
+  def join(self) -> bool:
     """
     Halts the current thread execution until a thread completes or exceeds the timeout
 
     Returns
     -------
-    :returns JoinTerminatedStatus: Why the method stoped halting the thread
+    :returns bool: True if the thread is no-longer alive
 
     Raises
     ------
@@ -410,7 +404,7 @@ class ParallelProcessing:
 
     for thread in self._threads:
       thread.join()
-    return JoinTerminatedStatus('Thread terminated')
+    return True
   
 
   def start(self) -> None:
