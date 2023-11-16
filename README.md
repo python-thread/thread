@@ -54,14 +54,6 @@ I hope thread will become your threading solution! ♡⸜(˶˃ ᵕ ˂˶)⸝♡
 
 
 
-### Built With
-
-* [![Python 3.11.6+](https://img.shields.io/badge/python-3.11.6+-blue.svg)](https://www.python.org/downloads/release/python-3116/)
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
-
 <!-- GETTING STARTED -->
 ## Getting Started
 
@@ -70,7 +62,7 @@ To get a local copy up and running follow these simple example steps.
 
 ### Prerequisites
 
-* Python 3.10+
+* Python 3.9+
 
 ### Installation
 
@@ -102,11 +94,10 @@ Our docs are [here!](/docs/getting-started.md)
 <!-- ROADMAP -->
 ## Roadmap
 
-- [ ] Bug fixes
-- [ ] Set Thread class to inherit from threading.Thread
+- [x] Bug fixes
+- [x] Set Thread class to inherit from threading.Thread
 - [ ] Add kill method
-- [ ] New Features
-- [ ] Bug fixes
+- [ ] Docs Update
 - [ ] v0.1.2 Release
 
 See the [open issues](https://github.com/caffeine-addictt/thread/issues) for a full list of proposed features (and known issues).
