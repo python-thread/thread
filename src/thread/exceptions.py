@@ -20,7 +20,7 @@ class ThreadNotRunningError(ThreadErrorBase):
 
 class ThreadNotInitializedError(ThreadErrorBase):
   """Exception class for attempting to invoke a method which requires the thread to be initialized, but isn't"""
-  message: str = 'Thread is not initialized, unable to invoke method. Have you ran `Thread.start()` at least once?'
+  message: str = 'Thread is not initialized, unable to invoke method.'
 
 class HookRuntimeError(ThreadErrorBase):
   """Exception class for hook runtime errors"""
