@@ -1,4 +1,6 @@
+import os
 import sys
+import time
 import signal
 import threading
 
@@ -13,7 +15,16 @@ from typing import (
 )
 
 
-ThreadStatus = Literal['Idle', 'Running', 'Invoking hooks', 'Completed', 'Errored', 'Killed']
+ThreadStatus = Literal[
+  'Idle',
+  'Running',
+  'Invoking hooks',
+  'Completed',
+
+  'Errored',
+  'Kill Scheduled',
+  'Killed'
+]
 Data_In = Any
 Data_Out = Any
 Overflow_In = Any
@@ -143,9 +154,10 @@ class Thread(threading.Thread):
     if event == 'call':
       return self.local_trace
     
-  def local_trace(self, frame, event, arg):
-    if self.status == 'Killed' and event == 'line':
+  def local_trace(self, frame, event: str, arg):
+    if self.status == 'Kill Scheduled' and event == 'line':
       print('KILLED ident:%s' % self.ident)
+      self.status = 'Killed'
       raise SystemExit()
     return self.local_trace
     
@@ -248,9 +260,18 @@ class Thread(threading.Thread):
     return self.result
   
 
-  def kill(self) -> None:
+  def kill(self, yielding: bool = False, timeout: float = 5) -> bool:
     """
-    Kills the thread
+    Schedules a thread to be killed
+
+    Parameters
+    ----------
+    :param yielding: If true, halts the current thread execution until the thread is killed
+    :param timeout: The maximum number of seconds to wait before exiting
+
+    Returns
+    -------
+    :returns bool: False if the it exceeded the timeout
     
     Raises
     ------
@@ -259,7 +280,18 @@ class Thread(threading.Thread):
     """
     if not self.is_alive():
       raise exceptions.ThreadNotRunningError()
-    self.status = 'Killed'
+    
+    self.status = 'Kill Scheduled'
+    if not yielding:
+      return True
+    
+    start = time.perf_counter()
+    while self.status != 'Killed':
+      time.sleep(0.01)
+      if (time.perf_counter() - start) >= timeout:
+        return False
+
+    return True
   
 
   def start(self) -> None:
