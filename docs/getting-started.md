@@ -8,13 +8,8 @@ Here's to you get started.
 
 ## Prerequisites
 
-* Python 3.11+
+* Python 3.9+
 
-The project is quite heavily type-annotated, and we use `Concatenate[Any, ...]` in some function declarations.
-However `Python <=3.10` does not support `...` being the last argument as laid out in [this stack overflow question](https://stackoverflow.com/questions/74893354/is-literal-ellipsis-really-valid-as-paramspec-last-argument).
-
-If possible, I may release a sister version of thread that is compatible with `Python 3.9+` in the future, but for the time being,
-support will extend only from Python 3.11+
 
 <br />
 

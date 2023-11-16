@@ -11,6 +11,7 @@ I will lay out how to use the `thread.Thread` class!
     <li><a href='#parameters'> Parameters </a></li>
     <li><a href='#attributes'> Attributes </a></li>
     <li><a href='#methods'> Class Methods </a></li>
+    <li><a href='#behviours'> Behaviours </a></li>
   </ul>
 </details>
 
@@ -49,9 +50,6 @@ A thread can be ran by invoking the `start()` method
 my_thread.start()
 ```
 
-> [!NOTE]
-> The **threading.Thread()** class from python will only be initialized when **start()** is invoked
-
 <br />
 
 
@@ -83,6 +81,11 @@ my_thread.start()
 * daemon : bool = False
   > This is an argument parsed to `threading.Thread`
 
+* group : None = None
+  > This is an argument parsed to `threading.Thread`<br />
+  > [!NOTE]<br />
+  > This does nothing
+
 * *overflow_args : Overflow_In
   > These are arguments parsed to `threading.Thread`
 
@@ -98,9 +101,12 @@ These are attributes of [`Thread`](#importing-the-class) class
 
 * result : Data_Out
   > The result value of the thread
-  > **Raises** [`ThreadNotInitializedError`](./exceptions.md#threadNotInitializedError)
-  > **Raises** [`ThreadNotRunningError`](./exceptions.md#threadnotrunningerror)
+  > **Raises** [`ThreadNotInitializedError`](./exceptions.md#threadNotInitializedError)<br />
+  > **Raises** [`ThreadNotRunningError`](./exceptions.md#threadnotrunningerror)<br />
   > **Raises** [`ThreadStillRunningError`](./exceptions.md#threadStillRunningError)
+
+* status : str
+  > The current status of the thread
 
 <br />
 
@@ -118,17 +124,53 @@ These are methods of [`Thread`](#importing-the-class) class
   > **Raises** [`ThreadNotInitializedError`](./exceptions.md#threadNotInitializedError)
 
 * add_hook : ((Data_Out) -> Any | None) -> None
-  > Hooks will be automatically invoked after a thread successfully completes, parsing the return value as the first argument
-  > **Raises** [`ThreadNotInitializedError`](./exceptions.md#threadNotInitializedError)
+  > Hooks will be automatically invoked after a thread successfully completes, parsing the return value as the first argument<br />
+  > **Raises** [`ThreadNotInitializedError`](./exceptions.md#threadNotInitializedError)<br />
   > **Raises** [`ThreadNotRunningError`](./exceptions.md#threadnotrunningerror)
 
 * get_return_value : () -> Data_Out
   > Halts the current thread execution until the thread completes
 
 * join : () -> JoinTerminatedStatus
-  > Halts the current thread execution until a thread completes or exceeds the timeout
-  > **Raises** [`ThreadNotInitializedError`](./exceptions.md#threadNotInitializedError)
+  > Halts the current thread execution until a thread completes or exceeds the timeout<br />
+  > **Raises** [`ThreadNotInitializedError`](./exceptions.md#threadNotInitializedError)<br />
   > **Raises** [`ThreadNotRunningError`](./exceptions.md#threadnotrunningerror)
+
+* kill : (yielding: bool = False, timeout: float = 5) -> bool
+  > Schedules the thread to be killed<br />
+  > If yielding is True, it halts the current thread execution until the thread is killed or the timeout is exceeded<br />
+  > **Raises** [`ThreadNotInitializedError`](./exceptions.md#threadnotinitializederror)<br />
+  > **Raises** [`ThreadNotRunningError`](./exceptions.md#threadnotrunningerror)<br />
+  > [!NOTE]<br />
+  > This only schedules the thread to be killed, and does not immediately kill the thread
+
+<br />
+
+
+## Behviours
+
+These are a list of thread behvaiours
+
+### Killing Threads - Introduced in v0.1.2
+
+While preferably not utilized, we do support killing threads.<br />
+We mark a thread to be killed, and will only be killed when the thread invokes `sys.settrace()`.
+
+> [!IMPORTANT]<br />
+> This means that if your `target` has a long `time.wait()` call, it will only be killed after it moves onto the next line.
+
+<br />
+
+Want an alternative? Learn about [Daemonized Threads!](https://www.geeksforgeeks.org/python-daemon-threads/)
+
+<br />
+
+
+### Gracefull Exiting - Introduced in v0.1.2
+
+When the program is abruptly stopped with `CTRL+C` for example, active threads will now attempt to gracefully kill itself.<br />
+
+This is not to be an "end-all be-all" for managing threads. You should still try to properly exit a thread before abruptly exiting the program, or utilize a `Daemonized Thread`.
 
 <br />
 
