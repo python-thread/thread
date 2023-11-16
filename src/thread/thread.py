@@ -3,10 +3,10 @@ import threading
 from . import exceptions
 
 from functools import wraps
-from dataclasses import dataclass
+from typing_extensions import Concatenate
 from typing import (
   Any, List,
-  Callable, Concatenate,
+  Callable,
   Optional, Literal,
   Mapping, Sequence
 )
