@@ -75,7 +75,7 @@ _Below is an example of how you can instruct your audience on installing and set
 2. Import thread into your library!
    ```py
    import thread
-   from thread import Thread, ...
+   from thread import Thread, ParallelProcessing
    ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -96,8 +96,8 @@ Our docs are [here!](/docs/getting-started.md)
 
 - [x] Bug fixes
 - [x] Set Thread class to inherit from threading.Thread
-- [ ] Add kill method
-- [ ] Docs Update
+- [x] Add kill method
+- [x] Docs Update
 - [ ] v0.1.2 Release
 
 See the [open issues](https://github.com/caffeine-addictt/thread/issues) for a full list of proposed features (and known issues).
