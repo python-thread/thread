@@ -3,12 +3,10 @@ import threading
 from . import exceptions
 
 from functools import wraps
-from typing_extensions import Concatenate
 from typing import (
   Any, List,
-  Callable,
-  Optional, Literal,
-  Mapping, Sequence
+  Callable, Union, Optional, Literal,
+  Mapping, Sequence, Tuple
 )
 
 
@@ -16,6 +14,7 @@ ThreadStatus = Literal['Idle', 'Running', 'Invoking hooks', 'Completed', 'Errore
 Data_In = Any
 Data_Out = Any
 Overflow_In = Any
+
 
 class Thread(threading.Thread):
   """
@@ -26,7 +25,7 @@ class Thread(threading.Thread):
   """
 
   status         : ThreadStatus
-  hooks          : List[Callable[[Data_Out], Any | None]]
+  hooks          : List[Callable[[Data_Out], Union[Any, None]]]
   returned_value: Data_Out
 
   errors         : List[Exception]
@@ -67,7 +66,7 @@ class Thread(threading.Thread):
     :param *: These are arguments parsed to `threading.Thread`
     :param **: These are arguments parsed to `thread.Thread`
     """
-    target = self._wrap_target(target)
+    _target = self._wrap_target(target)
     self.returned_values = None
     self.status = 'Idle'
     self.hooks = []
@@ -77,7 +76,7 @@ class Thread(threading.Thread):
     self.suppress_errors = suppress_errors
 
     super().__init__(
-      target = target,
+      target = _target,
       args = args,
       kwargs = kwargs,
       name = name,
@@ -109,19 +108,21 @@ class Thread(threading.Thread):
   
 
   def _invoke_hooks(self) -> None:
-    err = exceptions.HookRuntimeError()
+    errors: List[Tuple[Exception, str]] = []
     for hook in self.hooks:
       try:
         hook(self.returned_value)
       except Exception as e:
         if not any(isinstance(e, ignore) for ignore in self.ignore_errors):
-          err.add_exception_case(
-            hook.__name__,
-            e
-          )
+          errors.append((
+            e,
+            hook.__name__
+          ))
 
-    if err.count > 0:
-      self.errors.append(err)
+    if len(errors) > 0:
+      self.errors.append(exceptions.HookRuntimeError(
+        None, errors
+      ))
 
 
   def _handle_exceptions(self) -> None:
@@ -169,7 +170,7 @@ class Thread(threading.Thread):
     return super().is_alive()
     
 
-  def add_hook(self, hook: Callable[[Data_Out], Any | None]) -> None:
+  def add_hook(self, hook: Callable[[Data_Out], Union[Any, None]]) -> None:
     """
     Adds a hook to the thread
     -------------------------
@@ -253,7 +254,7 @@ class ParallelProcessing:
   _return_vales  : Mapping[int, List[Data_Out]]
 
   status         : ThreadStatus
-  function       : Callable[Concatenate[Sequence[Data_In], ...], List[Data_Out]]
+  function       : Callable[..., List[Data_Out]]
   dataset        : Sequence[Data_In]
   max_threads    : int
 
@@ -262,7 +263,7 @@ class ParallelProcessing:
   
   def __init__(
     self,
-    function: Callable[Concatenate[Data_In, ...], Data_Out],
+    function: Callable[..., Data_Out],
     dataset: Sequence[Data_In],
     max_threads: int = 8,
 
@@ -277,7 +278,7 @@ class ParallelProcessing:
 
     Parameters
     ----------
-    :param function: This should be the function to validate each data entry in the `dataset`
+    :param function: This should be the function to validate each data entry in the `dataset`, the first argument parsed will be a value of the dataset
     :param dataset: This should be an iterable sequence of data entries
     :param max_threads: This should be an integer value of the max threads allowed
     :param *: These are arguments parsed to `threading.Thread` and `Thread`
@@ -303,8 +304,8 @@ class ParallelProcessing:
 
   def _wrap_function(
     self,
-    function: Callable[Concatenate[Data_In, ...], Data_Out]
-  ) -> Callable[Concatenate[Sequence[Data_In], ...], List[Data_Out]]:
+    function: Callable[..., Data_Out]
+  ) -> Callable[..., List[Data_Out]]:
     @wraps(function)
     def wrapper(data_chunk: Sequence[Data_In], *args: Any, **kwargs: Any) -> List[Data_Out]:
       computed: List[Data_Out] = []
