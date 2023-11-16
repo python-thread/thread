@@ -17,7 +17,7 @@ Data_In = Any
 Data_Out = Any
 Overflow_In = Any
 
-class Thread:
+class Thread(threading.Thread):
   """
   Wraps python's `threading.Thread` class
   ---------------------------------------
@@ -25,21 +25,17 @@ class Thread:
   Type-Safe and provides more functionality on top
   """
 
-  _thread        : Optional[threading.Thread]
   status         : ThreadStatus
   hooks          : List[Callable[[Data_Out], Any | None]]
-  returned_value : Data_Out
-
-  target         : Callable[..., Data_Out]
-  args           : Sequence[Data_In]
-  kwargs         : Mapping[str, Data_In]
+  returned_value: Data_Out
 
   errors         : List[Exception]
   ignore_errors  : Sequence[type[Exception]]
   suppress_errors: bool
 
-  overflow_args  : Sequence[Overflow_In]
-  overflow_kwargs: Mapping[str, Overflow_In]
+  # threading.Thread stuff
+  _initialized   : bool
+
 
   def __init__(
     self,
@@ -51,6 +47,7 @@ class Thread:
 
     name: Optional[str] = None,
     daemon: bool = False,
+    group = None,
     *overflow_args: Overflow_In,
     **overflow_kwargs: Overflow_In
   ) -> None:
@@ -66,34 +63,33 @@ class Thread:
     :param suppress_errors: This should be a boolean indicating whether exceptions will be raised, else will only write to internal `errors` property
     :param name: This is an argument parsed to `threading.Thread`
     :param daemon: This is an argument parsed to `threading.Thread`
+    :param group: This does nothing right now, but should be left as None
     :param *: These are arguments parsed to `threading.Thread`
     :param **: These are arguments parsed to `thread.Thread`
     """
-    self._thread = None
+    target = self._wrap_target(target)
+    self.returned_values = None
     self.status = 'Idle'
     self.hooks = []
-    self.returned_value = None
-
-    self.target = self._wrap_target(target)
-    self.args = args
-    self.kwargs = kwargs
 
     self.errors = []
     self.ignore_errors = ignore_errors
     self.suppress_errors = suppress_errors
 
-    self.overflow_args = overflow_args
-    self.overflow_kwargs = {
-      'name': name,
-      'daemon': daemon,
+    super().__init__(
+      target = target,
+      args = args,
+      kwargs = kwargs,
+      name = name,
+      daemon = daemon,
+      group = group,
+      *overflow_args,
       **overflow_kwargs
-    }
+    )
 
 
-  def _wrap_target(
-    self,
-    target: Callable[..., Data_Out]
-  ) -> Callable[..., Data_Out]:
+  def _wrap_target(self, target: Callable[..., Data_Out]) -> Callable[..., Data_Out]:
+    """Wraps the target function"""
     @wraps(target)
     def wrapper(*args: Any, **kwargs: Any) -> Any:
       self.status = 'Running'
@@ -110,22 +106,22 @@ class Thread:
       self._invoke_hooks()
       self.status = 'Completed'
     return wrapper
-
+  
 
   def _invoke_hooks(self) -> None:
-    trace = exceptions.HookRuntimeError()
+    err = exceptions.HookRuntimeError()
     for hook in self.hooks:
       try:
         hook(self.returned_value)
       except Exception as e:
         if not any(isinstance(e, ignore) for ignore in self.ignore_errors):
-          trace.add_exception_case(
+          err.add_exception_case(
             hook.__name__,
             e
           )
 
-    if trace.count > 0:
-      self.errors.append(trace)
+    if err.count > 0:
+      self.errors.append(err)
 
 
   def _handle_exceptions(self) -> None:
@@ -135,7 +131,7 @@ class Thread:
     
     for e in self.errors:
       raise e
-
+    
 
   @property
   def result(self) -> Data_Out:
@@ -144,13 +140,12 @@ class Thread:
     
     Raises
     ------
-    ThreadNotInitializedError: If the thread is not initialized
+    ThreadNotInitializedError: If the thread is not intialized
     ThreadNotRunningError: If the thread is not running
     ThreadStillRunningError: If the thread is still running
     """
-    if not self._thread:
+    if not self._initialized:
       raise exceptions.ThreadNotInitializedError()
-    
     if self.status == 'Idle':
       raise exceptions.ThreadNotRunningError()
     
@@ -169,9 +164,9 @@ class Thread:
     ------
     ThreadNotInitializedError: If the thread is not intialized
     """
-    if not self._thread:
+    if not self._initialized:
       raise exceptions.ThreadNotInitializedError()
-    return self._thread.is_alive()
+    return super().is_alive()
     
 
   def add_hook(self, hook: Callable[[Data_Out], Any | None]) -> None:
@@ -205,15 +200,15 @@ class Thread:
     ThreadNotInitializedError: If the thread is not initialized
     ThreadNotRunningError: If the thread is not running
     """
-    if not self._thread:
+    if not self._initialized:
       raise exceptions.ThreadNotInitializedError()
     
     if self.status == 'Idle':
       raise exceptions.ThreadNotRunningError()
 
-    self._thread.join(timeout)
+    super().join(timeout)
     self._handle_exceptions()
-    return not self._thread.is_alive()
+    return not self.is_alive()
   
 
   def get_return_value(self) -> Data_Out:
@@ -234,19 +229,13 @@ class Thread:
     
     Raises
     ------
+    ThreadNotInitializedError: If the thread is not intialized
     ThreadStillRunningError: If there already is a running thread
     """
-    if self._thread is not None and self._thread.is_alive():
+    if self.is_alive():
       raise exceptions.ThreadStillRunningError()
     
-    self._thread = threading.Thread(
-      target = self.target,
-      args = self.args,
-      kwargs = self.kwargs,
-      *self.overflow_args,
-      **self.overflow_kwargs
-    )
-    self._thread.start()
+    super().start()
 
 
 
