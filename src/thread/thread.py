@@ -150,7 +150,7 @@ class Thread(threading.Thread):
       raise e
     
 
-  def global_trace(self, frame, event: str, arg) -> Callable | None:
+  def global_trace(self, frame, event: str, arg) -> Optional[Callable]:
     if event == 'call':
       return self.local_trace
     
