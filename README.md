@@ -14,7 +14,7 @@
 [![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
 [![Issues][issues-shield]][issues-url]
-[![MIT License][license-shield]][license-url]
+[![BSD-3-Clause License][license-shield]][license-url]
 [![LinkedIn][linkedin-shield]][linkedin-url]
 
 <!-- PROJECT LOGO -->
@@ -54,14 +54,6 @@ I hope thread will become your threading solution! ♡⸜(˶˃ ᵕ ˂˶)⸝♡
 
 
 
-### Built With
-
-* [![Python 3.11.6+](https://img.shields.io/badge/python-3.11.6+-blue.svg)](https://www.python.org/downloads/release/python-3116/)
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
-
 <!-- GETTING STARTED -->
 ## Getting Started
 
@@ -70,7 +62,7 @@ To get a local copy up and running follow these simple example steps.
 
 ### Prerequisites
 
-* Python 3.10+
+* Python 3.9+
 
 ### Installation
 
@@ -102,12 +94,11 @@ Our docs are [here!](/docs/getting-started.md)
 <!-- ROADMAP -->
 ## Roadmap
 
-- [x] 0.0.1 Release
 - [x] Bug fixes
-- [x] 0.1.0 Release
-- [x] 0.1.1 Hotfix
-- [ ] New Features
-- [ ] 0.1.1 Release
+- [x] Set Thread class to inherit from threading.Thread
+- [ ] Add kill method
+- [ ] Docs Update
+- [ ] v0.1.2 Release
 
 See the [open issues](https://github.com/caffeine-addictt/thread/issues) for a full list of proposed features (and known issues).
 
@@ -136,7 +127,7 @@ Don't forget to give the project a star! Thanks again!
 <!-- LICENSE -->
 ## License
 
-Distributed under the MIT License. See `LICENSE.txt` for more information.
+Distributed under the BSD-3-Clause License. See `LICENSE.txt` for more information.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 

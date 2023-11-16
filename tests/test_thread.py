@@ -12,6 +12,11 @@ def _dummy_raiseException(x: Exception, delay: float = 0):
   time.sleep(delay)
   raise x
 
+def _dummy_iterative(itemCount: int, pTime: float = 0.1, delay: float = 0):
+  time.sleep(delay)
+  for i in range(itemCount):
+    time.sleep(pTime)
+
 
 
 
@@ -21,11 +26,11 @@ def test_threadCreation():
   new = Thread(
     target = _dummy_target_raiseToPower,
     args = [4],
-    kwargs = { 'power': 2 }
+    kwargs = { 'power': 2 },
+    daemon = True
   )
   new.start()
-  s = new.join()
-  assert s.status == 'Thread terminated'
+  assert new.join()
   assert new.result == 16
 
 def test_threadingThreadParsing():
@@ -37,7 +42,7 @@ def test_threadingThreadParsing():
     daemon = True
   )
   new.start()
-  assert new._thread and new._thread.name == 'testingThread'
+  assert new.name == 'testingThread'
 
 def test_suppressAll():
   """This test is for testing that errors are suppressed properly"""
@@ -58,6 +63,7 @@ def test_ignoreSpecificError():
     target = _dummy_raiseException,
     args = [ValueError()],
     ignore_errors = [ValueError],
+    daemon = True
   )
   new.start()
   new.join()
@@ -69,30 +75,32 @@ def test_ignoreAll():
     target = _dummy_raiseException,
     args = [ValueError()],
     ignore_errors = [Exception],
+    daemon = True
   )
   new.start()
   new.join()
   assert len(new.errors) == 0
 
+def test_threadKilling():
+  """This test is for testing that threads are killed properly"""
+  new = Thread(
+    target = _dummy_iterative,
+    args = [5, 0.1, 0]
+  )
+  new.start()
+  new.kill(True)
+  assert not new.is_alive()
+
 
 
 
 # >>>>>>>>>> Raising Exceptions <<<<<<<<<< #
-def test_raises_notInitializedError():
-  """This test should raise ThreadNotInitializedError"""
-  new = Thread(
-    target = _dummy_target_raiseToPower,
-    args = [4, 2]
-  )
-
-  with pytest.raises(exceptions.ThreadNotInitializedError):
-    new.result
-
 def test_raises_stillRunningError():
   """This test should raise ThreadStillRunningError"""
   new = Thread(
     target = _dummy_target_raiseToPower,
-    args = [4, 2, 5]
+    args = [4, 2, 5],
+    daemon = True
   )
   new.start()
 
@@ -105,7 +113,8 @@ def test_raises_ignoreSpecificError():
     target = _dummy_raiseException,
     args = [FileExistsError()],
     ignore_errors = [ValueError],
-    suppress_errors = False
+    suppress_errors = False,
+    daemon = True
   )
   with pytest.raises(FileExistsError):
     new.start()
@@ -115,7 +124,8 @@ def test_raises_HookError():
   """This test should raise """
   new = Thread(
     target = _dummy_target_raiseToPower,
-    args = [4, 2]
+    args = [4, 2],
+    daemon = True
   )
 
   def newhook(x: int):

@@ -1,29 +1,35 @@
-import numpy
+import sys
+import time
+import signal
 import threading
+
+import numpy
 from . import exceptions
 
 from functools import wraps
-from dataclasses import dataclass
 from typing import (
   Any, List,
-  Callable, Concatenate,
-  Optional, Literal,
-  Mapping, Sequence
+  Callable, Union, Optional, Literal,
+  Mapping, Sequence, Tuple
 )
 
 
-@dataclass
-class JoinTerminatedStatus:
-  """How the `Thread.join()` method terminated"""
-  status: Literal['Timeout Exceeded', 'Thread terminated']
+ThreadStatus = Literal[
+  'Idle',
+  'Running',
+  'Invoking hooks',
+  'Completed',
 
-
-ThreadStatus = Literal['Idle', 'Running', 'Invoking hooks', 'Completed', 'Errored']
+  'Errored',
+  'Kill Scheduled',
+  'Killed'
+]
 Data_In = Any
 Data_Out = Any
 Overflow_In = Any
 
-class Thread:
+
+class Thread(threading.Thread):
   """
   Wraps python's `threading.Thread` class
   ---------------------------------------
@@ -31,25 +37,22 @@ class Thread:
   Type-Safe and provides more functionality on top
   """
 
-  _thread        : Optional[threading.Thread]
   status         : ThreadStatus
-  hooks          : List[Callable[[Data_Out], Any | None]]
-  returned_value : Data_Out
-
-  target         : Callable[Concatenate[Data_In, ...], Data_Out]
-  args           : Sequence[Data_In]
-  kwargs         : Mapping[str, Data_In]
+  hooks          : List[Callable[[Data_Out], Union[Any, None]]]
+  returned_value: Data_Out
 
   errors         : List[Exception]
   ignore_errors  : Sequence[type[Exception]]
   suppress_errors: bool
 
-  overflow_args  : Sequence[Overflow_In]
-  overflow_kwargs: Mapping[str, Overflow_In]
+  # threading.Thread stuff
+  _initialized   : bool
+  _run           : Callable
+
 
   def __init__(
     self,
-    target: Callable[Concatenate[Data_In, ...], Data_Out],
+    target: Callable[..., Data_Out],
     args: Sequence[Data_In] = (),
     kwargs: Mapping[str, Data_In] = {},
     ignore_errors: Sequence[type[Exception]] = (),
@@ -57,6 +60,7 @@ class Thread:
 
     name: Optional[str] = None,
     daemon: bool = False,
+    group = None,
     *overflow_args: Overflow_In,
     **overflow_kwargs: Overflow_In
   ) -> None:
@@ -72,34 +76,33 @@ class Thread:
     :param suppress_errors: This should be a boolean indicating whether exceptions will be raised, else will only write to internal `errors` property
     :param name: This is an argument parsed to `threading.Thread`
     :param daemon: This is an argument parsed to `threading.Thread`
+    :param group: This does nothing right now, but should be left as None
     :param *: These are arguments parsed to `threading.Thread`
     :param **: These are arguments parsed to `thread.Thread`
     """
-    self._thread = None
+    _target = self._wrap_target(target)
+    self.returned_values = None
     self.status = 'Idle'
     self.hooks = []
-    self.returned_value = None
-
-    self.target = self._wrap_target(target)
-    self.args = args
-    self.kwargs = kwargs
 
     self.errors = []
     self.ignore_errors = ignore_errors
     self.suppress_errors = suppress_errors
 
-    self.overflow_args = overflow_args
-    self.overflow_kwargs = {
-      'name': name,
-      'daemon': daemon,
+    super().__init__(
+      target = _target,
+      args = args,
+      kwargs = kwargs,
+      name = name,
+      daemon = daemon,
+      group = group,
+      *overflow_args,
       **overflow_kwargs
-    }
+    )
 
 
-  def _wrap_target(
-    self,
-    target: Callable[Concatenate[Data_In, ...], Data_Out]
-  ) -> Callable[Concatenate[Data_In, ...], Data_Out]:
+  def _wrap_target(self, target: Callable[..., Data_Out]) -> Callable[..., Data_Out]:
+    """Wraps the target function"""
     @wraps(target)
     def wrapper(*args: Any, **kwargs: Any) -> Any:
       self.status = 'Running'
@@ -116,32 +119,55 @@ class Thread:
       self._invoke_hooks()
       self.status = 'Completed'
     return wrapper
-
+  
 
   def _invoke_hooks(self) -> None:
-    trace = exceptions.HookRuntimeError()
+    """Invokes hooks in the thread"""
+    errors: List[Tuple[Exception, str]] = []
     for hook in self.hooks:
       try:
         hook(self.returned_value)
       except Exception as e:
         if not any(isinstance(e, ignore) for ignore in self.ignore_errors):
-          trace.add_exception_case(
-            hook.__name__,
-            e
-          )
+          errors.append((
+            e,
+            hook.__name__
+          ))
 
-    if trace.count > 0:
-      self.errors.append(trace)
+    if len(errors) > 0:
+      self.errors.append(exceptions.HookRuntimeError(
+        None, errors
+      ))
 
 
   def _handle_exceptions(self) -> None:
-    """Raises exceptions if not suppressed"""
+    """Raises exceptions if not suppressed in the main thread"""
     if self.suppress_errors:
       return
     
     for e in self.errors:
       raise e
+    
 
+  def global_trace(self, frame, event: str, arg) -> Optional[Callable]:
+    if event == 'call':
+      return self.local_trace
+    
+  def local_trace(self, frame, event: str, arg):
+    if self.status == 'Kill Scheduled' and event == 'line':
+      print('KILLED ident:%s' % self.ident)
+      self.status = 'Killed'
+      raise SystemExit()
+    return self.local_trace
+    
+  def _run_with_trace(self) -> None:
+    """This will replace `threading.Thread`'s `run()` method"""
+    if not self._run:
+      raise exceptions.ThreadNotInitializedError('Running `_run_with_trace` may cause unintended behaviour, run `start` instead')
+    
+    sys.settrace(self.global_trace)
+    self._run()
+    
 
   @property
   def result(self) -> Data_Out:
@@ -150,14 +176,13 @@ class Thread:
     
     Raises
     ------
-    ThreadNotInitializedError: If the thread is not initialized
+    ThreadNotInitializedError: If the thread is not intialized
     ThreadNotRunningError: If the thread is not running
     ThreadStillRunningError: If the thread is still running
     """
-    if not self._thread:
+    if not self._initialized:
       raise exceptions.ThreadNotInitializedError()
-    
-    if self.status == 'Idle':
+    if self.status in ['Idle', 'Killed']:
       raise exceptions.ThreadNotRunningError()
     
     self._handle_exceptions()
@@ -175,12 +200,12 @@ class Thread:
     ------
     ThreadNotInitializedError: If the thread is not intialized
     """
-    if not self._thread:
+    if not self._initialized:
       raise exceptions.ThreadNotInitializedError()
-    return self._thread.is_alive()
+    return super().is_alive()
     
 
-  def add_hook(self, hook: Callable[[Data_Out], Any | None]) -> None:
+  def add_hook(self, hook: Callable[[Data_Out], Union[Any, None]]) -> None:
     """
     Adds a hook to the thread
     -------------------------
@@ -194,7 +219,7 @@ class Thread:
     self.hooks.append(hook)
 
 
-  def join(self, timeout: Optional[float] = None) -> 'JoinTerminatedStatus':
+  def join(self, timeout: Optional[float] = None) -> bool:
     """
     Halts the current thread execution until a thread completes or exceeds the timeout
 
@@ -204,22 +229,22 @@ class Thread:
 
     Returns
     -------
-    :returns JoinTerminatedStatus: Why the method stoped halting the thread
+    :returns bool: True if the thread is no-longer alive
 
     Raises
     ------
     ThreadNotInitializedError: If the thread is not initialized
     ThreadNotRunningError: If the thread is not running
     """
-    if not self._thread:
+    if not self._initialized:
       raise exceptions.ThreadNotInitializedError()
     
-    if self.status == 'Idle':
+    if self.status == ['Idle', 'Killed']:
       raise exceptions.ThreadNotRunningError()
 
-    self._thread.join(timeout)
+    super().join(timeout)
     self._handle_exceptions()
-    return JoinTerminatedStatus(self._thread.is_alive() and 'Timeout Exceeded' or 'Thread terminated')
+    return not self.is_alive()
   
 
   def get_return_value(self) -> Data_Out:
@@ -234,25 +259,55 @@ class Thread:
     return self.result
   
 
+  def kill(self, yielding: bool = False, timeout: float = 5) -> bool:
+    """
+    Schedules a thread to be killed
+
+    Parameters
+    ----------
+    :param yielding: If true, halts the current thread execution until the thread is killed
+    :param timeout: The maximum number of seconds to wait before exiting
+
+    Returns
+    -------
+    :returns bool: False if the it exceeded the timeout
+    
+    Raises
+    ------
+    ThreadNotInitializedError: If the thread is not initialized
+    ThreadNotRunningError: If the thread is not running
+    """
+    if not self.is_alive():
+      raise exceptions.ThreadNotRunningError()
+    
+    self.status = 'Kill Scheduled'
+    if not yielding:
+      return True
+    
+    start = time.perf_counter()
+    while self.status != 'Killed':
+      time.sleep(0.01)
+      if (time.perf_counter() - start) >= timeout:
+        return False
+
+    return True
+  
+
   def start(self) -> None:
     """
     Starts the thread
     
     Raises
     ------
+    ThreadNotInitializedError: If the thread is not intialized
     ThreadStillRunningError: If there already is a running thread
     """
-    if self._thread is not None and self._thread.is_alive():
+    if self.is_alive():
       raise exceptions.ThreadStillRunningError()
     
-    self._thread = threading.Thread(
-      target = self.target,
-      args = self.args,
-      kwargs = self.kwargs,
-      *self.overflow_args,
-      **self.overflow_kwargs
-    )
-    self._thread.start()
+    self._run = self.run
+    self.run = self._run_with_trace
+    super().start()
 
 
 
@@ -270,7 +325,7 @@ class ParallelProcessing:
   _return_vales  : Mapping[int, List[Data_Out]]
 
   status         : ThreadStatus
-  function       : Callable[Concatenate[Sequence[Data_In], ...], List[Data_Out]]
+  function       : Callable[..., List[Data_Out]]
   dataset        : Sequence[Data_In]
   max_threads    : int
 
@@ -279,7 +334,7 @@ class ParallelProcessing:
   
   def __init__(
     self,
-    function: Callable[Concatenate[Data_In, ...], Data_Out],
+    function: Callable[..., Data_Out],
     dataset: Sequence[Data_In],
     max_threads: int = 8,
 
@@ -294,7 +349,7 @@ class ParallelProcessing:
 
     Parameters
     ----------
-    :param function: This should be the function to validate each data entry in the `dataset`
+    :param function: This should be the function to validate each data entry in the `dataset`, the first argument parsed will be a value of the dataset
     :param dataset: This should be an iterable sequence of data entries
     :param max_threads: This should be an integer value of the max threads allowed
     :param *: These are arguments parsed to `threading.Thread` and `Thread`
@@ -320,8 +375,8 @@ class ParallelProcessing:
 
   def _wrap_function(
     self,
-    function: Callable[Concatenate[Data_In, ...], Data_Out]
-  ) -> Callable[Concatenate[Sequence[Data_In], ...], List[Data_Out]]:
+    function: Callable[..., Data_Out]
+  ) -> Callable[..., List[Data_Out]]:
     @wraps(function)
     def wrapper(data_chunk: Sequence[Data_In], *args: Any, **kwargs: Any) -> List[Data_Out]:
       computed: List[Data_Out] = []
@@ -354,10 +409,6 @@ class ParallelProcessing:
     results: List[Data_Out] = []
     for thread in self._threads:
       results += thread.result
-      if thread.status == 'Idle':
-        raise exceptions.ThreadNotRunningError()
-      elif thread.status == 'Running':
-        raise exceptions.ThreadStillRunningError()
     return results
   
 
@@ -389,13 +440,13 @@ class ParallelProcessing:
     return results
   
 
-  def join(self) -> 'JoinTerminatedStatus':
+  def join(self) -> bool:
     """
     Halts the current thread execution until a thread completes or exceeds the timeout
 
     Returns
     -------
-    :returns JoinTerminatedStatus: Why the method stoped halting the thread
+    :returns bool: True if the thread is no-longer alive
 
     Raises
     ------
@@ -410,7 +461,20 @@ class ParallelProcessing:
 
     for thread in self._threads:
       thread.join()
-    return JoinTerminatedStatus('Thread terminated')
+    return True
+  
+
+  def kill(self) -> None:
+    """
+    Kills the threads
+
+    Raises
+    ------
+    ThreadNotInitializedError: If the thread is not initialized
+    ThreadNotRunningError: If the thread is not running
+    """
+    for thread in self._threads:
+      thread.kill()
   
 
   def start(self) -> None:
@@ -440,3 +504,22 @@ class ParallelProcessing:
       )
       self._threads.append(chunk_thread)
       chunk_thread.start()
+
+
+
+
+
+# Handle abrupt exit
+def service_shutdown(signum, frame):
+  print('\nCaught signal %d' % signum)
+  print('Gracefully killing active threads')
+  
+  for thread in threading.enumerate():
+    if isinstance(thread, Thread):
+      thread.kill()
+  sys.exit(0)
+
+
+# Register the signal handlers
+signal.signal(signal.SIGTERM, service_shutdown)
+signal.signal(signal.SIGINT, service_shutdown)

@@ -24,7 +24,8 @@ def test_threadsScaleDown():
     function = _dummy_dataProcessor,
     dataset = dataset,
     max_threads = 4,
-    kwargs = { 'delay': 2 }
+    kwargs = { 'delay': 2 },
+    daemon = True
   )
   new.start()
   assert len(new._threads) == 2
@@ -35,7 +36,8 @@ def test_threadsProcessing():
   new = ParallelProcessing(
     function = _dummy_dataProcessor,
     dataset = dataset,
-    args = [0.001]
+    args = [0.001],
+    daemon = True
   )
   new.start()
   assert new.get_return_values() == dataset
@@ -44,24 +46,14 @@ def test_threadsProcessing():
 
 
 # >>>>>>>>>> Raising Exceptions <<<<<<<<<< #
-def test_raises_notInitializedError():
-  """This test should raise ThreadNotInitializedError"""
-  dataset = numpy.arange(0, 8).tolist()
-  new = ParallelProcessing(
-    function = _dummy_dataProcessor,
-    dataset = dataset
-  )
-
-  with pytest.raises(exceptions.ThreadNotInitializedError):
-    new.results
-
 def test_raises_StillRunningError():
   """This test should raise ThreadStillRunningError"""
   dataset = numpy.arange(0, 8).tolist()
   new = ParallelProcessing(
     function = _dummy_dataProcessor,
     dataset = dataset,
-    args = [1]
+    args = [1],
+    daemon = True
   )
   new.start()
   with pytest.raises(exceptions.ThreadStillRunningError):
@@ -73,7 +65,8 @@ def test_raises_RunTimeError():
   new = ParallelProcessing(
     function = _dummy_raiseException,
     dataset = dataset,
-    args = [0.01]
+    args = [0.01],
+    daemon = True
   )
   with pytest.raises(RuntimeError):
     new.start()

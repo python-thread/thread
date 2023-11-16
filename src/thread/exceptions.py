@@ -1,5 +1,5 @@
 import traceback
-from typing import Any, Optional
+from typing import Any, Optional, Sequence, Tuple
 
 
 class ThreadErrorBase(Exception):
@@ -20,17 +20,37 @@ class ThreadNotRunningError(ThreadErrorBase):
 
 class ThreadNotInitializedError(ThreadErrorBase):
   """Exception class for attempting to invoke a method which requires the thread to be initialized, but isn't"""
-  message: str = 'Thread is not initialized, unable to invoke method. Have you ran `Thread.start()` at least once?'
+  message: str = 'Thread is not initialized, unable to invoke method.'
 
 class HookRuntimeError(ThreadErrorBase):
   """Exception class for hook runtime errors"""
   message: str = 'Encountered runtime errors in hooks'
   count: int = 0
 
-  def add_exception_case(self, func_name: str, error: Exception):
-    self.count += 1
-    trace = '\n'.join(traceback.format_stack())
+  def __init__(self, message: Optional[str] = '', extra: Sequence[Tuple[Exception, str]] = []) -> None:
+    """
+    Extra for parsing all hooks that errored
+    
+    Parameters
+    ----------
+    :param message: The message to be parsed, can be left blank
+    :param extra: Tuple of (Exception_Raised, function_name)
+    """
+    new_message: str = message or self.message
 
-    self.add_note(f'\n{self.count}. {func_name}\n>>>>>>>>>>')
-    self.add_note(f'{trace}\n{error}')
-    self.add_note('<<<<<<<<<<')
+    for i, v in enumerate(extra):
+      trace = '\n'.join(traceback.format_stack())
+      new_message += f'\n\n{i}. {v[1]}\n>>>>>>>>>>'
+      new_message += f'{trace}\n{v[0]}'
+      new_message += '<<<<<<<<<<'
+    super().__init__(new_message)
+
+
+  # Python 3.9 doesn't support Exception.add_note()
+  # def add_exception_case(self, func_name: str, error: Exception):
+  #   self.count += 1
+  #   trace = '\n'.join(traceback.format_stack())
+
+  #   self.add_note(f'\n{self.count}. {func_name}\n>>>>>>>>>>')
+  #   self.add_note(f'{trace}\n{error}')
+  #   self.add_note('<<<<<<<<<<')

@@ -3,7 +3,7 @@ name = "thread"
 version = "0.1.1"
 description = "Threading module extension"
 authors = ["Alex <taboez4life@gmail.com>"]
-license = "MIT"
+license = "BSD-3-Clause"
 readme = "README.md"
 packages = [{include = "thread", from = "src"}]
 include = [{ path = "tests", format = "sdist" }]
@@ -14,15 +14,16 @@ keywords = ["threading", "extension", "multiprocessing"]
 classifiers = [
   "Development Status :: 1 - Planning",
   "Intended Audience :: Developers",
-  "License :: OSI Approved :: MIT License"
+  "License :: OSI Approved :: BSD License"
 ]
 
 [tool.poetry.urls]
 "Bug Tracker" = "https://github.com/caffeine-addictt/thread/issues"
 
 [tool.poetry.dependencies]
-python = "^3.11"
+python = "^3.9"
 numpy = "^1.26.2"
+typing-extensions = "^4.8.0"
 
 
 [tool.poetry.group.dev.dependencies]
