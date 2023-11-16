@@ -23,6 +23,7 @@ classifiers = [
 [tool.poetry.dependencies]
 python = "^3.11"
 numpy = "^1.26.2"
+typing-extensions = "^4.8.0"
 
 
 [tool.poetry.group.dev.dependencies]
