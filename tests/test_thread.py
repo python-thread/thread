@@ -12,6 +12,11 @@ def _dummy_raiseException(x: Exception, delay: float = 0):
   time.sleep(delay)
   raise x
 
+def _dummy_iterative(itemCount: int, pTime: float = 0.1, delay: float = 0):
+  time.sleep(delay)
+  for i in range(itemCount):
+    time.sleep(pTime)
+
 
 
 
@@ -75,6 +80,16 @@ def test_ignoreAll():
   new.start()
   new.join()
   assert len(new.errors) == 0
+
+def test_threadKilling():
+  """This test is for testing that threads are killed properly"""
+  new = Thread(
+    target = _dummy_iterative,
+    args = [5, 0.1, 0]
+  )
+  new.start()
+  new.kill(True)
+  assert not new.is_alive()
 
 
 
