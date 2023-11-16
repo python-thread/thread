@@ -1,5 +1,8 @@
-import numpy
+import sys
+import signal
 import threading
+
+import numpy
 from . import exceptions
 
 from functools import wraps
@@ -10,7 +13,7 @@ from typing import (
 )
 
 
-ThreadStatus = Literal['Idle', 'Running', 'Invoking hooks', 'Completed', 'Errored']
+ThreadStatus = Literal['Idle', 'Running', 'Invoking hooks', 'Completed', 'Errored', 'Killed']
 Data_In = Any
 Data_Out = Any
 Overflow_In = Any
@@ -34,6 +37,7 @@ class Thread(threading.Thread):
 
   # threading.Thread stuff
   _initialized   : bool
+  _run           : Callable
 
 
   def __init__(
@@ -108,6 +112,7 @@ class Thread(threading.Thread):
   
 
   def _invoke_hooks(self) -> None:
+    """Invokes hooks in the thread"""
     errors: List[Tuple[Exception, str]] = []
     for hook in self.hooks:
       try:
@@ -126,12 +131,31 @@ class Thread(threading.Thread):
 
 
   def _handle_exceptions(self) -> None:
-    """Raises exceptions if not suppressed"""
+    """Raises exceptions if not suppressed in the main thread"""
     if self.suppress_errors:
       return
     
     for e in self.errors:
       raise e
+    
+
+  def global_trace(self, frame, event: str, arg) -> Callable | None:
+    if event == 'call':
+      return self.local_trace
+    
+  def local_trace(self, frame, event, arg):
+    if self.status == 'Killed' and event == 'line':
+      print('KILLED ident:%s' % self.ident)
+      raise SystemExit()
+    return self.local_trace
+    
+  def _run_with_trace(self) -> None:
+    """This will replace `threading.Thread`'s `run()` method"""
+    if not self._run:
+      raise exceptions.ThreadNotInitializedError('Running `_run_with_trace` may cause unintended behaviour, run `start` instead')
+    
+    sys.settrace(self.global_trace)
+    self._run()
     
 
   @property
@@ -147,7 +171,7 @@ class Thread(threading.Thread):
     """
     if not self._initialized:
       raise exceptions.ThreadNotInitializedError()
-    if self.status == 'Idle':
+    if self.status in ['Idle', 'Killed']:
       raise exceptions.ThreadNotRunningError()
     
     self._handle_exceptions()
@@ -204,7 +228,7 @@ class Thread(threading.Thread):
     if not self._initialized:
       raise exceptions.ThreadNotInitializedError()
     
-    if self.status == 'Idle':
+    if self.status == ['Idle', 'Killed']:
       raise exceptions.ThreadNotRunningError()
 
     super().join(timeout)
@@ -224,6 +248,20 @@ class Thread(threading.Thread):
     return self.result
   
 
+  def kill(self) -> None:
+    """
+    Kills the thread
+    
+    Raises
+    ------
+    ThreadNotInitializedError: If the thread is not initialized
+    ThreadNotRunningError: If the thread is not running
+    """
+    if not self.is_alive():
+      raise exceptions.ThreadNotRunningError()
+    self.status = 'Killed'
+  
+
   def start(self) -> None:
     """
     Starts the thread
@@ -236,6 +274,8 @@ class Thread(threading.Thread):
     if self.is_alive():
       raise exceptions.ThreadStillRunningError()
     
+    self._run = self.run
+    self.run = self._run_with_trace
     super().start()
 
 
@@ -338,10 +378,6 @@ class ParallelProcessing:
     results: List[Data_Out] = []
     for thread in self._threads:
       results += thread.result
-      if thread.status == 'Idle':
-        raise exceptions.ThreadNotRunningError()
-      elif thread.status == 'Running':
-        raise exceptions.ThreadStillRunningError()
     return results
   
 
@@ -397,6 +433,19 @@ class ParallelProcessing:
     return True
   
 
+  def kill(self) -> None:
+    """
+    Kills the threads
+
+    Raises
+    ------
+    ThreadNotInitializedError: If the thread is not initialized
+    ThreadNotRunningError: If the thread is not running
+    """
+    for thread in self._threads:
+      thread.kill()
+  
+
   def start(self) -> None:
     """
     Starts the threads
@@ -424,3 +473,22 @@ class ParallelProcessing:
       )
       self._threads.append(chunk_thread)
       chunk_thread.start()
+
+
+
+
+
+# Handle abrupt exit
+def service_shutdown(signum, frame):
+  print('\nCaught signal %d' % signum)
+  print('Gracefully killing active threads')
+  
+  for thread in threading.enumerate():
+    if isinstance(thread, Thread):
+      thread.kill()
+  sys.exit(0)
+
+
+# Register the signal handlers
+signal.signal(signal.SIGTERM, service_shutdown)
+signal.signal(signal.SIGINT, service_shutdown)
