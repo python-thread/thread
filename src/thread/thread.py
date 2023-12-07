@@ -10,7 +10,7 @@ from functools import wraps
 from typing import (
   Any, List,
   Callable, Union, Optional, Literal,
-  Mapping, Sequence, Tuple
+  Mapping, Sequence, Tuple, TypedDict
 )
 
 
@@ -81,7 +81,7 @@ class Thread(threading.Thread):
     :param **: These are arguments parsed to `thread.Thread`
     """
     _target = self._wrap_target(target)
-    self.returned_values = None
+    self.returned_value = None
     self.status = 'Idle'
     self.hooks = []
 
@@ -312,6 +312,14 @@ class Thread(threading.Thread):
 
 
 
+class _ThreadWorker:
+  progress: float
+  thread: Thread
+
+  def __init__(self, thread: Thread, progress: float = 0) -> None:
+    self.thread = thread
+    self.progress = progress
+
 class ParallelProcessing:
   """
   Multi-Threaded Parallel Processing
@@ -320,15 +328,14 @@ class ParallelProcessing:
   Type-Safe and provides more functionality on top
   """
 
-  _threads       : List[Thread]
+  _threads       : List[_ThreadWorker]
   _completed     : int
-  _return_vales  : Mapping[int, List[Data_Out]]
 
   status         : ThreadStatus
   function       : Callable[..., List[Data_Out]]
   dataset        : Sequence[Data_In]
   max_threads    : int
-
+  
   overflow_args  : Sequence[Overflow_In]
   overflow_kwargs: Mapping[str, Overflow_In]
   
@@ -378,11 +385,12 @@ class ParallelProcessing:
     function: Callable[..., Data_Out]
   ) -> Callable[..., List[Data_Out]]:
     @wraps(function)
-    def wrapper(data_chunk: Sequence[Data_In], *args: Any, **kwargs: Any) -> List[Data_Out]:
+    def wrapper(index: int, data_chunk: Sequence[Data_In], *args: Any, **kwargs: Any) -> List[Data_Out]:
       computed: List[Data_Out] = []
-      for data_entry in data_chunk:
+      for i, data_entry in enumerate(data_chunk):
         v = function(data_entry, *args, **kwargs)
         computed.append(v)
+        self._threads[index].progress = round(i/len(data_chunk), 2)
 
       self._completed += 1
       if self._completed == len(self._threads):
@@ -407,8 +415,8 @@ class ParallelProcessing:
       raise exceptions.ThreadNotInitializedError()
 
     results: List[Data_Out] = []
-    for thread in self._threads:
-      results += thread.result
+    for entry in self._threads:
+      results += entry.thread.result
     return results
   
 
@@ -422,7 +430,7 @@ class ParallelProcessing:
     """
     if len(self._threads) == 0:
       raise exceptions.ThreadNotInitializedError()
-    return any(thread.is_alive() for thread in self._threads)
+    return any(entry.thread.is_alive() for entry in self._threads)
   
 
   def get_return_values(self) -> List[Data_Out]:
@@ -434,9 +442,9 @@ class ParallelProcessing:
     :returns Any: The return value of the target function
     """
     results: List[Data_Out] = []
-    for thread in self._threads:
-      thread.join()
-      results += thread.result
+    for entry in self._threads:
+      entry.thread.join()
+      results += entry.thread.result
     return results
   
 
@@ -459,8 +467,8 @@ class ParallelProcessing:
     if self.status == 'Idle':
       raise exceptions.ThreadNotRunningError()
 
-    for thread in self._threads:
-      thread.join()
+    for entry in self._threads:
+      entry.thread.join()
     return True
   
 
@@ -473,8 +481,8 @@ class ParallelProcessing:
     ThreadNotInitializedError: If the thread is not initialized
     ThreadNotRunningError: If the thread is not running
     """
-    for thread in self._threads:
-      thread.kill()
+    for entry in self._threads:
+      entry.thread.kill()
   
 
   def start(self) -> None:
@@ -498,11 +506,11 @@ class ParallelProcessing:
     for i, data_chunk in enumerate(numpy.array_split(self.dataset, max_threads)):
       chunk_thread = Thread(
         target = self.function,
-        args = [data_chunk.tolist(), *parsed_args, *self.overflow_args],
+        args = [i, data_chunk.tolist(), *parsed_args, *self.overflow_args],
         name = name_format and name_format % i or None,
         **self.overflow_kwargs
       )
-      self._threads.append(chunk_thread)
+      self._threads.append(_ThreadWorker(chunk_thread, 0))
       chunk_thread.start()
 
 
