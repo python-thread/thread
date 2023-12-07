@@ -1,11 +1,12 @@
 import os
 import time
 import json
-import typer
 import inspect
 import importlib
 
+import typer
 import logging
+from rich.progress import Progress, TextColumn, BarColumn, TimeRemainingColumn, TimeElapsedColumn
 from typing import Union, Pattern, Required, Optional, Callable
 
 from . import __version__
@@ -109,8 +110,8 @@ def process(
   ds: Union[list, tuple, set, None] = None
   try:
     logger.info('Attempting to interpret dataset')
-    ds = json.loads(dataset)
-    logger.debug(f'Evaluated dataset: %s' % ds)
+    ds = eval(dataset)
+    logger.debug(f'Evaluated dataset: %s' % (str(ds)[:125] + '...' if len(str(ds)) > 125 else ds))
 
     if not isinstance(ds, (list, tuple, set)):
       logger.info('Invalid dataset literal')
@@ -158,7 +159,23 @@ def process(
   logger.info('Started parallel process')
   logger.info('Waiting for parallel process to complete, this may take a while...')
 
+  with Progress(
+    TextColumn('[bold blue]{task.description}', justify='right'),
+    BarColumn(bar_width=None),
+    '[progress.percentage]{task.percentage:>3.1f}%',
+    '•',
+    TimeRemainingColumn(),
+    TimeElapsedColumn(),
+  ) as progress:
+    percentage = 0
+    job = progress.add_task('Working...', total = 100, fields = 'a')
+
+    while percentage < 100:
+      percentage = round(sum(i.progress for i in newProcess._threads) / (len(newProcess._threads) or 8), 2) * 100
+      progress.update(job, completed = percentage)
+      time.sleep(0.1)
+
   result = newProcess.get_return_values()
 
   logger.info(f'Completed in {(time.perf_counter() - start_t):.5f}s')
-  typer.echo(result)
+  # typer.echo(result)
