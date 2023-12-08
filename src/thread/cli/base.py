@@ -56,6 +56,9 @@ def process(
   threads: int = typer.Option(8, '--threads', '-t', help = 'Maximum number of threads (will scale down based on dataset size)'),
 
   daemon: bool = typer.Option(False, '--daemon', '-d', help = 'Threads to run in daemon mode'),
+  output: str = typer.Option('./output.json', '--output', '-o', help = 'Output file location'),
+  fileout: bool = typer.Option(True, '--fileout', is_flag = True, help = 'Weather to write output to a file'),
+  stdout: bool = typer.Option(False, '--stdout', is_flag = True, help = 'Weather to print the output'),
   
   debug: bool = DebugOption,
   verbose: bool = VerboseOption,
@@ -74,6 +77,16 @@ def process(
   verbose_args_processor(debug, verbose, quiet)
   kwargs = kwargs_processor(ctx)
   logger.debug('Processed kwargs: %s' % kwargs)
+
+
+  # Verify output
+  if not fileout and not stdout:
+    raise typer.BadParameter('No output method specified')
+  
+  if fileout and not os.path.exists('/'.join(output.split('/')[:-1])):
+    raise typer.BadParameter('Output file directory does not exist')
+
+
 
 
   # Loading function
@@ -160,15 +173,16 @@ def process(
   logger.info('Waiting for parallel process to complete, this may take a while...')
 
   with Progress(
-    TextColumn('[bold blue]{task.description}', justify='right'),
-    BarColumn(bar_width=None),
+    TextColumn('[bold blue]{task.description}', justify = 'right'),
+    BarColumn(bar_width = None),
     '[progress.percentage]{task.percentage:>3.1f}%',
     '•',
     TimeRemainingColumn(),
-    TimeElapsedColumn(),
+    '•',
+    TimeElapsedColumn()
   ) as progress:
     percentage = 0
-    job = progress.add_task('Working...', total = 100, fields = 'a')
+    job = progress.add_task('Working...', total = 100)
 
     while percentage < 100:
       percentage = round(sum(i.progress for i in newProcess._threads) / (len(newProcess._threads) or 8), 2) * 100
@@ -178,4 +192,15 @@ def process(
   result = newProcess.get_return_values()
 
   logger.info(f'Completed in {(time.perf_counter() - start_t):.5f}s')
-  # typer.echo(result)
+  if fileout:
+    logger.info(f'Writing file to {output}...')
+    try:
+      with open(output, 'w') as f:
+        json.dump(result, f, indent = 2)
+      logger.info(f'Wrote to file')
+    except Exception as e:
+      logger.error('Failed to write to file')
+      logger.debug(str(e))
+
+  if stdout:
+    typer.echo(result)
