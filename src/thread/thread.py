@@ -10,7 +10,7 @@ from functools import wraps
 from typing import (
   Any, List,
   Callable, Union, Optional, Literal,
-  Mapping, Sequence, Tuple, TypedDict
+  Mapping, Sequence, Tuple
 )
 
 
