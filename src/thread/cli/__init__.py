@@ -9,3 +9,6 @@ logging.setLoggerClass(ColorLogger)
 
 # Import #
 from .base import cli_base as app
+from .process import process as process_cli
+
+app.command(name = 'process')(process_cli)
