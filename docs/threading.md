@@ -1,4 +1,4 @@
-# Thread Class documentation
+# Thread Class Documentation
 
 I will lay out how to use the `thread.Thread` class!
 
