@@ -16,8 +16,9 @@ logger = logging.getLogger('base')
 
 cli_base = typer.Typer(
   no_args_is_help = True,
+  rich_markup_mode = 'rich',
   context_settings = {
-    'help_option_names': ['-h', '--help']
+    'help_option_names': ['-h', '--help', 'help']
   }
 )
 
@@ -41,12 +42,91 @@ def callback(
   verbose: bool = VerboseOption,
   quiet: bool = QuietOption
 ):
-  """Thread CLI"""
+  """
+  [b]Thread CLI[/b]\b\n
+  [white]Use thread from the terminal![/white]
+
+  [blue][u]                                 [/u][/blue]
+
+  Learn more from our [link=https://github.com/caffeine-addictt/thread/blob/main/docs/command-line.md]documentation![/link]
+  """
   verbose_args_processor(debug, verbose, quiet)
 
 
 
-@cli_base.command(context_settings = {'allow_extra_args': True})
+# Help and Others
+@cli_base.command(rich_help_panel = 'Help and Others')
+def help():
+  """Get [yellow]help[/yellow] from the community. :question:"""
+  typer.echo('Feel free to search for or ask questions here!')
+  try:
+    logger.info('Attempting to open in web browser...')
+
+    import webbrowser
+    webbrowser.open(
+      'https://github.com/caffeine-addictt/thread/issues',
+      new = 2
+    )
+    typer.echo('Opening in web browser!')
+
+  except Exception as e:
+    logger.warn('Failed to open web browser')
+    logger.debug(f'{e}')
+    typer.echo('https://github.com/caffeine-addictt/thread/issues')
+
+
+
+@cli_base.command(rich_help_panel = 'Help and Others')
+def docs():
+  """View our [yellow]documentation.[/yellow] :book:"""
+  typer.echo('Thanks for using Thread, here is our documentation!')
+  try:
+    logger.info('Attempting to open in web browser...')
+    import webbrowser
+    webbrowser.open(
+      'https://github.com/caffeine-addictt/thread/blob/main/docs/command-line.md',
+      new = 2
+    )
+    typer.echo('Opening in web browser!')
+
+  except Exception as e:
+    logger.warn('Failed to open web browser')
+    logger.debug(f'{e}')
+    typer.echo('https://github.com/caffeine-addictt/thread/blob/main/docs/command-line.md')
+
+
+
+@cli_base.command(rich_help_panel = 'Help and Others')
+def report():
+  """[yellow]Report[/yellow] an issue. :bug:"""
+  typer.echo('Sorry you run into an issue, report it here!')
+  try:
+    logger.info('Attempting to open in web browser...')
+    import webbrowser
+    webbrowser.open(
+      'https://github.com/caffeine-addictt/thread/issues',
+      new = 2
+    )
+    typer.echo('Opening in web browser!')
+
+  except Exception as e:
+    logger.warn('Failed to open web browser')
+    logger.debug(f'{e}')
+    typer.echo('https://github.com/caffeine-addictt/thread/issues')
+
+
+
+# Utils and Configs
+@cli_base.command(rich_help_panel = 'Utils and Configs')
+def config(configuration: str):
+  """
+  [blue]Configure[/blue] the system. :wrench:
+  """
+  typer.echo('Coming soon!')
+
+
+
+@cli_base.command(context_settings = {'allow_extra_args': True}, no_args_is_help = True)
 def process(
   ctx: typer.Context,
   func: str = typer.Argument(help = '(path.to.file:function_name) OR (lambda x: x)'),
@@ -65,14 +145,18 @@ def process(
   quiet: bool = QuietOption
 ):
   """
-  Execute parallel processing\n
-  Kwargs can be parsed by adding overflow arguments in pairs\n
-  $ thread process ... k1 v1 k2 v2\n
-  => kwargs = {k1: v1, k2: v2}\n\n
+  [bold]Utilise parallel processing on a dataset[/bold]
+  
+  \b\n
+  [bold]:glowing_star: Examples[/bold]
+  Kwargs can be parsed by adding overflow arguments in pairs
+      [green]$ thread process ... k1 v1 k2 v2[/green]
+      => kwargs = {k1: v1, k2: v2}
 
-  Single kwargs will be ignored\n
-  $ thread process ... a1\n
-  => kwargs = {}
+  Single kwargs will be ignored
+      [green]$ thread process ... a1[/green]
+      => kwargs = {}
+  
   """
   verbose_args_processor(debug, verbose, quiet)
   kwargs = kwargs_processor(ctx)
@@ -169,8 +253,8 @@ def process(
   start_t = time.perf_counter()
   newProcess.start()
 
-  logger.info('Started parallel process')
-  logger.info('Waiting for parallel process to complete, this may take a while...')
+  typer.echo('Started parallel process')
+  typer.echo('Waiting for parallel process to complete, this may take a while...')
 
   with Progress(
     TextColumn('[bold blue]{task.description}', justify = 'right'),
@@ -191,13 +275,13 @@ def process(
 
   result = newProcess.get_return_values()
 
-  logger.info(f'Completed in {(time.perf_counter() - start_t):.5f}s')
+  typer.echo(f'Completed in {(time.perf_counter() - start_t):.5f}s')
   if fileout:
-    logger.info(f'Writing file to {output}...')
+    typer.echo(f'Writing file to {output}...')
     try:
       with open(output, 'w') as f:
         json.dump(result, f, indent = 2)
-      logger.info(f'Wrote to file')
+      typer.echo(f'Wrote to file')
     except Exception as e:
       logger.error('Failed to write to file')
       logger.debug(str(e))
