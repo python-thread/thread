@@ -29,7 +29,7 @@ jobs:
       - name: Lint with Ruff
         run: |
           python -m pip install -U ruff
-          ruff -v --per-file-ignores="__init__.py:F401" .
+          ruff --per-file-ignores="__init__.py:F401" --per-file-ignores="__init__.py:E402" .
         continue-on-error: true
 
       - name: Test with pytest
