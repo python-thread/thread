@@ -5,6 +5,7 @@ import threading
 
 import numpy
 from . import exceptions
+from .utils.config import Settings
 
 from functools import wraps
 from typing import (
@@ -519,13 +520,14 @@ class ParallelProcessing:
 
 # Handle abrupt exit
 def service_shutdown(signum, frame):
-  print('\nCaught signal %d' % signum)
-  print('Gracefully killing active threads')
-  
-  for thread in threading.enumerate():
-    if isinstance(thread, Thread):
-      thread.kill()
-  sys.exit(0)
+  if Settings.GRACEFUL_SHUTDOWN_ENABLED:
+    print('\nCaught signal %d' % signum)
+    print('Gracefully killing active threads')
+    
+    for thread in threading.enumerate():
+      if isinstance(thread, Thread):
+        thread.kill()
+    sys.exit(0)
 
 
 # Register the signal handlers
