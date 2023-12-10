@@ -39,15 +39,10 @@ def verbose_args_processor(debug: bool, verbose: bool, quiet: bool):
     logging.ERROR
   ))
 
-def kwargs_processor(ctx: typer.Context) -> dict:
-  """Processes overflow arguments into kwargs"""
-  kwargs = {}
-  length = len(ctx.args) // 2
-
-  for i in range(length):
-    kv_pair = ctx.args[i*2:i*2+2]
-    kwargs[kv_pair[0]] = kv_pair[1]
-
-  return kwargs
-
-
+def kwargs_processor(arguments: list[str]) -> dict[str, str]:
+  """Processes arguments into kwargs"""
+  return {
+    kwarg[0]: kwarg[1]
+    for i in arguments
+    if (kwarg := i.split('='))
+  }
