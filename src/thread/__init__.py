@@ -6,3 +6,5 @@ from .thread import (
 from . import (
   exceptions
 )
+
+from .utils import Settings
