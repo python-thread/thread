@@ -25,6 +25,9 @@ jobs:
           python -m pip install -U pip
           python -m pip install -U coverage pytest pytest-cov poetry
           python -m poetry install
+          python -m poetry self add poetry-plugin-export
+          python -m poetry export -f requirements.txt --output requirements.txt
+          python -m pip install -r requirements.txt
 
       - name: Lint with Ruff
         run: |
