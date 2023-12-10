@@ -2,7 +2,7 @@
 Import and config CLI commands
 """
 
-__version__ = '0.1.2'
+__version__ = '0.1.3'
 from ..utils.logging_config import logging, ColorLogger
 logging.setLoggerClass(ColorLogger)
 
