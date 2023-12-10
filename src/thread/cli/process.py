@@ -69,7 +69,7 @@ def process(
   try:
     logger.info('Attempted to interpret function')
     f = eval(func) # I know eval is bad practice, but I have yet to find a safer replacement
-    logger.debug(f'Evaluated function: %s' % f)
+    logger.debug('Evaluated function: %s' % f)
 
     if not inspect.isfunction(f):
       logger.info('Invalid function')
@@ -82,7 +82,7 @@ def process(
 
       fPath, fName = func.split(':')
       f = importlib.import_module(fPath).__dict__[fName]
-      logger.debug(f'Evaluated function: %s' % f)
+      logger.debug('Evaluated function: %s' % f)
 
       if not inspect.isfunction(f):
         logger.info('Not a function')
@@ -99,7 +99,7 @@ def process(
   try:
     logger.info('Attempting to interpret dataset')
     ds = eval(dataset)
-    logger.debug(f'Evaluated dataset: %s' % (str(ds)[:125] + '...' if len(str(ds)) > 125 else ds))
+    logger.debug('Evaluated dataset: %s' % (str(ds)[:125] + '...' if len(str(ds)) > 125 else ds))
 
     if not isinstance(ds, (list, tuple, set)):
       logger.info('Invalid dataset literal')
@@ -145,8 +145,8 @@ def process(
   start_t = time.perf_counter()
   newProcess.start()
 
-  typer.echo('Started parallel process')
-  typer.echo('Waiting for parallel process to complete, this may take a while...')
+  logger.info('Started parallel processes')
+  typer.echo('Waiting for parallel processes to complete, this may take a while...')
 
   with Progress(
     TextColumn('[bold blue]{task.description}', justify = 'right'),
@@ -169,11 +169,11 @@ def process(
 
   typer.echo(f'Completed in {(time.perf_counter() - start_t):.5f}s')
   if fileout:
-    typer.echo(f'Writing file to {output}...')
+    typer.echo(f'Writing to {output}')
     try:
       with open(output, 'w') as f:
         json.dump(result, f, indent = 2)
-      typer.echo(f'Wrote to file')
+      logger.info('Wrote to file')
     except Exception as e:
       logger.error('Failed to write to file')
       logger.debug(str(e))

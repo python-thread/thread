@@ -535,7 +535,7 @@ def service_shutdown(signum, frame):
           thread.kill()
         except (exceptions.ThreadNotRunningError, exceptions.ThreadNotInitializedError):
           pass
-        except Exception as e:
+        except Exception:
           print('Failed to kill ident: %d' % thread.ident or 0)
     sys.exit(0)
 
