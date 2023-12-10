@@ -6,13 +6,21 @@ I will lay out how to use the comamnd line!
 <details>
   <summary>Jump to</summary>
   <ul>
-    <li><a href='#importing-the-class'> Import the class</a></li>
-    <li><a href='#initializing-a-thread'> Initialize a thread </a></li>
-    <li><a href='#parameters'> Parameters </a></li>
-    <li><a href='#attributes'> Attributes </a></li>
-    <li><a href='#methods'> Class Methods </a></li>
-    <li><a href='#behviours'> Behaviours </a></li>
+    <li><a href='#getting-started'> Getting Started </a></li>
+    <li><a href='#log-levels'> Log Levels </a></li>
+    <li><a href='#commands'> Commands </a></li>
+    <details>
+      <summary>List</summary>
+      <ul>
+        <li><a href='#documentation-thread-docs'> thread docs </a></li>
+        <li><a href='#help-thread-help'> thread help </a></li>
+        <li><a href='#report-thread-report'> thread report </a></li>
+        <li><a href='#configuration-thread-config'> thread config </a></li>
+        <li><a href='#parallel-processing-thread-process'> thread process ... </a></li>
+      </ul>
+    </details>
   </ul>
+    
 </details>
 
 
@@ -58,6 +66,9 @@ List of commands
 
 ### Documentation (thread docs)
 
+```sh
+$ thread docs
+```
 Ran with no arguments and options, this command will attempt to open your brower to this MD file!
 <br />
 If unable, will instead print out the link.
@@ -67,6 +78,9 @@ If unable, will instead print out the link.
 
 ### Help (thread help)
 
+```sh
+$ thread help
+```
 Ran with no arguments and options, this command will attempt to open your brower to the issue tracker!
 <br />
 If unable, will instead print out the link.
@@ -76,6 +90,9 @@ If unable, will instead print out the link.
 
 ### Report (thread report)
 
+```sh
+$ thread report
+```
 Ran with no arguments and options, this command will attempt to open your brower to this MD file!
 <br />
 If unable, will instead print out the link.
@@ -85,6 +102,9 @@ If unable, will instead print out the link.
 
 ### Configuration (thread config ...)
 
+```sh
+$ thread config
+```
 Comming soon.
 
 
@@ -93,7 +113,11 @@ Comming soon.
 
 ### Parallel Processing (thread process ...)
 
+```sh
+$ thread process
+```
 Invokes the [parallel processing class](parallel-processing.md#importing-the-class)<br />
+<br />
 
 > **Help Command Output**
 
@@ -107,7 +131,7 @@ $ thread process 'lambda x: x**2' '[ i for i in range(1000) ]'
 $ thread process home.Downloads.clean_data:clean ./dataset.csv -t 20
 => The same as:
   from home.Downloads.clean_data import clean
-  dataset = open('dataset.csv', 'r')
+  dataset = open('./dataset.csv', 'r')
 
   newProcess = ParallelProcess(
     target = clean,
@@ -115,6 +139,7 @@ $ thread process home.Downloads.clean_data:clean ./dataset.csv -t 20
     max_threads = 20
   )
   newProcess.start()
+  dataset.close()
 
   prints or writes to file the result
 ```
