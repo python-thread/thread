@@ -17,11 +17,11 @@ logger = logging.getLogger('base')
 
 
 def process(
-  ctx: typer.Context,
   func: str = typer.Argument(help = '[blue].path.to.file[/blue]:[blue]function_name[/blue] OR [blue]lambda x: x[/blue]'),
   dataset: str = typer.Argument(help = '[blue]./path/to/file.txt[/blue] OR [blue][ i for i in range(2) ][/blue]'),
 
-  args: list[str] = typer.Option([], '--args', '-a', help = '[blue]Arguments[/blue] passed to each thread'),
+  args: list[str] = typer.Option([], '--arg', '-a', help = '[blue]Arguments[/blue] passed to each thread'),
+  kargs: list[str] = typer.Option([], '--kwarg', '-kw', help = '[blue]Key-Value arguments[/blue] passed to each thread'),
   threads: int = typer.Option(8, '--threads', '-t', help = 'Maximum number of [blue]threads[/blue] (will scale down based on dataset size)'),
 
   daemon: bool = typer.Option(False, '--daemon', '-d', help = 'Threads to run in [blue]daemon[/blue] mode'),
@@ -38,18 +38,19 @@ def process(
   [bold]Utilise parallel processing on a dataset[/bold]
   
   \b\n
-  [bold]:glowing_star: Examples[/bold]
-  Kwargs can be parsed by adding overflow arguments in pairs
-      [green]$ thread process ... k1 v1 k2 v2[/green]
-      => kwargs = {k1: v1, k2: v2}
+  [bold white]:glowing_star: Important[/bold white]
+  Args and Kwargs can be parsed by adding multiple -a or -kw
 
-  Single kwargs will be ignored
-      [green]$ thread process ... a1[/green]
-      => kwargs = {}
+  [green]$ thread[/green] [blue]process[/blue] ... -a 'an arg' -kw myKey=myValue -arg testing --kwarg a1=a2
+  [white]=> args = [ [green]'an arg'[/green], [green]'testing'[/green] ][/white]
+  [white]   kwargs = { [green]'myKey'[/green]: [green]'myValue'[/green], [green]'a1'[/green]: [green]'a2'[/green] }[/white]
   
+  [blue][u]                                 [/u][/blue]
+
+  Learn more from our [link=https://github.com/caffeine-addictt/thread/blob/main/docs/command-line.md#parallel-processing-thread-process]documentation![/link]
   """
   verbose_args_processor(debug, verbose, quiet)
-  kwargs = kwargs_processor(ctx)
+  kwargs = kwargs_processor(kargs)
   logger.debug('Processed kwargs: %s' % kwargs)
 
 
