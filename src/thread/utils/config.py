@@ -4,7 +4,7 @@ class Settings:
   `Non Instantiable`
   """
 
-  GRACEFUL_SHUTDOWN_ENABLED: bool = True
+  GRACEFUL_EXIT_ENABLED: bool = True
 
 
   def __init__(self):
@@ -12,5 +12,5 @@ class Settings:
   
 
   @staticmethod
-  def set_graceful_shutdown(enabled: bool = True):
-    Settings.GRACEFUL_SHUTDOWN_ENABLED = enabled
+  def set_graceful_exit(enabled: bool = True):
+    Settings.GRACEFUL_EXIT_ENABLED = enabled

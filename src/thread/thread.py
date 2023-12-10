@@ -520,7 +520,7 @@ class ParallelProcessing:
 
 # Handle abrupt exit
 def service_shutdown(signum, frame):
-  if Settings.GRACEFUL_SHUTDOWN_ENABLED:
+  if Settings.GRACEFUL_EXIT_ENABLED:
     print('\nCaught signal %d' % signum)
     print('Gracefully killing active threads')
     
