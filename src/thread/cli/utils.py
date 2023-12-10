@@ -6,17 +6,17 @@ import logging
 # Verbose Options #
 DebugOption = typer.Option(
   False, '--debug',
-  help = 'Set verbosity level to DEBUG',
+  help = 'Set verbosity level to [blue]DEBUG[/blue]',
   is_flag = True
 )
 VerboseOption = typer.Option(
   False, '--verbose', '-v',
-  help = 'Set verbosity level to INFO',
+  help = 'Set verbosity level to [green]INFO[/green]',
   is_flag = True
 )
 QuietOption = typer.Option(
   False, '--quiet', '-q',
-  help = 'Set verbosity level to ERROR',
+  help = 'Set verbosity level to [red]ERROR[/red]',
   is_flag = True
 )
 
