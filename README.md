@@ -3,19 +3,16 @@
 
 
 <!-- PROJECT SHIELDS -->
-<!--
-*** I'm using markdown "reference style" links for readability.
-*** Reference links are enclosed in brackets [ ] instead of parentheses ( ).
-*** See the bottom of this document for the declaration of the reference variables
-*** for contributors-url, forks-url, etc. This is an optional, concise syntax you may use.
-*** https://www.markdownguide.org/basic-syntax/#reference-style-links
--->
-[![Contributors][contributors-shield]][contributors-url]
-[![Forks][forks-shield]][forks-url]
-[![Stargazers][stars-shield]][stars-url]
-[![Issues][issues-shield]][issues-url]
-[![BSD-3-Clause License][license-shield]][license-url]
-[![LinkedIn][linkedin-shield]][linkedin-url]
+<div align="center">
+
+  <a href="[contributors-url]">[![Contributors][contributors-shield]][contributors-url]</a>
+  <a href="[forks-url]">[![Forks][forks-shield]][forks-url]</a>
+  <a href="[stars-url]">[![Stargazers][stars-shield]][stars-url]</a>
+  <a href="[issues-url]">[![Issues][issues-shield]][issues-url]</a>
+  <a href="[license-url]">[![BSD-3-Clause License][license-shield]][license-url]</a>
+  <a href="[linkedin-url]">[![LinkedIn][linkedin-shield]][linkedin-url]</a>
+
+</div>
 
 <!-- PROJECT LOGO -->
 <br />
@@ -94,11 +91,11 @@ Our docs are [here!](/docs/getting-started.md)
 <!-- ROADMAP -->
 ## Roadmap
 
-- [x] Bug fixes
-- [x] Set Thread class to inherit from threading.Thread
-- [x] Add kill method
-- [x] Docs Update
-- [ ] v0.1.2 Release
+- [x] v0.1.3 Release
+- [ ] Bug fixes
+- [ ] New features
+- [ ] Testing
+- [ ] Next release...
 
 See the [open issues](https://github.com/caffeine-addictt/thread/issues) for a full list of proposed features (and known issues).
 
@@ -137,6 +134,8 @@ Distributed under the BSD-3-Clause License. See `LICENSE.txt` for more informati
 ## Contact
 
 Alex - junxiangng63@gmail.com
+
+Project Board: https://github.com/users/caffeine-addictt/projects/5
 
 Project Link: [https://github.com/caffeine-addictt/thread](https://github.com/caffeine-addictt/thread)
 
