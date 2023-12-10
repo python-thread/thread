@@ -13,24 +13,22 @@ from typing import Union
 from rich.progress import Progress, TextColumn, BarColumn, TimeRemainingColumn, TimeElapsedColumn
 from .utils import DebugOption, VerboseOption, QuietOption, verbose_args_processor, kwargs_processor
 
-
-cli = typer.Typer()
 logger = logging.getLogger('base')
 
 
-@cli.command(context_settings = {'allow_extra_args': True}, no_args_is_help = True)
 def process(
   ctx: typer.Context,
-  func: str = typer.Argument(help = '(path.to.file:function_name) OR (lambda x: x)'),
-  dataset: str = typer.Argument(help = '(path/to/file.txt) OR ([ i for i in range(2) ])'),
+  func: str = typer.Argument(help = '[blue].path.to.file[/blue]:[blue]function_name[/blue] OR [blue]lambda x: x[/blue]'),
+  dataset: str = typer.Argument(help = '[blue]./path/to/file.txt[/blue] OR [blue][ i for i in range(2) ][/blue]'),
 
-  args: list[str] = typer.Option([], '--args', '-a', help = 'Arguments passed to each thread'),
-  threads: int = typer.Option(8, '--threads', '-t', help = 'Maximum number of threads (will scale down based on dataset size)'),
+  args: list[str] = typer.Option([], '--args', '-a', help = '[blue]Arguments[/blue] passed to each thread'),
+  threads: int = typer.Option(8, '--threads', '-t', help = 'Maximum number of [blue]threads[/blue] (will scale down based on dataset size)'),
 
-  daemon: bool = typer.Option(False, '--daemon', '-d', help = 'Threads to run in daemon mode'),
-  output: str = typer.Option('./output.json', '--output', '-o', help = 'Output file location'),
-  fileout: bool = typer.Option(True, '--fileout', is_flag = True, help = 'Weather to write output to a file'),
-  stdout: bool = typer.Option(False, '--stdout', is_flag = True, help = 'Weather to print the output'),
+  daemon: bool = typer.Option(False, '--daemon', '-d', help = 'Threads to run in [blue]daemon[/blue] mode'),
+  graceful_exit: bool = typer.Option(True, '--graceful-exit', '-ge', is_flag = True, help = 'Whether to [blue]gracefully exit[/blue] on abrupt exit (etc. CTRL+C)'),
+  output: str = typer.Option('./output.json', '--output', '-o', help = '[blue]Output[/blue] file location'),
+  fileout: bool = typer.Option(True, '--fileout', is_flag = True, help = 'Whether to [blue]write[/blue] output to a file'),
+  stdout: bool = typer.Option(False, '--stdout', is_flag = True, help = 'Whether to [blue]print[/blue] the output'),
   
   debug: bool = DebugOption,
   verbose: bool = VerboseOption,
@@ -127,9 +125,10 @@ def process(
 
   # Setup
   logger.debug('Importing module')
-  from ..thread import ParallelProcessing
+  from ..thread import Settings, ParallelProcessing
   logger.info('Spawning threads... [Expected: {tcount} threads]'.format(tcount=min(len(ds), threads)))
 
+  Settings.set_graceful_exit(graceful_exit)
   newProcess = ParallelProcessing(
     function = f,
     dataset = list(ds),
