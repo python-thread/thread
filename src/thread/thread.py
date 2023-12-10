@@ -5,12 +5,13 @@ import threading
 
 import numpy
 from . import exceptions
+from .utils.config import Settings
 
 from functools import wraps
 from typing import (
   Any, List,
   Callable, Union, Optional, Literal,
-  Mapping, Sequence, Tuple, TypedDict
+  Mapping, Sequence, Tuple
 )
 
 
@@ -29,6 +30,7 @@ Data_Out = Any
 Overflow_In = Any
 
 
+Threads: set['Thread'] = set()
 class Thread(threading.Thread):
   """
   Wraps python's `threading.Thread` class
@@ -107,6 +109,9 @@ class Thread(threading.Thread):
     def wrapper(*args: Any, **kwargs: Any) -> Any:
       self.status = 'Running'
 
+      global Threads
+      Threads.add(self)
+
       try:
         self.returned_value = target(*args, **kwargs)
       except Exception as e:
@@ -117,6 +122,7 @@ class Thread(threading.Thread):
       
       self.status = 'Invoking hooks'
       self._invoke_hooks()
+      Threads.remove(self)
       self.status = 'Completed'
     return wrapper
   
@@ -155,7 +161,7 @@ class Thread(threading.Thread):
     
   def local_trace(self, frame, event: str, arg):
     if self.status == 'Kill Scheduled' and event == 'line':
-      print('KILLED ident:%s' % self.ident)
+      print('KILLED ident: %s' % self.ident)
       self.status = 'Killed'
       raise SystemExit()
     return self.local_trace
@@ -390,7 +396,7 @@ class ParallelProcessing:
       for i, data_entry in enumerate(data_chunk):
         v = function(data_entry, *args, **kwargs)
         computed.append(v)
-        self._threads[index].progress = round(i/len(data_chunk), 2)
+        self._threads[index].progress = round((i+1)/len(data_chunk), 5)
 
       self._completed += 1
       if self._completed == len(self._threads):
@@ -519,13 +525,19 @@ class ParallelProcessing:
 
 # Handle abrupt exit
 def service_shutdown(signum, frame):
-  print('\nCaught signal %d' % signum)
-  print('Gracefully killing active threads')
-  
-  for thread in threading.enumerate():
-    if isinstance(thread, Thread):
-      thread.kill()
-  sys.exit(0)
+  if Settings.GRACEFUL_EXIT_ENABLED:
+    print('\nCaught signal %d' % signum)
+    print('Gracefully killing active threads')
+    
+    for thread in Threads:
+      if isinstance(thread, Thread):
+        try:
+          thread.kill()
+        except (exceptions.ThreadNotRunningError, exceptions.ThreadNotInitializedError):
+          pass
+        except Exception:
+          print('Failed to kill ident: %d' % thread.ident or 0)
+    sys.exit(0)
 
 
 # Register the signal handlers

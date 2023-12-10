@@ -23,13 +23,16 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install -U pip
-          python -m pip install -U coverage pytest pytest-cov
+          python -m pip install -U coverage pytest pytest-cov poetry
+          python -m poetry install
+          python -m poetry self add poetry-plugin-export
+          python -m poetry export -f requirements.txt --output requirements.txt
           python -m pip install -r requirements.txt
 
       - name: Lint with Ruff
         run: |
           python -m pip install -U ruff
-          ruff -v --per-file-ignores="__init__.py:F401" .
+          ruff --per-file-ignores="__init__.py:F401" --per-file-ignores="__init__.py:E402" .
         continue-on-error: true
 
       - name: Test with pytest

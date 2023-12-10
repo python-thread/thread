@@ -6,17 +6,17 @@ import logging
 # Verbose Options #
 DebugOption = typer.Option(
   False, '--debug',
-  help = 'Set verbosity level to DEBUG',
+  help = 'Set verbosity level to [blue]DEBUG[/blue]',
   is_flag = True
 )
 VerboseOption = typer.Option(
   False, '--verbose', '-v',
-  help = 'Set verbosity level to INFO',
+  help = 'Set verbosity level to [green]INFO[/green]',
   is_flag = True
 )
 QuietOption = typer.Option(
   False, '--quiet', '-q',
-  help = 'Set verbosity level to ERROR',
+  help = 'Set verbosity level to [red]ERROR[/red]',
   is_flag = True
 )
 
@@ -39,15 +39,10 @@ def verbose_args_processor(debug: bool, verbose: bool, quiet: bool):
     logging.ERROR
   ))
 
-def kwargs_processor(ctx: typer.Context) -> dict:
-  """Processes overflow arguments into kwargs"""
-  kwargs = {}
-  length = len(ctx.args) // 2
-
-  for i in range(length):
-    kv_pair = ctx.args[i*2:i*2+2]
-    kwargs[kv_pair[0]] = kv_pair[1]
-
-  return kwargs
-
-
+def kwargs_processor(arguments: list[str]) -> dict[str, str]:
+  """Processes arguments into kwargs"""
+  return {
+    kwarg[0]: kwarg[1]
+    for i in arguments
+    if (kwarg := i.split('='))
+  }
