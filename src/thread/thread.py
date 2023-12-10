@@ -396,7 +396,7 @@ class ParallelProcessing:
       for i, data_entry in enumerate(data_chunk):
         v = function(data_entry, *args, **kwargs)
         computed.append(v)
-        self._threads[index].progress = round((i+1)/len(data_chunk), 2)
+        self._threads[index].progress = round((i+1)/len(data_chunk), 5)
 
       self._completed += 1
       if self._completed == len(self._threads):
