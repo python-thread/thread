@@ -10,7 +10,10 @@ import typer
 import logging
 from typing import Union
 
-from rich.progress import Progress, TextColumn, BarColumn, TimeRemainingColumn, TimeElapsedColumn
+from rich.live import Live
+from rich.panel import Panel
+from rich.console import Group
+from rich.progress import Progress, TaskID, SpinnerColumn, TextColumn, BarColumn, TimeRemainingColumn, TimeElapsedColumn
 from .utils import DebugOption, VerboseOption, QuietOption, verbose_args_processor, kwargs_processor
 
 logger = logging.getLogger('base')
@@ -148,22 +151,66 @@ def process(
   logger.info('Started parallel processes')
   typer.echo('Waiting for parallel processes to complete, this may take a while...')
 
-  with Progress(
-    TextColumn('[bold blue]{task.description}', justify = 'right'),
-    BarColumn(bar_width = None),
-    '[progress.percentage]{task.percentage:>3.1f}%',
+
+  # Progress bar :D
+  threadCount = len(newProcess._threads)
+
+  thread_progress = Progress(
+    SpinnerColumn(),
+    TextColumn('{task.description}'),
     '•',
     TimeRemainingColumn(),
-    '•',
-    TimeElapsedColumn()
-  ) as progress:
-    percentage = 0
-    job = progress.add_task('Working...', total = 100)
+    BarColumn(bar_width = 80),
+    TextColumn('{task.percentage:>3.1f}%')
+  )
+  overall_progress = Progress(
+    TimeElapsedColumn(),
+    BarColumn(bar_width = 110),
+    TextColumn('{task.description}')
+  )
 
-    while percentage < 100:
-      percentage = round(sum(i.progress for i in newProcess._threads) / (len(newProcess._threads) or 8), 2) * 100
-      progress.update(job, completed = percentage)
+  workerjobs: list[TaskID] = [
+    thread_progress.add_task(
+      f'[bold blue][T {threadNum}]',
+      total = 100
+    )
+    for threadNum in range(threadCount)
+  ]
+  overalljob = overall_progress.add_task('(0 of ?)', total = 100)
+
+
+  with Live(
+    Group(
+      Panel(thread_progress),
+      overall_progress,
+    ),
+    refresh_per_second = 10
+  ):
+    completed = 0
+    while completed != threadCount:
+      i = 0
+      completed = 0
+      progressAvg = 0
+
+      for jobID in workerjobs:
+        jobProgress = newProcess._threads[i].progress
+        thread_progress.update(jobID, completed = round(jobProgress * 100, 2))
+        if jobProgress == 1:
+          thread_progress.stop_task(jobID)
+          thread_progress.update(jobID, description = '[bold green]Completed')
+          completed += 1
+
+        progressAvg += jobProgress
+        i += 1
+
+      # Update overall
+      overall_progress.update(
+        overalljob,
+        description = f'[bold {"green" if completed == threadCount else "#AAAAAA"}]({completed} of {threadCount})',
+        completed = round((progressAvg / threadCount) * 100, 2)
+      )
       time.sleep(0.1)
+      
 
   result = newProcess.get_return_values()
 
