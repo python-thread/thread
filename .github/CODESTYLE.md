@@ -8,6 +8,7 @@ and refer to it throughout the development of your contribution.
 3. [Markdown Guidelines](#markdown-guidelines)
 
 
+
 ## General Guidelines
 Listed is a example class used demonstrate general rules you should follow throughout the development of your contribution.
 
@@ -103,6 +104,8 @@ anim id est laborum. found [Lorem Ipsum Generator]
   <li> Orange
   <li> Pineapple
 </ul>
+
+
 
 [Lorem Ipsum Generator]: https://loremipsum.io/generator/
 ```
