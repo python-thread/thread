@@ -5,26 +5,7 @@ email, or any other method with the owners of this repository before making a ch
 
 Please note we have a [code of conduct](CODE_OF_CONDUCT.md); please follow it in all your interactions with the project.
 
-## Build Instructions
-This project utilizes [Poetry](https://python-poetry.org/) to manage and install dependencies. You can install Poetry using [pipx](https://pipx.pypa.io/stable/)
-which allows Poetry to run in an isolated environment which ensures that Poetry's own dependencies are not accidentally deleted or upgraded. pipx is the easiest
-method to install Poetry, but for more advanced installation options refer to Poetry's [documentation](https://python-poetry.org/docs/).
 
-```
-pipx install poetry
-```
-
-After poetry is installed, in the project's root directory run the following the install the project's dependencies.
-
-```
-poetry install
-```
-
-That's it! you can now run thread using
-
-```
-poetry run python src/thread
-```
 
 ## Pull Request Process
 
@@ -35,6 +16,7 @@ poetry run python src/thread
    Pull Request would represent. The versioning scheme we use is [SemVer](http://semver.org/).
 4. You may merge the Pull Request once you have the sign-off of two other developers, or if you
    do not have permission to do that, you may request the second reviewer to merge it for you.
+
 
 
 ## Issue Report Process
