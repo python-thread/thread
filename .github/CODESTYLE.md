@@ -4,6 +4,22 @@ remains consistent throughout all files. Please read this document in it's entir
 and refer to it throughout the development of your contribution.
 
 
+## Commit Message Guidelines
+When committing, commit messages are prefixed with a `+` or `-`. Depending on the type of change made influences which prefix is used.
+
+ - `+` when something is added.
+ - `-` when something is removed.
+ - none: when neither is applicable, like merge commits.
+
+Commit messages are also to begin with an uppercase character. Below list some example commit messages.
+
+```
+git commit -m "+ Added README.md"
+git commit -m "- Removed README.md"
+git commit -m "Moved README.md"
+```
+
+
 ## General Guidelines
 ```python
 class ExampleClass:
