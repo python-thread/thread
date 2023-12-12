@@ -22,9 +22,9 @@
   <p align="center">
     A python threading library extension
     <br />
-    <a href="https://github.com/caffeine-addictt/thread/issues">Report Bug</a>
+    <a href="https://github.com/python-thread/thread/issues">Report Bug</a>
     ·
-    <a href="https://github.com/caffeine-addictt/thread/issues">Request Feature</a>
+    <a href="https://github.com/python-thread/thread/issues">Request Feature</a>
   </p>
 </div>
 
@@ -97,7 +97,7 @@ Our docs are [here!](/docs/getting-started.md)
 - [ ] Testing
 - [ ] Next release...
 
-See the [open issues](https://github.com/caffeine-addictt/thread/issues) for a full list of proposed features (and known issues).
+See the [open issues](https://github.com/python-thread/thread/issues) for a full list of proposed features (and known issues).
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -133,11 +133,11 @@ Distributed under the BSD-3-Clause License. See `LICENSE.txt` for more informati
 <!-- CONTACT -->
 ## Contact
 
-Alex - junxiangng63@gmail.com
+Alex - thread@ngjx.org
 
-Project Board: https://github.com/users/caffeine-addictt/projects/5
+Project Board: https://github.com/orgs/python-thread/projects/2
 
-Project Link: [https://github.com/caffeine-addictt/thread](https://github.com/caffeine-addictt/thread)
+Project Link: [https://github.com/python-thread/thread](https://github.com/python-thread/thread)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -158,15 +158,15 @@ Project Link: [https://github.com/caffeine-addictt/thread](https://github.com/ca
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[contributors-shield]: https://img.shields.io/github/contributors/caffeine-addictt/thread.svg?style=for-the-badge
-[contributors-url]: https://github.com/caffeine-addictt/thread/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/caffeine-addictt/thread.svg?style=for-the-badge
-[forks-url]: https://github.com/caffeine-addictt/thread/network/members
-[stars-shield]: https://img.shields.io/github/stars/caffeine-addictt/thread.svg?style=for-the-badge
-[stars-url]: https://github.com/caffeine-addictt/thread/stargazers
-[issues-shield]: https://img.shields.io/github/issues/caffeine-addictt/thread.svg?style=for-the-badge
-[issues-url]: https://github.com/caffeine-addictt/thread/issues
-[license-shield]: https://img.shields.io/github/license/caffeine-addictt/thread.svg?style=for-the-badge
-[license-url]: https://github.com/caffeine-addictt/thread/blob/master/LICENSE.txt
+[contributors-shield]: https://img.shields.io/github/contributors/python-thread/thread.svg?style=for-the-badge
+[contributors-url]: https://github.com/python-thread/thread/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/python-thread/thread.svg?style=for-the-badge
+[forks-url]: https://github.com/python-thread/thread/network/members
+[stars-shield]: https://img.shields.io/github/stars/python-thread/thread.svg?style=for-the-badge
+[stars-url]: https://github.com/python-thread/thread/stargazers
+[issues-shield]: https://img.shields.io/github/issues/python-thread/thread.svg?style=for-the-badge
+[issues-url]: https://github.com/python-thread/thread/issues
+[license-shield]: https://img.shields.io/github/license/python-thread/thread.svg?style=for-the-badge
+[license-url]: https://github.com/python-thread/thread/blob/master/LICENSE.txt
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://www.linkedin.com/in/ngjx

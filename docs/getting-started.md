@@ -24,7 +24,7 @@ pip install thread
 ### Building from source (Not Recommended)
 ```sh
 # Clone this repository
-git clone https://github.com/caffeine-addictt/thread
+git clone https://github.com/python-thread/thread
 
 # Install dependencies
 pip install poetry
