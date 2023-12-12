@@ -3,9 +3,9 @@ import time
 import signal
 import threading
 
-import numpy
 from . import exceptions
 from .utils.config import Settings
+from .utils.algorithm import chunk_split
 
 from functools import wraps
 from typing import (
@@ -509,10 +509,10 @@ class ParallelProcessing:
     name_format = self.overflow_kwargs.get('name') and self.overflow_kwargs['name'] + '%s'
     self.overflow_kwargs = { i: v for i,v in self.overflow_kwargs.items() if i != 'name' and i != 'args' }
 
-    for i, data_chunk in enumerate(numpy.array_split(self.dataset, max_threads)):
+    for i, data_chunk in enumerate(chunk_split(self.dataset, max_threads)):
       chunk_thread = Thread(
         target = self.function,
-        args = [i, data_chunk.tolist(), *parsed_args, *self.overflow_args],
+        args = [i, data_chunk, *parsed_args, *self.overflow_args],
         name = name_format and name_format % i or None,
         **self.overflow_kwargs
       )
