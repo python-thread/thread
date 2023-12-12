@@ -1,5 +1,4 @@
 import time
-import numpy
 import pytest
 from src.thread import ParallelProcessing, exceptions
 
@@ -19,7 +18,7 @@ def _dummy_raiseException(x: Exception, delay: float = 0):
 # >>>>>>>>>> General Use <<<<<<<<<< #
 def test_threadsScaleDown():
   """This test is for testing if threads scale down `max_threads` when the dataset is lesser than the thread count"""
-  dataset = numpy.arange(0, 2).tolist()
+  dataset = list(range(0, 2))
   new = ParallelProcessing(
     function = _dummy_dataProcessor,
     dataset = dataset,
@@ -32,7 +31,7 @@ def test_threadsScaleDown():
 
 def test_threadsProcessing():
   """This test is for testing if threads correctly order data in the `dataset` arrangement"""
-  dataset = numpy.arange(0, 500).tolist()
+  dataset = list(range(0, 500))
   new = ParallelProcessing(
     function = _dummy_dataProcessor,
     dataset = dataset,
@@ -48,7 +47,7 @@ def test_threadsProcessing():
 # >>>>>>>>>> Raising Exceptions <<<<<<<<<< #
 def test_raises_StillRunningError():
   """This test should raise ThreadStillRunningError"""
-  dataset = numpy.arange(0, 8).tolist()
+  dataset = list(range(0, 8))
   new = ParallelProcessing(
     function = _dummy_dataProcessor,
     dataset = dataset,
