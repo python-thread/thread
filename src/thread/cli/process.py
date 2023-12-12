@@ -50,7 +50,7 @@ def process(
   
   [blue][u]                                 [/u][/blue]
 
-  Learn more from our [link=https://github.com/caffeine-addictt/thread/blob/main/docs/command-line.md#parallel-processing-thread-process]documentation![/link]
+  Learn more from our [link=https://github.com/python-thread/thread/blob/main/docs/command-line.md#parallel-processing-thread-process]documentation![/link]
   """
   verbose_args_processor(debug, verbose, quiet)
   kwargs = kwargs_processor(kargs)

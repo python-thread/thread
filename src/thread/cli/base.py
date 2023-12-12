@@ -40,7 +40,7 @@ def callback(
 
   [blue][u]                                 [/u][/blue]
 
-  Learn more from our [link=https://github.com/caffeine-addictt/thread/blob/main/docs/command-line.md]documentation![/link]
+  Learn more from our [link=https://github.com/python-thread/thread/blob/main/docs/command-line.md]documentation![/link]
   """
   verbose_args_processor(debug, verbose, quiet)
 
@@ -56,7 +56,7 @@ def help():
 
     import webbrowser
     webbrowser.open(
-      'https://github.com/caffeine-addictt/thread/issues',
+      'https://github.com/python-thread/thread/issues',
       new = 2
     )
     typer.echo('Opening in web browser!')
@@ -64,7 +64,7 @@ def help():
   except Exception as e:
     logger.warn('Failed to open web browser')
     logger.debug(f'{e}')
-    typer.echo('https://github.com/caffeine-addictt/thread/issues')
+    typer.echo('https://github.com/python-thread/thread/issues')
 
 
 
@@ -76,7 +76,7 @@ def docs():
     logger.info('Attempting to open in web browser...')
     import webbrowser
     webbrowser.open(
-      'https://github.com/caffeine-addictt/thread/blob/main/docs/command-line.md',
+      'https://github.com/python-thread/thread/blob/main/docs/command-line.md',
       new = 2
     )
     typer.echo('Opening in web browser!')
@@ -84,7 +84,7 @@ def docs():
   except Exception as e:
     logger.warn('Failed to open web browser')
     logger.debug(f'{e}')
-    typer.echo('https://github.com/caffeine-addictt/thread/blob/main/docs/command-line.md')
+    typer.echo('https://github.com/python-thread/thread/blob/main/docs/command-line.md')
 
 
 
@@ -96,7 +96,7 @@ def report():
     logger.info('Attempting to open in web browser...')
     import webbrowser
     webbrowser.open(
-      'https://github.com/caffeine-addictt/thread/issues',
+      'https://github.com/python-thread/thread/issues',
       new = 2
     )
     typer.echo('Opening in web browser!')
@@ -104,7 +104,7 @@ def report():
   except Exception as e:
     logger.warn('Failed to open web browser')
     logger.debug(f'{e}')
-    typer.echo('https://github.com/caffeine-addictt/thread/issues')
+    typer.echo('https://github.com/python-thread/thread/issues')
 
 
 
