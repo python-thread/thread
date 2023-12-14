@@ -1,33 +1,28 @@
+"""
+## Core of thread
+
+```py
+Thread()
+ParallelProcessing()
+```
+"""
+
 import sys
 import time
 import signal
 import threading
+from functools import wraps
 
 from . import exceptions
 from .utils.config import Settings
 from .utils.algorithm import chunk_split
 
-from functools import wraps
+from ._types import ThreadStatus, Data_In, Data_Out, Overflow_In
 from typing import (
   Any, List,
-  Callable, Union, Optional, Literal,
+  Callable, Union, Optional,
   Mapping, Sequence, Tuple
 )
-
-
-ThreadStatus = Literal[
-  'Idle',
-  'Running',
-  'Invoking hooks',
-  'Completed',
-
-  'Errored',
-  'Kill Scheduled',
-  'Killed'
-]
-Data_In = Any
-Data_Out = Any
-Overflow_In = Any
 
 
 Threads: set['Thread'] = set()
