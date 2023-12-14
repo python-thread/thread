@@ -19,10 +19,10 @@ from . import exceptions
 from .utils.config import Settings
 from .utils.algorithm import chunk_split
 
-from ._types import ThreadStatus, Data_In, Data_Out, Overflow_In, HookFunction
+from ._types import ThreadStatus, Data_In, Data_Out, Overflow_In, TargetFunction, HookFunction
 from typing import (
   Any, List,
-  Callable, Union, Optional,
+  Callable, Optional,
   Mapping, Sequence, Tuple
 )
 
@@ -51,7 +51,7 @@ class Thread(threading.Thread):
 
   def __init__(
     self,
-    target: Callable[..., Data_Out],
+    target: TargetFunction,
     args: Sequence[Data_In] = (),
     kwargs: Mapping[str, Data_In] = {},
     ignore_errors: Sequence[type[Exception]] = (),
@@ -100,7 +100,7 @@ class Thread(threading.Thread):
     )
 
 
-  def _wrap_target(self, target: Callable[..., Data_Out]) -> Callable[..., Data_Out]:
+  def _wrap_target(self, target: TargetFunction) -> TargetFunction:
     """Wraps the target function"""
     @wraps(target)
     def wrapper(*args: Any, **kwargs: Any) -> Any:
@@ -344,7 +344,7 @@ class ParallelProcessing:
   
   def __init__(
     self,
-    function: Callable[..., Data_Out],
+    function: TargetFunction,
     dataset: Sequence[Data_In],
     max_threads: int = 8,
 
@@ -385,7 +385,7 @@ class ParallelProcessing:
 
   def _wrap_function(
     self,
-    function: Callable[..., Data_Out]
+    function: TargetFunction
   ) -> Callable[..., List[Data_Out]]:
     @wraps(function)
     def wrapper(index: int, data_chunk: Sequence[Data_In], *args: Any, **kwargs: Any) -> List[Data_Out]:
