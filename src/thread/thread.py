@@ -2,9 +2,11 @@
 ## Core of thread
 
 ```py
-Thread()
-ParallelProcessing()
+class Thread: ...
+class ParallelProcessing: ...
 ```
+
+Documentation: https://thread.ngjx.org
 """
 
 import sys

@@ -1,5 +1,7 @@
 """
 ## Thread Exceptions
+
+Documentation: https://thread.ngjx.org
 """
 
 import traceback
