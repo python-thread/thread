@@ -1,3 +1,7 @@
+"""
+## Thread Exceptions
+"""
+
 import traceback
 from typing import Any, Optional, Sequence, Tuple
 
