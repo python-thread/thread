@@ -4,7 +4,7 @@
 Documentation: https://thread.ngjx.org
 """
 
-from typing import Any, Literal
+from typing import Any, Literal, Callable, Union
 
 ThreadStatus = Literal[
   'Idle',
@@ -19,3 +19,5 @@ ThreadStatus = Literal[
 Data_In = Any
 Data_Out = Any
 Overflow_In = Any
+
+HookFunction = Callable[[Data_Out], Union[Any, None]]

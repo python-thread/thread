@@ -19,7 +19,7 @@ from . import exceptions
 from .utils.config import Settings
 from .utils.algorithm import chunk_split
 
-from ._types import ThreadStatus, Data_In, Data_Out, Overflow_In
+from ._types import ThreadStatus, Data_In, Data_Out, Overflow_In, HookFunction
 from typing import (
   Any, List,
   Callable, Union, Optional,
@@ -37,7 +37,7 @@ class Thread(threading.Thread):
   """
 
   status         : ThreadStatus
-  hooks          : List[Callable[[Data_Out], Union[Any, None]]]
+  hooks          : List[HookFunction]
   returned_value: Data_Out
 
   errors         : List[Exception]
@@ -208,7 +208,7 @@ class Thread(threading.Thread):
     return super().is_alive()
     
 
-  def add_hook(self, hook: Callable[[Data_Out], Union[Any, None]]) -> None:
+  def add_hook(self, hook: HookFunction) -> None:
     """
     Adds a hook to the thread
     -------------------------
