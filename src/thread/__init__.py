@@ -30,5 +30,12 @@ from . import (
   exceptions
 )
 
+
+# Export decorators
+from .decorators import (
+  threaded
+)
+
+
 # Configuration
 from .utils import Settings
