@@ -1,33 +1,30 @@
+"""
+## Core of thread
+
+```py
+class Thread: ...
+class ParallelProcessing: ...
+```
+
+Documentation: https://thread.ngjx.org
+"""
+
 import sys
 import time
 import signal
 import threading
+from functools import wraps
 
 from . import exceptions
 from .utils.config import Settings
 from .utils.algorithm import chunk_split
 
-from functools import wraps
+from ._types import ThreadStatus, Data_In, Data_Out, Overflow_In, TargetFunction, HookFunction
 from typing import (
   Any, List,
-  Callable, Union, Optional, Literal,
+  Callable, Optional,
   Mapping, Sequence, Tuple
 )
-
-
-ThreadStatus = Literal[
-  'Idle',
-  'Running',
-  'Invoking hooks',
-  'Completed',
-
-  'Errored',
-  'Kill Scheduled',
-  'Killed'
-]
-Data_In = Any
-Data_Out = Any
-Overflow_In = Any
 
 
 Threads: set['Thread'] = set()
@@ -40,7 +37,7 @@ class Thread(threading.Thread):
   """
 
   status         : ThreadStatus
-  hooks          : List[Callable[[Data_Out], Union[Any, None]]]
+  hooks          : List[HookFunction]
   returned_value: Data_Out
 
   errors         : List[Exception]
@@ -54,7 +51,7 @@ class Thread(threading.Thread):
 
   def __init__(
     self,
-    target: Callable[..., Data_Out],
+    target: TargetFunction,
     args: Sequence[Data_In] = (),
     kwargs: Mapping[str, Data_In] = {},
     ignore_errors: Sequence[type[Exception]] = (),
@@ -103,7 +100,7 @@ class Thread(threading.Thread):
     )
 
 
-  def _wrap_target(self, target: Callable[..., Data_Out]) -> Callable[..., Data_Out]:
+  def _wrap_target(self, target: TargetFunction) -> TargetFunction:
     """Wraps the target function"""
     @wraps(target)
     def wrapper(*args: Any, **kwargs: Any) -> Any:
@@ -211,7 +208,7 @@ class Thread(threading.Thread):
     return super().is_alive()
     
 
-  def add_hook(self, hook: Callable[[Data_Out], Union[Any, None]]) -> None:
+  def add_hook(self, hook: HookFunction) -> None:
     """
     Adds a hook to the thread
     -------------------------
@@ -347,7 +344,7 @@ class ParallelProcessing:
   
   def __init__(
     self,
-    function: Callable[..., Data_Out],
+    function: TargetFunction,
     dataset: Sequence[Data_In],
     max_threads: int = 8,
 
@@ -388,7 +385,7 @@ class ParallelProcessing:
 
   def _wrap_function(
     self,
-    function: Callable[..., Data_Out]
+    function: TargetFunction
   ) -> Callable[..., List[Data_Out]]:
     @wraps(function)
     def wrapper(index: int, data_chunk: Sequence[Data_In], *args: Any, **kwargs: Any) -> List[Data_Out]:
