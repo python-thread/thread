@@ -8,8 +8,8 @@ from functools import wraps
 from .thread import Thread
 
 from ._types import Overflow_In, Data_Out, Data_In
-from typing import Any, Callable, Mapping, Sequence, Optional, Union, overload
-from typing_extensions import ParamSpec, TypeVar, Concatenate
+from typing import Callable, Mapping, Sequence, Optional, Union, overload
+from typing_extensions import ParamSpec, TypeVar
 
 
 T = TypeVar('T')
@@ -17,7 +17,7 @@ P = ParamSpec('P')
 TargetFunction = Callable[P, Data_Out]
 NoParamReturn = Callable[P, Thread]
 WithParamReturn = Callable[[TargetFunction], NoParamReturn]
-FullParamReturn = Callable[Concatenate[TargetFunction, ...], Thread]
+FullParamReturn = Callable[P, Thread]
 WrappedWithParamReturn = Callable[[TargetFunction], WithParamReturn]
 
 
