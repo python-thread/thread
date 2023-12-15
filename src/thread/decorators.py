@@ -4,16 +4,12 @@
 Documentation: https://thread.ngjx.org
 """
 
-import inspect
-from functools import wraps, partial
-from abc import ABC, abstractmethod
+from functools import wraps
+from .thread import Thread
 
 from ._types import Overflow_In, Data_Out, Data_In
-from typing import Any, Callable, Mapping, Tuple, Sequence, Optional, Union, Protocol, Iterable, overload
+from typing import Any, Callable, Mapping, Sequence, Optional, Union, overload
 from typing_extensions import ParamSpec, TypeVar, Concatenate
-
-from .thread import Thread
-from .exceptions import AbstractInvokationError, ArgumentValidationError
 
 
 T = TypeVar('T')
@@ -21,7 +17,7 @@ P = ParamSpec('P')
 TargetFunction = Callable[P, Data_Out]
 NoParamReturn = Callable[P, Thread]
 WithParamReturn = Callable[[TargetFunction], NoParamReturn]
-FullParamReturn = Callable[P, Thread]
+FullParamReturn = Callable[Concatenate[TargetFunction, ...], Thread]
 WrappedWithParamReturn = Callable[[TargetFunction], WithParamReturn]
 
 
@@ -60,7 +56,43 @@ def threaded(
   **overflow_kwargs: Overflow_In
 ) -> Union[NoParamReturn, WithParamReturn, FullParamReturn]:
   """
-  test 1
+  Decorate a function to run it in a thread
+
+  Parameters
+  ----------
+  :param __function: The function to run in a thread
+  :param args: Keyword-Only arguments to pass into `thread.Thread`
+  :param kwargs: Keyword-Only keyword arguments to pass into `thread.Thread`
+  :param ignore_errors: Keyword-Only arguments to pass into `thread.Thread`
+  :param suppress_errors: Keyword-Only arguments to pass into `thread.Thread`
+  :param **: Keyword-Only arguments to pass into `thread.Thread`
+
+  Returns
+  -------
+  :return decorator:
+
+  Use Case
+  --------
+  Now whenever `myfunction` is invoked, it will be executed in a thread and the `Thread` object will be returned
+
+  >>> @thread.threaded
+  >>>   def myfunction(*args, **kwargs): ...
+
+  >>> myJob = myfunction(1, 2)
+  >>> type(myjob)
+  > Thread
+
+  You can also pass keyword arguments to change the thread behaviour, it otherwise follows the defaults of `thread.Thread`
+  >>> @thread.threaded(daemon = True)
+  >>> def myfunction(): ...
+
+  Args will be ordered infront of function-parsed args parsed into `thread.Thread.args`
+  >>> @thread.threaded(args = (1))
+  >>> def myfunction(*args):
+  >>>   print(args)
+  >>>
+  >>> myfunction(4, 6).get_return_value()
+  1, 4, 6
   """
 
   if not callable(__function):
@@ -84,11 +116,10 @@ def threaded(
   
   @wraps(__function)
   def wrapped(*parsed_args: P.args, **parsed_kwargs: P.kwargs) -> Thread:
-    """test 2"""
     kwargs.update(parsed_kwargs)
 
     processed_args = ( *args, *parsed_args )
-    processed_kwargs = { i:v for i,v in kwargs.items() if i not in ['args', 'kwargs'] }
+    processed_kwargs = { i:v for i,v in parsed_kwargs.items() if i not in ['args', 'kwargs'] }
 
     job = Thread(
       target = __function,
@@ -100,3 +131,5 @@ def threaded(
     return job
   
   return wrapped
+
+
