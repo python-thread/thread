@@ -66,3 +66,6 @@ class AbstractInvokationError(ErrorBase):
 class ArgumentValidationError(ErrorBase):
   """Exception class for when validating arguments passed to the wrapped method fails"""
   message: str = 'Validation for arguments passed to the wrapped method failed'
+
+  def __init__(self, additional: Optional[str] = '') -> None:
+    super().__init__(self.message + f'\n{additional}')
