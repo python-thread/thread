@@ -52,20 +52,3 @@ class HookRuntimeError(ErrorBase):
       new_message += f'{trace}\n{v[0]}'
       new_message += '<<<<<<<<<<'
     super().__init__(new_message)
-
-
-
-# DECORATOR ERRORS #
-class AbstractInvokationError(ErrorBase):
-  """Exception class for attempting to invoke an abstract method which is only accessible from inheriting classes"""
-  message: str = 'Attempt to invoke abstract method [{method_name}]!'
-  
-  def __init__(self, method_name: str) -> None:
-    super().__init__(self.message.format(method_name = method_name))
-
-class ArgumentValidationError(ErrorBase):
-  """Exception class for when validating arguments passed to the wrapped method fails"""
-  message: str = 'Validation for arguments passed to the wrapped method failed'
-
-  def __init__(self, additional: Optional[str] = '') -> None:
-    super().__init__(self.message + f'\n{additional}')
