@@ -27,7 +27,7 @@ from ._types import (
 )
 from typing_extensions import Generic
 from typing import (
-  Any, List, Unpack,
+  List,
   Callable, Optional, Union,
   Mapping, Sequence, Tuple
 )
