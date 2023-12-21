@@ -25,7 +25,7 @@ from ._types import (
   DatasetFunction, _Dataset_T,
   HookFunction
 )
-from typing_extensions import Generic
+from typing_extensions import Generic, Concatenate, ParamSpec
 from typing import (
   List,
   Callable, Optional, Union,
@@ -321,6 +321,7 @@ class Thread(threading.Thread, Generic[_Target_P, _Target_T]):
 
 
 
+_P = ParamSpec('_P')
 class _ThreadWorker:
   progress: float
   thread: Thread
@@ -341,7 +342,7 @@ class ParallelProcessing(Generic[_Target_P, _Target_T, _Dataset_T]):
   _completed     : int
 
   status         : ThreadStatus
-  function       : TargetFunction[..., List[_Target_T]]
+  function       : TargetFunction
   dataset        : Sequence[Data_In]
   max_threads    : int
   
@@ -391,8 +392,8 @@ class ParallelProcessing(Generic[_Target_P, _Target_T, _Dataset_T]):
 
   def _wrap_function(
     self,
-    function: TargetFunction[[_Dataset_T], _Target_T]
-  ) -> TargetFunction[..., List[_Target_T]]:
+    function: TargetFunction
+  ) -> TargetFunction:
     @wraps(function)
     def wrapper(index: int, data_chunk: Sequence[_Dataset_T], *args: _Target_P.args, **kwargs: _Target_P.kwargs) -> List[_Target_T]:
       computed: List[Data_Out] = []
@@ -511,6 +512,8 @@ class ParallelProcessing(Generic[_Target_P, _Target_T, _Dataset_T]):
     parsed_args = self.overflow_kwargs.get('args', [])
     name_format = self.overflow_kwargs.get('name') and self.overflow_kwargs['name'] + '%s'
     self.overflow_kwargs = { i: v for i,v in self.overflow_kwargs.items() if i != 'name' and i != 'args' }
+
+    print(parsed_args, self.overflow_args)
 
     for i, data_chunk in enumerate(chunk_split(self.dataset, max_threads)):
       chunk_thread = Thread(
