@@ -44,7 +44,7 @@ class Thread(threading.Thread, Generic[_Target_P, _Target_T]):
 
   status         : ThreadStatus
   hooks          : List[HookFunction]
-  returned_value: Data_Out
+  _returned_value: Data_Out
 
   errors         : List[Exception]
   ignore_errors  : Sequence[type[Exception]]
@@ -86,7 +86,7 @@ class Thread(threading.Thread, Generic[_Target_P, _Target_T]):
     :param **: These are arguments parsed to `thread.Thread`
     """
     _target = self._wrap_target(target)
-    self.returned_value = None
+    self._returned_value = None
     self.status = 'Idle'
     self.hooks = []
 
@@ -116,7 +116,7 @@ class Thread(threading.Thread, Generic[_Target_P, _Target_T]):
       Threads.add(self)
 
       try:
-        self.returned_value = target(*args, **kwargs)
+        self._returned_value = target(*args, **kwargs)
       except Exception as e:
         if not any(isinstance(e, ignore) for ignore in self.ignore_errors):
           self.status = 'Errored'
@@ -135,7 +135,7 @@ class Thread(threading.Thread, Generic[_Target_P, _Target_T]):
     errors: List[Tuple[Exception, str]] = []
     for hook in self.hooks:
       try:
-        hook(self.returned_value)
+        hook(self._returned_value)
       except Exception as e:
         if not any(isinstance(e, ignore) for ignore in self.ignore_errors):
           errors.append((
@@ -196,7 +196,7 @@ class Thread(threading.Thread, Generic[_Target_P, _Target_T]):
     
     self._handle_exceptions()
     if self.status in ['Invoking hooks', 'Completed']:
-      return self.returned_value
+      return self._returned_value
     else:
       raise exceptions.ThreadStillRunningError()
     
