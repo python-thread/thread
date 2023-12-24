@@ -25,7 +25,7 @@ from ._types import (
   DatasetFunction, _Dataset_T,
   HookFunction
 )
-from typing_extensions import Generic, Concatenate, ParamSpec
+from typing_extensions import Generic, ParamSpec
 from typing import (
   List,
   Callable, Optional, Union,

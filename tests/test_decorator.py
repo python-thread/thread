@@ -1,6 +1,5 @@
 import time
-import pytest
-from src.thread import threaded, exceptions
+from src.thread import threaded
 
 
 # >>>>>>>>>> Dummy Functions <<<<<<<<<< #
