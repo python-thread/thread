@@ -8,15 +8,6 @@ def _dummy_target_raiseToPower(x: float, power: float, delay: float = 0):
   time.sleep(delay)
   return x**power
 
-def _dummy_raiseException(x: Exception, delay: float = 0):
-  time.sleep(delay)
-  raise x
-
-def _dummy_iterative(itemCount: int, pTime: float = 0.1, delay: float = 0):
-  time.sleep(delay)
-  for i in range(itemCount):
-    time.sleep(pTime)
-
 
 
 
