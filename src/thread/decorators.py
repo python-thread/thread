@@ -15,14 +15,14 @@ from typing_extensions import ParamSpec, TypeVar
 T = TypeVar('T')
 P = ParamSpec('P')
 TargetFunction = Callable[P, Data_Out]
-NoParamReturn = Callable[P, Thread]
-WithParamReturn = Callable[[TargetFunction], NoParamReturn]
+NoParamReturn = Callable[P, Thread[P, T]]
+WithParamReturn = Callable[[TargetFunction[P]], NoParamReturn[P, T]]
 FullParamReturn = Callable[P, Thread]
-WrappedWithParamReturn = Callable[[TargetFunction], WithParamReturn]
+WrappedWithParamReturn = Callable[[TargetFunction[P]], WithParamReturn[P, T]]
 
 
 @overload
-def threaded(__function: TargetFunction) -> NoParamReturn: ...
+def threaded(__function: TargetFunction[P]) -> NoParamReturn[P, T]: ...
 
 @overload
 def threaded(
@@ -32,7 +32,7 @@ def threaded(
   ignore_errors: Sequence[type[Exception]] = (),
   suppress_errors: bool = False,
   **overflow_kwargs: Overflow_In
-) -> WithParamReturn: ...
+) -> WithParamReturn[P, T]: ...
 
 @overload
 def threaded(
@@ -43,18 +43,18 @@ def threaded(
   ignore_errors: Sequence[type[Exception]] = (),
   suppress_errors: bool = False,
   **overflow_kwargs: Overflow_In
-) -> FullParamReturn: ...
+) -> FullParamReturn[P]: ...
 
 
 def threaded(
-  __function: Optional[TargetFunction] = None,
+  __function: Optional[TargetFunction[P]] = None,
   *,
   args: Sequence[Data_In] = (),
   kwargs: Mapping[str, Data_In] = {},
   ignore_errors: Sequence[type[Exception]] = (),
   suppress_errors: bool = False,
   **overflow_kwargs: Overflow_In
-) -> Union[NoParamReturn, WithParamReturn, FullParamReturn]:
+) -> Union[NoParamReturn[P, T], WithParamReturn[P, T], FullParamReturn[P]]:
   """
   Decorate a function to run it in a thread
 
@@ -96,7 +96,7 @@ def threaded(
   """
 
   if not callable(__function):
-    def wrapper(func: TargetFunction) -> FullParamReturn:
+    def wrapper(func: TargetFunction[P]) -> FullParamReturn[P]:
       return threaded(
         func,
         args = args,
