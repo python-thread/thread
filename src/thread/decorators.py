@@ -14,15 +14,15 @@ from typing_extensions import ParamSpec, TypeVar
 
 T = TypeVar('T')
 P = ParamSpec('P')
-TargetFunction = Callable[P, Data_Out]
+TargetFunction = Callable[P, T]
 NoParamReturn = Callable[P, Thread[P, T]]
-WithParamReturn = Callable[[TargetFunction[P]], NoParamReturn[P, T]]
-FullParamReturn = Callable[P, Thread]
-WrappedWithParamReturn = Callable[[TargetFunction[P]], WithParamReturn[P, T]]
+WithParamReturn = Callable[[TargetFunction[P, T]], NoParamReturn[P, T]]
+FullParamReturn = Callable[P, Thread[P, T]]
+WrappedWithParamReturn = Callable[[TargetFunction[P, T]], WithParamReturn[P, T]]
 
 
 @overload
-def threaded(__function: TargetFunction[P]) -> NoParamReturn[P, T]: ...
+def threaded(__function: TargetFunction[P, T]) -> NoParamReturn[P, T]: ...
 
 @overload
 def threaded(
@@ -36,25 +36,25 @@ def threaded(
 
 @overload
 def threaded(
-  __function: Callable[P, Data_Out],
+  __function: TargetFunction[P, T],
   *,
   args: Sequence[Data_In] = (),
   kwargs: Mapping[str, Data_In] = {},
   ignore_errors: Sequence[type[Exception]] = (),
   suppress_errors: bool = False,
   **overflow_kwargs: Overflow_In
-) -> FullParamReturn[P]: ...
+) -> FullParamReturn[P, T]: ...
 
 
 def threaded(
-  __function: Optional[TargetFunction[P]] = None,
+  __function: Optional[TargetFunction[P, T]] = None,
   *,
   args: Sequence[Data_In] = (),
   kwargs: Mapping[str, Data_In] = {},
   ignore_errors: Sequence[type[Exception]] = (),
   suppress_errors: bool = False,
   **overflow_kwargs: Overflow_In
-) -> Union[NoParamReturn[P, T], WithParamReturn[P, T], FullParamReturn[P]]:
+) -> Union[NoParamReturn[P, T], WithParamReturn[P, T], FullParamReturn[P, T]]:
   """
   Decorate a function to run it in a thread
 
@@ -96,7 +96,7 @@ def threaded(
   """
 
   if not callable(__function):
-    def wrapper(func: TargetFunction[P]) -> FullParamReturn[P]:
+    def wrapper(func: TargetFunction[P, T]) -> FullParamReturn[P, T]:
       return threaded(
         func,
         args = args,
@@ -115,7 +115,7 @@ def threaded(
   kwargs = dict(kwargs)
   
   @wraps(__function)
-  def wrapped(*parsed_args: P.args, **parsed_kwargs: P.kwargs) -> Thread:
+  def wrapped(*parsed_args: P.args, **parsed_kwargs: P.kwargs) -> Thread[P, T]:
     kwargs.update(parsed_kwargs)
 
     processed_args = ( *args, *parsed_args )
