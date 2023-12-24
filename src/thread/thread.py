@@ -19,16 +19,22 @@ from . import exceptions
 from .utils.config import Settings
 from .utils.algorithm import chunk_split
 
-from ._types import ThreadStatus, Data_In, Data_Out, Overflow_In, TargetFunction, HookFunction
+from ._types import (
+  ThreadStatus, Data_In, Data_Out, Overflow_In,
+  TargetFunction, _Target_P, _Target_T,
+  DatasetFunction, _Dataset_T,
+  HookFunction
+)
+from typing_extensions import Generic, ParamSpec
 from typing import (
-  Any, List,
-  Callable, Optional,
+  List,
+  Callable, Optional, Union,
   Mapping, Sequence, Tuple
 )
 
 
 Threads: set['Thread'] = set()
-class Thread(threading.Thread):
+class Thread(threading.Thread, Generic[_Target_P, _Target_T]):
   """
   Wraps python's `threading.Thread` class
   ---------------------------------------
@@ -38,7 +44,7 @@ class Thread(threading.Thread):
 
   status         : ThreadStatus
   hooks          : List[HookFunction]
-  returned_value: Data_Out
+  _returned_value: Data_Out
 
   errors         : List[Exception]
   ignore_errors  : Sequence[type[Exception]]
@@ -51,7 +57,7 @@ class Thread(threading.Thread):
 
   def __init__(
     self,
-    target: TargetFunction,
+    target: TargetFunction[_Target_P, _Target_T],
     args: Sequence[Data_In] = (),
     kwargs: Mapping[str, Data_In] = {},
     ignore_errors: Sequence[type[Exception]] = (),
@@ -80,7 +86,7 @@ class Thread(threading.Thread):
     :param **: These are arguments parsed to `thread.Thread`
     """
     _target = self._wrap_target(target)
-    self.returned_value = None
+    self._returned_value = None
     self.status = 'Idle'
     self.hooks = []
 
@@ -100,17 +106,17 @@ class Thread(threading.Thread):
     )
 
 
-  def _wrap_target(self, target: TargetFunction) -> TargetFunction:
+  def _wrap_target(self, target: TargetFunction[_Target_P, _Target_T]) -> TargetFunction[_Target_P, Union[_Target_T, None]]:
     """Wraps the target function"""
     @wraps(target)
-    def wrapper(*args: Any, **kwargs: Any) -> Any:
+    def wrapper(*args: _Target_P.args, **kwargs: _Target_P.kwargs) -> Union[_Target_T, None]:
       self.status = 'Running'
 
       global Threads
       Threads.add(self)
 
       try:
-        self.returned_value = target(*args, **kwargs)
+        self._returned_value = target(*args, **kwargs)
       except Exception as e:
         if not any(isinstance(e, ignore) for ignore in self.ignore_errors):
           self.status = 'Errored'
@@ -129,7 +135,7 @@ class Thread(threading.Thread):
     errors: List[Tuple[Exception, str]] = []
     for hook in self.hooks:
       try:
-        hook(self.returned_value)
+        hook(self._returned_value)
       except Exception as e:
         if not any(isinstance(e, ignore) for ignore in self.ignore_errors):
           errors.append((
@@ -173,7 +179,7 @@ class Thread(threading.Thread):
     
 
   @property
-  def result(self) -> Data_Out:
+  def result(self) -> _Target_T:
     """
     The return value of the thread
     
@@ -190,7 +196,7 @@ class Thread(threading.Thread):
     
     self._handle_exceptions()
     if self.status in ['Invoking hooks', 'Completed']:
-      return self.returned_value
+      return self._returned_value
     else:
       raise exceptions.ThreadStillRunningError()
     
@@ -208,7 +214,7 @@ class Thread(threading.Thread):
     return super().is_alive()
     
 
-  def add_hook(self, hook: HookFunction) -> None:
+  def add_hook(self, hook: HookFunction[_Target_T]) -> None:
     """
     Adds a hook to the thread
     -------------------------
@@ -250,7 +256,7 @@ class Thread(threading.Thread):
     return not self.is_alive()
   
 
-  def get_return_value(self) -> Data_Out:
+  def get_return_value(self) -> _Target_T:
     """
     Halts the current thread execution until the thread completes
 
@@ -315,6 +321,7 @@ class Thread(threading.Thread):
 
 
 
+_P = ParamSpec('_P')
 class _ThreadWorker:
   progress: float
   thread: Thread
@@ -323,7 +330,7 @@ class _ThreadWorker:
     self.thread = thread
     self.progress = progress
 
-class ParallelProcessing:
+class ParallelProcessing(Generic[_Target_P, _Target_T, _Dataset_T]):
   """
   Multi-Threaded Parallel Processing
   ---------------------------------------
@@ -335,7 +342,7 @@ class ParallelProcessing:
   _completed     : int
 
   status         : ThreadStatus
-  function       : Callable[..., List[Data_Out]]
+  function       : TargetFunction
   dataset        : Sequence[Data_In]
   max_threads    : int
   
@@ -344,8 +351,8 @@ class ParallelProcessing:
   
   def __init__(
     self,
-    function: TargetFunction,
-    dataset: Sequence[Data_In],
+    function: DatasetFunction[_Dataset_T, _Target_T],
+    dataset: Sequence[_Dataset_T],
     max_threads: int = 8,
 
     *overflow_args: Overflow_In,
@@ -386,9 +393,9 @@ class ParallelProcessing:
   def _wrap_function(
     self,
     function: TargetFunction
-  ) -> Callable[..., List[Data_Out]]:
+  ) -> TargetFunction:
     @wraps(function)
-    def wrapper(index: int, data_chunk: Sequence[Data_In], *args: Any, **kwargs: Any) -> List[Data_Out]:
+    def wrapper(index: int, data_chunk: Sequence[_Dataset_T], *args: _Target_P.args, **kwargs: _Target_P.kwargs) -> List[_Target_T]:
       computed: List[Data_Out] = []
       for i, data_entry in enumerate(data_chunk):
         v = function(data_entry, *args, **kwargs)
@@ -404,7 +411,7 @@ class ParallelProcessing:
 
 
   @property
-  def results(self) -> Data_Out:
+  def results(self) -> List[_Dataset_T]:
     """
     The return value of the threads if completed
     
@@ -436,7 +443,7 @@ class ParallelProcessing:
     return any(entry.thread.is_alive() for entry in self._threads)
   
 
-  def get_return_values(self) -> List[Data_Out]:
+  def get_return_values(self) -> List[_Dataset_T]:
     """
     Halts the current thread execution until the thread completes
 
@@ -505,6 +512,8 @@ class ParallelProcessing:
     parsed_args = self.overflow_kwargs.get('args', [])
     name_format = self.overflow_kwargs.get('name') and self.overflow_kwargs['name'] + '%s'
     self.overflow_kwargs = { i: v for i,v in self.overflow_kwargs.items() if i != 'name' and i != 'args' }
+
+    print(parsed_args, self.overflow_args)
 
     for i, data_chunk in enumerate(chunk_split(self.dataset, max_threads)):
       chunk_thread = Thread(

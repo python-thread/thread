@@ -5,6 +5,7 @@ Documentation: https://thread.ngjx.org
 """
 
 from typing import Any, Literal, Callable, Union
+from typing_extensions import ParamSpec, TypeVar
 
 
 # Descriptive Types
@@ -27,5 +28,11 @@ ThreadStatus = Literal[
 
 
 # Function types
-HookFunction = Callable[[Data_Out], Union[Any, None]]
-TargetFunction = Callable[..., Data_Out]
+_Target_P = ParamSpec('_Target_P')
+_Target_T = TypeVar('_Target_T')
+TargetFunction = Callable[_Target_P, _Target_T]
+
+HookFunction = Callable[[_Target_T], Union[Any, None]]
+
+_Dataset_T = TypeVar('_Dataset_T')
+DatasetFunction = Callable[[_Dataset_T], _Target_T]
