@@ -33,7 +33,8 @@ from . import (
 
 # Export decorators
 from .decorators import (
-  threaded
+  threaded,
+  processor
 )
 
 
