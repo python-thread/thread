@@ -126,7 +126,7 @@ def processor(
     processed_kwargs = { i:v for i,v in kwargs.items() if i not in ['args', 'kwargs'] }
 
     job = ParallelProcessing(
-      target = __function,
+      function = __function,
       dataset = data,
       args = processed_args,
       kwargs = processed_kwargs,
