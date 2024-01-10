@@ -1,13 +1,13 @@
 """
-## Decorators
+## Threaded
 
 Documentation: https://thread.ngjx.org
 """
 
 from functools import wraps
-from .thread import Thread
+from ..thread import Thread
 
-from ._types import Overflow_In, Data_Out, Data_In
+from .._types import Overflow_In, Data_In
 from typing import Callable, Mapping, Sequence, Optional, Union, overload
 from typing_extensions import ParamSpec, TypeVar
 
@@ -15,10 +15,14 @@ from typing_extensions import ParamSpec, TypeVar
 T = TypeVar('T')
 P = ParamSpec('P')
 TargetFunction = Callable[P, T]
+
+
 NoParamReturn = Callable[P, Thread[P, T]]
 WithParamReturn = Callable[[TargetFunction[P, T]], NoParamReturn[P, T]]
 FullParamReturn = Callable[P, Thread[P, T]]
 WrappedWithParamReturn = Callable[[TargetFunction[P, T]], WithParamReturn[P, T]]
+
+
 
 
 @overload
@@ -131,5 +135,3 @@ def threaded(
     return job
   
   return wrapped
-
-
