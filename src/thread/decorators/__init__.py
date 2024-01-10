@@ -2,5 +2,5 @@
 Export decorators
 """
 
-from .threaded import threaded
-from .processor import processor
+from ._threaded import threaded
+from ._processor import processor
