@@ -20,7 +20,6 @@ TargetFunction = Callable[P, T]
 NoParamReturn = Callable[P, Thread[P, T]]
 WithParamReturn = Callable[[TargetFunction[P, T]], NoParamReturn[P, T]]
 FullParamReturn = Callable[P, Thread[P, T]]
-WrappedWithParamReturn = Callable[[TargetFunction[P, T]], WithParamReturn[P, T]]
 
 
 

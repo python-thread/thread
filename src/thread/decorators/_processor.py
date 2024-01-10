@@ -21,7 +21,6 @@ TargetFunction = Callable[Concatenate[_DataT, _TargetP], _TargetT]
 NoParamReturn = Callable[Concatenate[Sequence[_DataT], _TargetP], ParallelProcessing[_TargetP, _TargetT, _DataT]]
 WithParamReturn = Callable[[TargetFunction[_DataT, _TargetP, _TargetT]], NoParamReturn[_DataT, _TargetP, _TargetT]]
 FullParamReturn = Callable[Concatenate[Sequence[_DataT], _TargetP], ParallelProcessing[_TargetP, _TargetT, _DataT]]
-WrappedWithParamReturn = Callable[[TargetFunction[_DataT, _TargetP, _TargetT]], WithParamReturn[_DataT, _TargetP, _TargetT]]
 
 
 
