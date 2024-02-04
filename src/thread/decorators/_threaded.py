@@ -22,10 +22,10 @@ WithParamReturn = Callable[[TargetFunction[P, T]], NoParamReturn[P, T]]
 FullParamReturn = Callable[P, Thread[P, T]]
 
 
-
-
 @overload
-def threaded(__function: TargetFunction[P, T]) -> NoParamReturn[P, T]: ...
+def threaded(__function: TargetFunction[P, T]) -> NoParamReturn[P, T]:
+  ...
+
 
 @overload
 def threaded(
@@ -34,8 +34,10 @@ def threaded(
   kwargs: Mapping[str, Data_In] = {},
   ignore_errors: Sequence[type[Exception]] = (),
   suppress_errors: bool = False,
-  **overflow_kwargs: Overflow_In
-) -> WithParamReturn[P, T]: ...
+  **overflow_kwargs: Overflow_In,
+  ) -> WithParamReturn[P, T]:
+  ...
+
 
 @overload
 def threaded(
@@ -45,8 +47,9 @@ def threaded(
   kwargs: Mapping[str, Data_In] = {},
   ignore_errors: Sequence[type[Exception]] = (),
   suppress_errors: bool = False,
-  **overflow_kwargs: Overflow_In
-) -> FullParamReturn[P, T]: ...
+  **overflow_kwargs: Overflow_In,
+  ) -> FullParamReturn[P, T]:
+  ...
 
 
 def threaded(
@@ -56,8 +59,8 @@ def threaded(
   kwargs: Mapping[str, Data_In] = {},
   ignore_errors: Sequence[type[Exception]] = (),
   suppress_errors: bool = False,
-  **overflow_kwargs: Overflow_In
-) -> Union[NoParamReturn[P, T], WithParamReturn[P, T], FullParamReturn[P, T]]:
+  **overflow_kwargs: Overflow_In,
+  ) -> Union[NoParamReturn[P, T], WithParamReturn[P, T], FullParamReturn[P, T]]:
   """
   Decorate a function to run it in a thread
 
@@ -87,7 +90,8 @@ def threaded(
 
   You can also pass keyword arguments to change the thread behaviour, it otherwise follows the defaults of `thread.Thread`
   >>> @thread.threaded(daemon = True)
-  >>> def myfunction(): ...
+  >>> def myfunction():
+  ...   ...
 
   Args will be ordered infront of function-parsed args parsed into `thread.Thread.args`
   >>> @thread.threaded(args = (1))
@@ -99,38 +103,38 @@ def threaded(
   """
 
   if not callable(__function):
+
     def wrapper(func: TargetFunction[P, T]) -> FullParamReturn[P, T]:
       return threaded(
         func,
-        args = args,
-        kwargs = kwargs,
-        ignore_errors = ignore_errors,
-        suppress_errors = suppress_errors,
-        **overflow_kwargs
+        args=args,
+        kwargs=kwargs,
+        ignore_errors=ignore_errors,
+        suppress_errors=suppress_errors,
+        **overflow_kwargs,
       )
+
     return wrapper
 
-  overflow_kwargs.update({
-    'ignore_errors': ignore_errors,
-    'suppress_errors': suppress_errors
-  })
+  overflow_kwargs.update(
+    {'ignore_errors': ignore_errors, 'suppress_errors': suppress_errors}
+  )
 
   kwargs = dict(kwargs)
-  
+
   @wraps(__function)
   def wrapped(*parsed_args: P.args, **parsed_kwargs: P.kwargs) -> Thread[P, T]:
     kwargs.update(parsed_kwargs)
 
-    processed_args = ( *args, *parsed_args )
-    processed_kwargs = { i:v for i,v in parsed_kwargs.items() if i not in ['args', 'kwargs'] }
+    processed_args = (*args, *parsed_args)
+    processed_kwargs = {
+      i: v for i, v in parsed_kwargs.items() if i not in ['args', 'kwargs']
+    }
 
     job = Thread(
-      target = __function,
-      args = processed_args,
-      kwargs = processed_kwargs,
-      **overflow_kwargs
+      target=__function, args=processed_args, kwargs=processed_kwargs, **overflow_kwargs
     )
     job.start()
     return job
-  
+
   return wrapped

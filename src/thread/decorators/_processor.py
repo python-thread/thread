@@ -18,15 +18,26 @@ _DataT = TypeVar('_DataT')
 TargetFunction = Callable[Concatenate[_DataT, _TargetP], _TargetT]
 
 
-NoParamReturn = Callable[Concatenate[Sequence[_DataT], _TargetP], ParallelProcessing[_TargetP, _TargetT, _DataT]]
-WithParamReturn = Callable[[TargetFunction[_DataT, _TargetP, _TargetT]], NoParamReturn[_DataT, _TargetP, _TargetT]]
-FullParamReturn = Callable[Concatenate[Sequence[_DataT], _TargetP], ParallelProcessing[_TargetP, _TargetT, _DataT]]
-
-
+NoParamReturn = Callable[
+Concatenate[Sequence[_DataT], _TargetP],
+ParallelProcessing[_TargetP, _TargetT, _DataT],
+]
+WithParamReturn = Callable[
+[TargetFunction[_DataT, _TargetP, _TargetT]],
+NoParamReturn[_DataT, _TargetP, _TargetT],
+]
+FullParamReturn = Callable[
+Concatenate[Sequence[_DataT], _TargetP],
+ParallelProcessing[_TargetP, _TargetT, _DataT],
+]
 
 
 @overload
-def processor(__function: TargetFunction[_DataT, _TargetP, _TargetT]) -> NoParamReturn[_DataT, _TargetP, _TargetT]: ...
+def processor(
+  __function: TargetFunction[_DataT, _TargetP, _TargetT],
+  ) -> NoParamReturn[_DataT, _TargetP, _TargetT]:
+  ...
+
 
 @overload
 def processor(
@@ -35,8 +46,10 @@ def processor(
   kwargs: Mapping[str, Data_In] = {},
   ignore_errors: Sequence[type[Exception]] = (),
   suppress_errors: bool = False,
-  **overflow_kwargs: Overflow_In
-) -> WithParamReturn[_DataT, _TargetP, _TargetT]: ...
+  **overflow_kwargs: Overflow_In,
+  ) -> WithParamReturn[_DataT, _TargetP, _TargetT]:
+  ...
+
 
 @overload
 def processor(
@@ -46,8 +59,9 @@ def processor(
   kwargs: Mapping[str, Data_In] = {},
   ignore_errors: Sequence[type[Exception]] = (),
   suppress_errors: bool = False,
-  **overflow_kwargs: Overflow_In
-) -> FullParamReturn[_DataT, _TargetP, _TargetT]: ...
+  **overflow_kwargs: Overflow_In,
+  ) -> FullParamReturn[_DataT, _TargetP, _TargetT]:
+  ...
 
 
 def processor(
@@ -57,8 +71,12 @@ def processor(
   kwargs: Mapping[str, Data_In] = {},
   ignore_errors: Sequence[type[Exception]] = (),
   suppress_errors: bool = False,
-  **overflow_kwargs: Overflow_In
-) -> Union[NoParamReturn[_DataT, _TargetP, _TargetT], WithParamReturn[_DataT, _TargetP, _TargetT], FullParamReturn[_DataT, _TargetP, _TargetT]]:
+  **overflow_kwargs: Overflow_In,
+  ) -> Union[
+  NoParamReturn[_DataT, _TargetP, _TargetT],
+  WithParamReturn[_DataT, _TargetP, _TargetT],
+  FullParamReturn[_DataT, _TargetP, _TargetT],
+]:
   """
   Decorate a function to run it in a thread
 
@@ -88,7 +106,8 @@ def processor(
 
   You can also pass keyword arguments to change the thread behaviour, it otherwise follows the defaults of `thread.Thread`
   >>> @thread.threaded(daemon = True)
-  >>> def myfunction(): ...
+  >>> def myfunction():
+  ...   ...
 
   Args will be ordered infront of function-parsed args parsed into `thread.Thread.args`
   >>> @thread.threaded(args = (1))
@@ -100,39 +119,46 @@ def processor(
   """
 
   if not callable(__function):
-    def wrapper(func: TargetFunction[_DataT, _TargetP, _TargetT]) -> FullParamReturn[_DataT, _TargetP, _TargetT]:
+
+    def wrapper(
+      func: TargetFunction[_DataT, _TargetP, _TargetT],
+      ) -> FullParamReturn[_DataT, _TargetP, _TargetT]:
       return processor(
         func,
-        args = args,
-        kwargs = kwargs,
-        ignore_errors = ignore_errors,
-        suppress_errors = suppress_errors,
-        **overflow_kwargs
+        args=args,
+        kwargs=kwargs,
+        ignore_errors=ignore_errors,
+        suppress_errors=suppress_errors,
+        **overflow_kwargs,
       )
+
     return wrapper
 
-  overflow_kwargs.update({
-    'ignore_errors': ignore_errors,
-    'suppress_errors': suppress_errors
-  })
+  overflow_kwargs.update(
+    {'ignore_errors': ignore_errors, 'suppress_errors': suppress_errors}
+  )
 
   kwargs = dict(kwargs)
-  
+
   @wraps(__function)
-  def wrapped(data: Sequence[_DataT], *parsed_args: _TargetP.args, **parsed_kwargs: _TargetP.kwargs) -> ParallelProcessing[_TargetP, _TargetT, _DataT]:
+  def wrapped(
+    data: Sequence[_DataT],
+    *parsed_args: _TargetP.args,
+    **parsed_kwargs: _TargetP.kwargs,
+    ) -> ParallelProcessing[_TargetP, _TargetT, _DataT]:
     kwargs.update(parsed_kwargs)
 
-    processed_args = ( *args, *parsed_args )
-    processed_kwargs = { i:v for i,v in kwargs.items() if i not in ['args', 'kwargs'] }
+    processed_args = (*args, *parsed_args)
+    processed_kwargs = {i: v for i, v in kwargs.items() if i not in ['args', 'kwargs']}
 
     job = ParallelProcessing(
-      function = __function,
-      dataset = data,
-      args = processed_args,
-      kwargs = processed_kwargs,
-      **overflow_kwargs
+      function=__function,
+      dataset=data,
+      args=processed_args,
+      kwargs=processed_kwargs,
+      **overflow_kwargs,
     )
     job.start()
     return job
-  
+
   return wrapped
