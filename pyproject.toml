@@ -10,7 +10,7 @@ include = [{ path = "tests", format = "sdist" }]
 homepage = "https://github.com/python-thread/thread"
 repository = "https://github.com/python-thread/thread"
 documentation = "https://github.com/python-thread/thread/blob/main/docs/getting-started.md"
-keywords = ["threading", "extension", "multiprocessing"]
+keywords = ["thread", "threading", "extension", "multiprocessing"]
 classifiers = [
   "Development Status :: 3 - Alpha",
   "Intended Audience :: Developers",
