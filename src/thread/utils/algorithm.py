@@ -14,7 +14,7 @@ from typing import List, Sequence, Any
 def chunk_split(dataset: Sequence[Any], number_of_chunks: int) -> List[List[Any]]:
   """
   Splits a dataset into balanced chunks
-  
+
   If the size of the dataset is not fully divisible by the number of chunks, it is split like this
     > `[ [n+1], [n+1], [n+1], [n], [n], [n] ]`
 
@@ -34,7 +34,9 @@ def chunk_split(dataset: Sequence[Any], number_of_chunks: int) -> List[List[Any]
   AssertionError: The number of chunks specified is larger than the dataset size
   """
   length = len(dataset)
-  assert length >= number_of_chunks, 'The number of chunks specified is larger than the dataset size'
+  assert (
+    length >= number_of_chunks
+  ), 'The number of chunks specified is larger than the dataset size'
 
   chunk_count = length // number_of_chunks
   overflow = length % number_of_chunks
@@ -50,4 +52,3 @@ def chunk_split(dataset: Sequence[Any], number_of_chunks: int) -> List[List[Any]
     i = b
 
   return split
-

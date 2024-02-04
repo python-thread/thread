@@ -16,14 +16,13 @@ Overflow_In = Any
 
 # Variable Types
 ThreadStatus = Literal[
-  'Idle',
-  'Running',
-  'Invoking hooks',
-  'Completed',
-
-  'Errored',
-  'Kill Scheduled',
-  'Killed'
+'Idle',
+'Running',
+'Invoking hooks',
+'Completed',
+'Errored',
+'Kill Scheduled',
+'Killed',
 ]
 
 

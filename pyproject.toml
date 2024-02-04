@@ -5,19 +5,26 @@ description = "Threading module extension"
 authors = ["Alex <taboez4life@gmail.com>"]
 license = "BSD-3-Clause"
 readme = "README.md"
-packages = [{include = "thread", from = "src"}]
+packages = [
+  { include = "thread", from = "src" },
+  { include = "thread/py.typed", from = "src" },
+]
 include = [{ path = "tests", format = "sdist" }]
 homepage = "https://github.com/python-thread/thread"
 repository = "https://github.com/python-thread/thread"
 documentation = "https://github.com/python-thread/thread/blob/main/docs/getting-started.md"
-keywords = ["threading", "extension", "multiprocessing"]
+keywords = ["thread", "threading", "extension", "multiprocessing"]
 classifiers = [
   "Development Status :: 3 - Alpha",
   "Intended Audience :: Developers",
-  "License :: OSI Approved :: BSD License"
+  "License :: OSI Approved :: BSD License",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3",
 ]
 
 [tool.poetry.urls]
+Changelog = "https://github.com/python-thread/thread/releases"
 "Bug Tracker" = "https://github.com/python-thread/thread/issues"
 
 [tool.poetry.scripts]
@@ -25,7 +32,6 @@ thread = "thread.__main__:app"
 
 [tool.poetry.dependencies]
 python = "^3.9"
-typer = {extras = ["all"], version = "^0.9.0"}
 typing-extensions = "^4.9.0"
 
 

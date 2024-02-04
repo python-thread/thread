@@ -19,24 +19,27 @@ import thread
 
 
 # Export Core
-from .thread import (
-  Thread,
-  ParallelProcessing
-)
+from .thread import Thread, ParallelProcessing
 
 
-from . import (
-  _types as types,
-  exceptions
-)
+from . import _types as types, exceptions
 
 
 # Export decorators
-from .decorators import (
-  threaded,
-  processor
-)
+from .decorators import threaded, processor
 
 
 # Configuration
 from .utils import Settings
+
+
+# Wildcard Export
+__all__ = [
+  'Thread',
+  'ParallelProcessing',
+  'threaded',
+  'processor',
+  'types',
+  'exceptions',
+  'Settings',
+]
