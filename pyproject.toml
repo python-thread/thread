@@ -5,7 +5,10 @@ description = "Threading module extension"
 authors = ["Alex <taboez4life@gmail.com>"]
 license = "BSD-3-Clause"
 readme = "README.md"
-packages = [{ include = "thread", from = "src" }]
+packages = [
+  { include = "thread", from = "src" },
+  { include = "thread-cli/py.typed", from = "src" },
+]
 include = [{ path = "tests", format = "sdist" }]
 homepage = "https://github.com/python-thread/thread"
 repository = "https://github.com/python-thread/thread"
