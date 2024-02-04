@@ -7,7 +7,7 @@ license = "BSD-3-Clause"
 readme = "README.md"
 packages = [
   { include = "thread", from = "src" },
-  { include = "thread-cli/py.typed", from = "src" },
+  { include = "thread/py.typed", from = "src" },
 ]
 include = [{ path = "tests", format = "sdist" }]
 homepage = "https://github.com/python-thread/thread"
