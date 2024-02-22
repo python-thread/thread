@@ -10,7 +10,6 @@
   <a href="[stars-url]">[![Stargazers][stars-shield]][stars-url]</a>
   <a href="[issues-url]">[![Issues][issues-shield]][issues-url]</a>
   <a href="[license-url]">[![BSD-3-Clause License][license-shield]][license-url]</a>
-  <a href="[linkedin-url]">[![LinkedIn][linkedin-shield]][linkedin-url]</a>
 
 </div>
 
@@ -54,7 +53,7 @@ I hope thread will become your threading solution! ♡⸜(˶˃ ᵕ ˂˶)⸝♡
 <!-- GETTING STARTED -->
 ## Getting Started
 
-This is an example of how you may give instructions on setting up your project locally.
+This is an example of how you can set up your project locally.
 To get a local copy up and running follow these simple example steps.
 
 ### Prerequisites
@@ -63,7 +62,7 @@ To get a local copy up and running follow these simple example steps.
 
 ### Installation
 
-_Below is an example of how you can instruct your audience on installing and setting up your app. This template doesn't rely on any external dependencies or services._
+_Below is an example of how you can install and use thread._
 
 1. Install the package
    ```sh
@@ -82,7 +81,7 @@ _Below is an example of how you can instruct your audience on installing and set
 <!-- DOCS -->
 ## Documentation
 
-Our docs are [here!](/docs/getting-started.md)
+Our docs are [here!](https://thread.ngjx.org)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -91,7 +90,7 @@ Our docs are [here!](/docs/getting-started.md)
 <!-- ROADMAP -->
 ## Roadmap
 
-- [x] v0.1.3 Release
+- [x] v1.0.0 Release
 - [ ] Bug fixes
 - [ ] New features
 - [ ] Testing
@@ -124,7 +123,7 @@ Don't forget to give the project a star! Thanks again!
 <!-- LICENSE -->
 ## License
 
-Distributed under the BSD-3-Clause License. See `LICENSE.txt` for more information.
+Distributed under the BSD-3-Clause License. See [LICENSE.txt](./LICENSE.txt) for more information.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -133,9 +132,9 @@ Distributed under the BSD-3-Clause License. See `LICENSE.txt` for more informati
 <!-- CONTACT -->
 ## Contact
 
-Alex - thread@ngjx.org
+Alex - [contact@thread.ngjx.org](mailto:contact@thread.ngjx.org)
 
-Project Board: https://github.com/orgs/python-thread/projects/2
+Project Board: [https://github.com/orgs/python-thread/projects/2](https://github.com/orgs/python-thread/projects/2)
 
 Project Link: [https://github.com/python-thread/thread](https://github.com/python-thread/thread)
 
@@ -168,5 +167,3 @@ Project Link: [https://github.com/python-thread/thread](https://github.com/pytho
 [issues-url]: https://github.com/python-thread/thread/issues
 [license-shield]: https://img.shields.io/github/license/python-thread/thread.svg?style=for-the-badge
 [license-url]: https://github.com/python-thread/thread/blob/master/LICENSE.txt
-[linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
-[linkedin-url]: https://www.linkedin.com/in/ngjx

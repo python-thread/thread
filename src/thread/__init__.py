@@ -18,6 +18,9 @@ import thread
 """
 
 
+__version__ = '1.0.0'
+
+
 # Export Core
 from .thread import Thread, ParallelProcessing
 
@@ -42,4 +45,5 @@ __all__ = [
   'types',
   'exceptions',
   'Settings',
+  '__version__',
 ]
