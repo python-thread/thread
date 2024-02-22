@@ -2,7 +2,7 @@
 name = "thread"
 version = "1.0.0"
 description = "Threading module extension"
-authors = ["Alex <taboez4life@gmail.com>"]
+authors = ["Alex <contact@ngjx.org>"]
 license = "BSD-3-Clause"
 readme = "README.md"
 packages = [
