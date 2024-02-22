@@ -132,7 +132,7 @@ Distributed under the BSD-3-Clause License. See `LICENSE.txt` for more informati
 <!-- CONTACT -->
 ## Contact
 
-Alex - thread@ngjx.org
+Alex - [contact@thread.ngjx.org](mailto:contact@thread.ngjx.org)
 
 Project Board: https://github.com/orgs/python-thread/projects/2
 
