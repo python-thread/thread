@@ -90,7 +90,7 @@ Our docs are [here!](/docs/getting-started.md)
 <!-- ROADMAP -->
 ## Roadmap
 
-- [x] v0.1.3 Release
+- [x] v1.0.0 Release
 - [ ] Bug fixes
 - [ ] New features
 - [ ] Testing
