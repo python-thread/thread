@@ -507,8 +507,6 @@ class ParallelProcessing(Generic[_Target_P, _Target_T, _Dataset_T]):
       i: v for i, v in self.overflow_kwargs.items() if i != 'name' and i != 'args'
     }
 
-    print(parsed_args, self.overflow_args)
-
     for i, data_chunk in enumerate(chunk_split(self.dataset, max_threads)):
       chunk_thread = Thread(
         target=self.function,
