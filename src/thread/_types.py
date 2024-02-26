@@ -5,7 +5,7 @@ Documentation: https://thread.ngjx.org
 """
 
 from typing import Any, Literal, Callable, Union
-from typing_extensions import ParamSpec, TypeVar
+from typing_extensions import ParamSpec, TypeVar, Concatenate
 
 
 # Descriptive Types
@@ -34,4 +34,4 @@ TargetFunction = Callable[_Target_P, _Target_T]
 HookFunction = Callable[[_Target_T], Union[Any, None]]
 
 _Dataset_T = TypeVar('_Dataset_T')
-DatasetFunction = Callable[[_Dataset_T], _Target_T]
+DatasetFunction = Callable[Concatenate[_Dataset_T, _Target_P], _Target_T]

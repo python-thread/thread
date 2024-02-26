@@ -346,7 +346,7 @@ class ParallelProcessing(Generic[_Target_P, _Target_T, _Dataset_T]):
 
   def __init__(
     self,
-    function: DatasetFunction[_Dataset_T, _Target_T],
+    function: DatasetFunction[_Dataset_T, _Target_P, _Target_T],
     dataset: Sequence[_Dataset_T],
     max_threads: int = 8,
     *overflow_args: Overflow_In,
