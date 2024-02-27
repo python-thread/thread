@@ -346,7 +346,7 @@ class ParallelProcessing(Generic[_Target_P, _Target_T, _Dataset_T]):
 
   def __init__(
     self,
-    function: DatasetFunction[_Dataset_T, _Target_T],
+    function: DatasetFunction[_Dataset_T, _Target_P, _Target_T],
     dataset: Sequence[_Dataset_T],
     max_threads: int = 8,
     *overflow_args: Overflow_In,
@@ -506,8 +506,6 @@ class ParallelProcessing(Generic[_Target_P, _Target_T, _Dataset_T]):
     self.overflow_kwargs = {
       i: v for i, v in self.overflow_kwargs.items() if i != 'name' and i != 'args'
     }
-
-    print(parsed_args, self.overflow_args)
 
     for i, data_chunk in enumerate(chunk_split(self.dataset, max_threads)):
       chunk_thread = Thread(
