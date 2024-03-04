@@ -46,7 +46,7 @@ def chunk_split(dataset_length: int, number_of_chunks: int) -> List[Tuple[int, i
     chunk_length = chunk_count + int(overflow > 0)
     b = i + chunk_length
 
-    split.append(dataset[i:b])
+    split.append((i, b))
     overflow -= 1
     i = b
 
