@@ -32,7 +32,7 @@ from ._types import (
   HookFunction,
 )
 from typing_extensions import Generic, ParamSpec
-from typing import List, Callable, Optional, Union, Mapping, Sequence, Tuple
+from typing import List, Callable, Optional, Union, Mapping, Sequence, Tuple, Generator
 
 
 Threads: set['Thread'] = set()
@@ -387,15 +387,19 @@ class ParallelProcessing(Generic[_Target_P, _Target_T, _Dataset_T]):
     @wraps(function)
     def wrapper(
       index: int,
-      data_chunk: Sequence[_Dataset_T],
+      length: int,
+      data_chunk: Generator[_Dataset_T, None, None],
       *args: _Target_P.args,
       **kwargs: _Target_P.kwargs,
       ) -> List[_Target_T]:
       computed: List[Data_Out] = []
-      for i, data_entry in enumerate(data_chunk):
+
+      i = 0
+      for data_entry in data_chunk:
         v = function(data_entry, *args, **kwargs)
         computed.append(v)
-        self._threads[index].progress = round((i + 1) / len(data_chunk), 5)
+        self._threads[index].progress = round((i + 1) / length, 5)
+        i += 1
 
       self._completed += 1
       if self._completed == len(self._threads):
@@ -507,15 +511,23 @@ class ParallelProcessing(Generic[_Target_P, _Target_T, _Dataset_T]):
       i: v for i, v in self.overflow_kwargs.items() if i != 'name' and i != 'args'
     }
 
-    for i, data_chunk in enumerate(chunk_split(self.dataset, max_threads)):
+    i = 0
+    for chunkStart, chunkEnd in chunk_split(len(self.dataset), max_threads):
       chunk_thread = Thread(
         target=self.function,
-        args=[i, data_chunk, *parsed_args, *self.overflow_args],
+        args=[
+          i,
+          chunkEnd - chunkStart,
+          (self.dataset[x] for x in range(chunkStart, chunkEnd)),
+          *parsed_args,
+          *self.overflow_args,
+        ],
         name=name_format and name_format % i or None,
         **self.overflow_kwargs,
       )
       self._threads.append(_ThreadWorker(chunk_thread, 0))
       chunk_thread.start()
+      i += 1
 
 
 # Handle abrupt exit
