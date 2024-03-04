@@ -21,13 +21,13 @@ def chunk_split(dataset_length: int, number_of_chunks: int) -> List[Tuple[int, i
 
   Parameters
   ----------
-  :param dataset: This should be the dataset you want to split into chunks
+  :param dataset_length: This should be the length of the dataset you want to split into chunks
   :param number_of_chunks: The should be the number of chunks it will attempt to split into
 
 
   Returns
   -------
-  :returns list[list[Any]]: The split dataset
+  :returns list[tuple[int, int]]: The chunked dataset slices
 
   Raises
   ------
