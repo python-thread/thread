@@ -512,9 +512,16 @@ class ParallelProcessing(Generic[_Target_P, _Target_T, _Dataset_T]):
     }
 
     i = 0
+    for chunkStart, chunkEnd in chunk_split(len(self.dataset), max_threads):
       chunk_thread = Thread(
         target=self.function,
-        args=[i, data_chunk, *parsed_args, *self.overflow_args],
+        args=[
+          i,
+          chunkEnd - chunkStart,
+          (self.dataset[x] for x in range(chunkStart, chunkEnd)),
+          *parsed_args,
+          *self.overflow_args,
+        ],
         name=name_format and name_format % i or None,
         **self.overflow_kwargs,
       )
