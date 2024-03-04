@@ -392,10 +392,13 @@ class ParallelProcessing(Generic[_Target_P, _Target_T, _Dataset_T]):
       **kwargs: _Target_P.kwargs,
       ) -> List[_Target_T]:
       computed: List[Data_Out] = []
-      for i, data_entry in enumerate(data_chunk):
+
+      i = 0
+      for data_entry in data_chunk:
         v = function(data_entry, *args, **kwargs)
         computed.append(v)
         self._threads[index].progress = round((i + 1) / len(data_chunk), 5)
+        i += 1
 
       self._completed += 1
       if self._completed == len(self._threads):
@@ -507,7 +510,7 @@ class ParallelProcessing(Generic[_Target_P, _Target_T, _Dataset_T]):
       i: v for i, v in self.overflow_kwargs.items() if i != 'name' and i != 'args'
     }
 
-    for i, data_chunk in enumerate(chunk_split(self.dataset, max_threads)):
+    i = 0
       chunk_thread = Thread(
         target=self.function,
         args=[i, data_chunk, *parsed_args, *self.overflow_args],
@@ -516,6 +519,7 @@ class ParallelProcessing(Generic[_Target_P, _Target_T, _Dataset_T]):
       )
       self._threads.append(_ThreadWorker(chunk_thread, 0))
       chunk_thread.start()
+      i += 1
 
 
 # Handle abrupt exit
