@@ -8,10 +8,10 @@ If it gets too dense, we could consider splitting it into a library import
   |_ b.py
 """
 
-from typing import List, Sequence, Any
+from typing import List, Tuple
 
 
-def chunk_split(dataset: Sequence[Any], number_of_chunks: int) -> List[List[Any]]:
+def chunk_split(dataset_length: int, number_of_chunks: int) -> List[Tuple[int, int]]:
   """
   Splits a dataset into balanced chunks
 
