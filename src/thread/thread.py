@@ -32,7 +32,7 @@ from ._types import (
   HookFunction,
 )
 from typing_extensions import Generic, ParamSpec
-from typing import List, Callable, Optional, Union, Mapping, Sequence, Tuple
+from typing import List, Callable, Optional, Union, Mapping, Sequence, Tuple, Generator
 
 
 Threads: set['Thread'] = set()
@@ -387,7 +387,7 @@ class ParallelProcessing(Generic[_Target_P, _Target_T, _Dataset_T]):
     @wraps(function)
     def wrapper(
       index: int,
-      data_chunk: Sequence[_Dataset_T],
+      data_chunk: Generator[_Dataset_T, None, None],
       *args: _Target_P.args,
       **kwargs: _Target_P.kwargs,
       ) -> List[_Target_T]:
