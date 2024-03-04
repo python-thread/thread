@@ -387,6 +387,7 @@ class ParallelProcessing(Generic[_Target_P, _Target_T, _Dataset_T]):
     @wraps(function)
     def wrapper(
       index: int,
+      length: int,
       data_chunk: Generator[_Dataset_T, None, None],
       *args: _Target_P.args,
       **kwargs: _Target_P.kwargs,
@@ -397,7 +398,7 @@ class ParallelProcessing(Generic[_Target_P, _Target_T, _Dataset_T]):
       for data_entry in data_chunk:
         v = function(data_entry, *args, **kwargs)
         computed.append(v)
-        self._threads[index].progress = round((i + 1) / len(data_chunk), 5)
+        self._threads[index].progress = round((i + 1) / length, 5)
         i += 1
 
       self._completed += 1
