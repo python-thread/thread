@@ -33,17 +33,16 @@ def chunk_split(dataset_length: int, number_of_chunks: int) -> List[Tuple[int, i
   ------
   AssertionError: The number of chunks specified is larger than the dataset size
   """
-  length = len(dataset)
   assert (
-    length >= number_of_chunks
+    dataset_length >= number_of_chunks
   ), 'The number of chunks specified is larger than the dataset size'
 
-  chunk_count = length // number_of_chunks
-  overflow = length % number_of_chunks
+  chunk_count = dataset_length // number_of_chunks
+  overflow = dataset_length % number_of_chunks
 
   i = 0
   split = []
-  while i < length:
+  while i < dataset_length:
     chunk_length = chunk_count + int(overflow > 0)
     b = i + chunk_length
 
