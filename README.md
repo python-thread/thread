@@ -162,7 +162,7 @@ Project Link: [https://github.com/python-thread/thread](https://github.com/pytho
 [pypi-url]: https://pypi.org/project/thread/
 [forks-shield]: https://img.shields.io/github/forks/python-thread/thread.svg?style=for-the-badge
 [forks-url]: https://github.com/python-thread/thread/network/members
-[stars-shield]: https://img.shields.io/github/stars/python-thread/thread.svg?style=for-the-badge
+[stars-shield]: https://img.shields.io/github/stars/python-thread/thread.svg?style=for-the-badge&color=yellow
 [stars-url]: https://github.com/python-thread/thread/stargazers
 [license-shield]: https://img.shields.io/github/license/python-thread/thread.svg?style=for-the-badge
 [license-url]: https://github.com/python-thread/thread/blob/master/LICENSE.txt
