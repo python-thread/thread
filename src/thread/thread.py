@@ -38,39 +38,40 @@ from typing import List, Callable, Optional, Union, Mapping, Sequence, Tuple, Ge
 Threads: set['Thread'] = set()
 
 
-"""
+class Thread(threading.Thread, Generic[_Target_P, _Target_T]):
+  """
   Wraps python's `threading.Thread` class
   ---------------------------------------
 
   Type-Safe and provides more functionality on top
   """
 
-status: ThreadStatus
-hooks: List[HookFunction]
-_returned_value: Data_Out
+  status: ThreadStatus
+  hooks: List[HookFunction]
+  _returned_value: Data_Out
 
-errors: List[Exception]
-ignore_errors: Sequence[type[Exception]]
-suppress_errors: bool
+  errors: List[Exception]
+  ignore_errors: Sequence[type[Exception]]
+  suppress_errors: bool
 
-# threading.Thread stuff
-_initialized: bool
-_run: Callable
+  # threading.Thread stuff
+  _initialized: bool
+  _run: Callable
 
-def __init__(
-  self,
-  target: TargetFunction[_Target_P, _Target_T],
-  args: Sequence[Data_In] = (),
-  kwargs: Mapping[str, Data_In] = {},
-  ignore_errors: Sequence[type[Exception]] = (),
-  suppress_errors: bool = False,
-  name: Optional[str] = None,
-  daemon: bool = False,
-  group=None,
-  *overflow_args: Overflow_In,
-  **overflow_kwargs: Overflow_In,
-  ) -> None:
-  """
+  def __init__(
+    self,
+    target: TargetFunction[_Target_P, _Target_T],
+    args: Sequence[Data_In] = (),
+    kwargs: Mapping[str, Data_In] = {},
+    ignore_errors: Sequence[type[Exception]] = (),
+    suppress_errors: bool = False,
+    name: Optional[str] = None,
+    daemon: bool = False,
+    group=None,
+    *overflow_args: Overflow_In,
+    **overflow_kwargs: Overflow_In,
+    ) -> None:
+    """
     Initializes a thread
 
     Parameters
@@ -86,25 +87,25 @@ def __init__(
     :param *: These are arguments parsed to `threading.Thread`
     :param **: These are arguments parsed to `thread.Thread`
     """
-  _target = self._wrap_target(target)
-  self._returned_value = None
-  self.status = 'Idle'
-  self.hooks = []
+    _target = self._wrap_target(target)
+    self._returned_value = None
+    self.status = 'Idle'
+    self.hooks = []
 
-  self.errors = []
-  self.ignore_errors = ignore_errors
-  self.suppress_errors = suppress_errors
+    self.errors = []
+    self.ignore_errors = ignore_errors
+    self.suppress_errors = suppress_errors
 
-  super().__init__(
-    target=_target,
-    args=args,
-    kwargs=kwargs,
-    name=name,
-    daemon=daemon,
-    group=group,
-    *overflow_args,
-    **overflow_kwargs,
-  )
+    super().__init__(
+      target=_target,
+      args=args,
+      kwargs=kwargs,
+      name=name,
+      daemon=daemon,
+      group=group,
+      *overflow_args,
+      **overflow_kwargs,
+    )
 
   def _wrap_target(
     self, target: TargetFunction[_Target_P, _Target_T]
