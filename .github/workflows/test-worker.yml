@@ -64,4 +64,4 @@ jobs:
 
     steps:
       - name: Whether the whole test suite passed
-        uses: re-actors/alls-green@release/v1.2.2
+        uses: re-actors/alls-green@v1.2.2
