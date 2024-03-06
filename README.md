@@ -5,10 +5,10 @@
 <!-- PROJECT SHIELDS -->
 <div align="center">
 
-  <a href="[contributors-url]">[![Contributors][contributors-shield]][contributors-url]</a>
+  <a href="[pypi-url]">[![PYPI - Version][version-shield]][pypi-url]</a>
+  <a href="[pypi-url]">[![PYPI - Downloads][downloads-shield]][pypi-url]</a>
   <a href="[forks-url]">[![Forks][forks-shield]][forks-url]</a>
   <a href="[stars-url]">[![Stargazers][stars-shield]][stars-url]</a>
-  <a href="[issues-url]">[![Issues][issues-shield]][issues-url]</a>
   <a href="[license-url]">[![BSD-3-Clause License][license-shield]][license-url]</a>
 
 </div>
@@ -157,13 +157,12 @@ Project Link: [https://github.com/python-thread/thread](https://github.com/pytho
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[contributors-shield]: https://img.shields.io/github/contributors/python-thread/thread.svg?style=for-the-badge
-[contributors-url]: https://github.com/python-thread/thread/graphs/contributors
+[version-shield]: https://img.shields.io/pypi/v/thread.svg?style=for-the-badge&color=efd0cd
+[downloads-shield]: https://img.shields.io/pypi/dm/thread.svg?style=for-the-badge
+[pypi-url]: https://pypi.org/project/thread/
 [forks-shield]: https://img.shields.io/github/forks/python-thread/thread.svg?style=for-the-badge
 [forks-url]: https://github.com/python-thread/thread/network/members
-[stars-shield]: https://img.shields.io/github/stars/python-thread/thread.svg?style=for-the-badge
+[stars-shield]: https://img.shields.io/github/stars/python-thread/thread.svg?style=for-the-badge&color=yellow
 [stars-url]: https://github.com/python-thread/thread/stargazers
-[issues-shield]: https://img.shields.io/github/issues/python-thread/thread.svg?style=for-the-badge
-[issues-url]: https://github.com/python-thread/thread/issues
 [license-shield]: https://img.shields.io/github/license/python-thread/thread.svg?style=for-the-badge
 [license-url]: https://github.com/python-thread/thread/blob/master/LICENSE.txt
