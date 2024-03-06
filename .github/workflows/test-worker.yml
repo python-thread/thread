@@ -25,6 +25,8 @@ jobs:
     name: "${{ matrix.python-version }} on ${{ matrix.os }}"
     runs-on: "${{ matrix.os }}-latest"
 
+    continue-on-error: ${{ startsWith(matrix.python-version, '~') }} # Allows unstable Python versions to fail
+
     strategy:
       fail-fast: false
       matrix:
