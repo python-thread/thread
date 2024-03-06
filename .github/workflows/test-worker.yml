@@ -68,3 +68,5 @@ jobs:
     steps:
       - name: Whether the whole test suite passed
         uses: re-actors/alls-green@v1.2.2
+        with:
+          jobs: ${{ toJSON(needs) }}
