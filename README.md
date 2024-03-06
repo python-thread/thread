@@ -5,6 +5,7 @@
 <!-- PROJECT SHIELDS -->
 <div align="center">
 
+  <a href="[pypi-url]">[![PYPI - Downloads][downloads-shield]][pypi-url]</a>
   <a href="[forks-url]">[![Forks][forks-shield]][forks-url]</a>
   <a href="[stars-url]">[![Stargazers][stars-shield]][stars-url]</a>
   <a href="[license-url]">[![BSD-3-Clause License][license-shield]][license-url]</a>
@@ -155,6 +156,8 @@ Project Link: [https://github.com/python-thread/thread](https://github.com/pytho
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
+[downloads-shield]: https://img.shields.io/pypi/dm/thread.svg?style=for-the-badge
+[pypi-url]: https://pypi.org/project/thread/
 [forks-shield]: https://img.shields.io/github/forks/python-thread/thread.svg?style=for-the-badge
 [forks-url]: https://github.com/python-thread/thread/network/members
 [stars-shield]: https://img.shields.io/github/stars/python-thread/thread.svg?style=for-the-badge
