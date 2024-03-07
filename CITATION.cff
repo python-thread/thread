@@ -1,0 +1,40 @@
+abstract: Python threading library
+authors:
+  - alias: Alex
+    family-names: Ng
+    given-names: Jun Xiang
+    orcid: https://orcid.org/0009-0001-1641-9397
+identifiers:
+  - type: doi
+    value: <TO GET AFTER v1.0.0>
+    description: This is the collection of archived snapshots of all versions of thread.
+  - type: doi
+    value: <TO GET AFTER v1.0.0>
+    description: This is the archived snapshot of version 1.0.0 of thread.
+  - type: url
+    value: https://github.com/python-thread/thread/releases/tag/v1.0.0
+    description: The GitHub release URL of tag v1.0.0.
+  - type: url
+    value: https://pypi.org/project/thread/1.0.0
+    description: The PyPI release URL of tag v1.0.0.
+cff-version: 1.2.0
+date-released: 2024-03-07
+keywords:
+  - python
+  - python3
+  - python3.9
+  - python3.10
+  - python3.11
+  - thread
+  - threading
+  - extension
+  - multiprocessing
+license: BSD-3-Clause
+message: If you use this software, please cite it using these metadata.
+repository-code: https://github.com/python-thread/thread
+reposistory-artifact: https://pypi.org/project/thread
+title: thread
+type: software
+version: 1.0.0
+url: https://thread.ngjx.org
+
