@@ -260,10 +260,11 @@ class Thread(threading.Thread, Generic[_Target_P, _Target_T]):
 
     Returns
     -------
-    :returns bool: False if the it exceeded the timeout
+    :returns bool: False if the it exceeded the timeout without being killed
 
     Raises
     ------
+    ValueError: If the thread ident does not exist
     ThreadNotInitializedError: If the thread is not initialized
     ThreadNotRunningError: If the thread is not running
     """
