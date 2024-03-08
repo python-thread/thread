@@ -33,7 +33,7 @@ from ._types import (
   HookFunction,
 )
 from typing_extensions import Generic, ParamSpec
-from typing import List, Callable, Optional, Union, Mapping, Sequence, Tuple, Generator
+from typing import List, Optional, Union, Mapping, Sequence, Tuple, Generator
 
 
 Threads: set['Thread'] = set()
@@ -57,7 +57,6 @@ class Thread(threading.Thread, Generic[_Target_P, _Target_T]):
 
   # threading.Thread stuff
   _initialized: bool
-  _run: Callable
 
   def __init__(
     self,
@@ -272,6 +271,7 @@ class Thread(threading.Thread, Generic[_Target_P, _Target_T]):
       raise exceptions.ThreadNotRunningError()
 
     self.status = 'Kill Scheduled'
+
     res: int = ctypes.pythonapi.PyThreadState_SetAsyncExc(
       ctypes.c_long(self.ident), ctypes.py_object(SystemExit)
     )
