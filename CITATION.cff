@@ -6,10 +6,10 @@ authors:
     orcid: https://orcid.org/0009-0001-1641-9397
 identifiers:
   - type: doi
-    value: <TO GET AFTER v1.0.0>
+    value: 10.5281/zenodo.10799219
     description: This is the collection of archived snapshots of all versions of thread.
   - type: doi
-    value: <TO GET AFTER v1.0.0>
+    value: 10.5281/zenodo.10799220
     description: This is the archived snapshot of version 1.0.0 of thread.
   - type: url
     value: https://github.com/python-thread/thread/releases/tag/v1.0.0
