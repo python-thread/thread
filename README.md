@@ -17,7 +17,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/python-thread/thread">
-    <img src="images/logo.svg" alt="Logo" width="80" height="80">
+    <img src="https://thread.ngjx.org/favicon.svg" alt="Logo" width="80" height="80">
   </a>
 
   <h3 align="center">Thread</h3>
@@ -174,4 +174,4 @@ Project Link: [https://github.com/python-thread/thread](https://github.com/pytho
 [stars-url]: https://github.com/python-thread/thread/stargazers
 [license-shield]: https://img.shields.io/github/license/python-thread/thread.svg?style=for-the-badge
 [license-url]: https://github.com/python-thread/thread/blob/master/LICENSE.txt
-[socialcard]: images/socialcard.jpg
+[socialcard]: https://thread.ngjx.org/socialcard-white.jpg
