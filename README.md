@@ -25,6 +25,9 @@
   <p align="center">
     A python threading library extension
     <br />
+    <a href="https://thread.ngjx.org"><strong>Explore the docs »</strong></a>
+    <br />
+    <br />
     <a href="https://github.com/python-thread/thread/issues">Report Bug</a>
     ·
     <a href="https://github.com/python-thread/thread/issues">Request Feature</a>
