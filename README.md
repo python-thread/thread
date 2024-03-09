@@ -35,9 +35,10 @@
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
-> Wraps around the python threading library and provides extra functionality
 
-Strictly type-safe
+[![Social Card][socialcard]](https://thread.ngjx.org)
+
+Strictly type-safe and Wraps around the python threading library and provides extra functionality
 
 Fully compatible with the threading library, this project hopes to provide a more out-of-the-box solution with multi-threaded processing and fetching values from a completed thread, etc.
 
@@ -170,3 +171,4 @@ Project Link: [https://github.com/python-thread/thread](https://github.com/pytho
 [stars-url]: https://github.com/python-thread/thread/stargazers
 [license-shield]: https://img.shields.io/github/license/python-thread/thread.svg?style=for-the-badge
 [license-url]: https://github.com/python-thread/thread/blob/master/LICENSE.txt
+[socialcard]: images/socialcard.jpg
