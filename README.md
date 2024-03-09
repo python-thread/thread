@@ -16,6 +16,10 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
+  <a href="https://github.com/python-thread/thread">
+    <img src="images/logo.svg" alt="Logo" width="80" height="80">
+  </a>
+
   <h3 align="center">Thread</h3>
 
   <p align="center">
