@@ -83,13 +83,22 @@ def test_ignoreAll():
 
 def test_threadKilling():
   """This test is for testing that threads are killed properly"""
+  stdout = []
+
+  def _dummy_target_killThread(x: int, delay: float = 0):
+    for i in range(x):
+      stdout.append(i)
+      time.sleep(delay)
+
   new = Thread(
-    target = _dummy_iterative,
-    args = [5, 0.1, 0]
+    target = _dummy_target_killThread,
+    args = [4, 1],
+    daemon = True
   )
   new.start()
   new.kill(True)
   assert not new.is_alive()
+  assert len(stdout) != 4
 
 
 

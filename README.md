@@ -16,10 +16,17 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
+  <a href="https://github.com/python-thread/thread">
+    <img src="https://thread.ngjx.org/favicon.svg" alt="Logo" width="80" height="80">
+  </a>
+
   <h3 align="center">Thread</h3>
 
   <p align="center">
     A python threading library extension
+    <br />
+    <a href="https://thread.ngjx.org"><strong>Explore the docs »</strong></a>
+    <br />
     <br />
     <a href="https://github.com/python-thread/thread/issues">Report Bug</a>
     ·
@@ -31,9 +38,10 @@
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
-> Wraps around the python threading library and provides extra functionality
 
-Strictly type-safe
+[![Social Card][socialcard]](https://thread.ngjx.org)
+
+Strictly type-safe and Wraps around the python threading library and provides extra functionality
 
 Fully compatible with the threading library, this project hopes to provide a more out-of-the-box solution with multi-threaded processing and fetching values from a completed thread, etc.
 
@@ -166,3 +174,4 @@ Project Link: [https://github.com/python-thread/thread](https://github.com/pytho
 [stars-url]: https://github.com/python-thread/thread/stargazers
 [license-shield]: https://img.shields.io/github/license/python-thread/thread.svg?style=for-the-badge
 [license-url]: https://github.com/python-thread/thread/blob/master/LICENSE.txt
+[socialcard]: https://thread.ngjx.org/socialcard-white.jpg
