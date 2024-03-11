@@ -1,5 +1,3 @@
-indent-width = 2
-
 [format]
 # Exclude commonly ignored directories.
 exclude = [
