@@ -54,6 +54,7 @@ jobs:
           python -m poetry self add poetry-plugin-export
           python -m poetry export -f requirements.txt --output requirements.txt
           python -m pip install -r requirements.txt
+          python -m pip install .
 
       - name: Test with pytest
         run: |
