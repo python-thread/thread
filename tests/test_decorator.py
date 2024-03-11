@@ -1,5 +1,6 @@
 import time
-from src.thread import threaded, processor
+
+from thread import threaded, processor
 
 
 # >>>>>>>>>> Dummy Functions <<<<<<<<<< #
