@@ -1,6 +1,5 @@
 import random
-
-from thread.utils import algorithm
+from src.thread.utils import algorithm
 
 
 def test_chunking_1():
