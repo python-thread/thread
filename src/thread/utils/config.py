@@ -4,6 +4,7 @@ class Settings:
   `Non Instantiable`
   """
 
+  VERBOSITY: bool = True
   GRACEFUL_EXIT_ENABLED: bool = True
 
   def __init__(self):
@@ -12,3 +13,7 @@ class Settings:
   @staticmethod
   def set_graceful_exit(enabled: bool = True):
     Settings.GRACEFUL_EXIT_ENABLED = enabled
+
+  @staticmethod
+  def set_verbosity(verbosity: bool = True):
+    Settings.VERBOSITY = verbosity
