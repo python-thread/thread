@@ -38,12 +38,12 @@ from .utils import Settings
 
 # Wildcard Export
 __all__ = [
-  'Thread',
-  'ParallelProcessing',
-  'threaded',
-  'processor',
-  'types',
-  'exceptions',
-  'Settings',
-  '__version__',
+    'Thread',
+    'ParallelProcessing',
+    'threaded',
+    'processor',
+    'types',
+    'exceptions',
+    'Settings',
+    '__version__',
 ]

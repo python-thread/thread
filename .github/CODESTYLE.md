@@ -19,39 +19,39 @@ Listed is a example class used demonstrate general rules you should follow throu
 
 ```python
 class ExampleClass:
-  """
-  ExampleClass
-  ------------
-  Example class for CODESTYLE.md
-  """
-  # ^^^ reST Docstring Format
-
-  _private_attribute : int # private attributes begin with a lowercase
-  public_attribute   : int # type hint for integer is defined here
-
-  def __init__(
-    self,
-    public_attribute: int # type hint for parameters
-  ) -> None: # the expected return value of method
     """
-    Initializes a ExampleClass
-
-    Parameters
-    ----------
-    :param public_attribute: example attribute
+    ExampleClass
+    ------------
+    Example class for CODESTYLE.md
     """
-    self.public_attribute = public_attribute
-    self.private_attribute = square(public_attribute)
+    # ^^^ reST Docstring Format
 
-  def square(self, value: int) -> int:
-    """
-    Example method that square roots a value
+    _private_attribute : int # private attributes begin with a lowercase
+    public_attribute   : int # type hint for integer is defined here
 
-    Parameters
-    ----------
-    :param value: value that you want squared
-    """
-    return value**2
+    def __init__(
+      self,
+      public_attribute: int # type hint for parameters
+    ) -> None: # the expected return value of method
+      """
+      Initializes a ExampleClass
+
+      Parameters
+      ----------
+      :param public_attribute: example attribute
+      """
+      self.public_attribute = public_attribute
+      self.private_attribute = square(public_attribute)
+
+    def square(self, value: int) -> int:
+      """
+      Example method that square roots a value
+
+      Parameters
+      ----------
+      :param value: value that you want squared
+      """
+      return value**2
 ```
 
 
@@ -87,7 +87,7 @@ Currently, documentation for this project resides in markdown files.
  - Use of HTML is permitted
  - [reference style links](https://www.markdownguide.org/basic-syntax/#reference-style-links) are not required by are appreciated
  - Exceedingly long lines are to be broken
- - The indents are to be two spaces 
+ - The indents are to be 4 spaces
 
 ```markdown
 <!--example markdown document-->
