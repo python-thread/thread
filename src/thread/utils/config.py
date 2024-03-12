@@ -1,3 +1,16 @@
+from typing import Any, Literal, Union, Callable
+
+
+_Verbosity_Num = Literal[0, 1, 2]
+_Verbosity_Enum = Literal['quiet', 'normal', 'verbose']
+VerbosityLevel = Union[_Verbosity_Num, _Verbosity_Enum]
+VerbosityMapping: dict[_Verbosity_Enum, _Verbosity_Num] = {
+    'quiet': 0,
+    'normal': 1,
+    'verbose': 2,
+}
+
+
 class Settings:
     """
     # Settings
