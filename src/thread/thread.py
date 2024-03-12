@@ -137,7 +137,8 @@ class Thread(threading.Thread, Generic[_Target_P, _Target_T]):
 
             except SystemExit:
                 self.status = 'Killed'
-                print('KILLED ident: %s' % self.ident)
+                if Settings.VERBOSITY > 'quiet':
+                    print('KILLED ident: %s' % self.ident)
                 return
 
         return wrapper
@@ -532,8 +533,9 @@ class ParallelProcessing(Generic[_Target_P, _Target_T, _Dataset_T]):
 # Handle abrupt exit
 def service_shutdown(signum, frame):
     if Settings.GRACEFUL_EXIT_ENABLED:
-        print('\nCaught signal %d' % signum)
-        print('Gracefully killing active threads')
+        if Settings.VERBOSITY > 'quiet':
+            print('\nCaught signal %d' % signum)
+            print('Gracefully killing active threads')
 
         for thread in Threads:
             if isinstance(thread, Thread):
@@ -545,7 +547,8 @@ def service_shutdown(signum, frame):
                 ):
                     pass
                 except Exception:
-                    print('Failed to kill ident: %d' % thread.ident or 0)
+                    if Settings.VERBOSITY > 'quiet':
+                        print('Failed to kill ident: %d' % thread.ident or 0)
         sys.exit(0)
 
 
