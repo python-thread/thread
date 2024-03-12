@@ -85,6 +85,17 @@ class Verbosity:
 
     @staticmethod
     def is_valid_level(level: Any) -> bool:
+        """
+        Determines whether the given level is a valid verbosity level.
+
+        Parameters
+        ----------
+        :param level: The level to check.
+
+        Returns
+        -------
+        :returns: True if the level is a valid verbosity level, False otherwise.
+        """
         if isinstance(level, int):
             return level in VerbosityMapping.values()
         if isinstance(level, str):
@@ -109,9 +120,36 @@ class Settings:
         raise NotImplementedError('This class is not instantiable')
 
     @staticmethod
-    def set_graceful_exit(enabled: bool = True):
+    def set_graceful_exit(enabled: bool = True) -> None:
+        """
+        Enables/Disables graceful exiting.
+
+        Parameters
+        ----------
+        :param enabled: True to enable graceful exit, False otherwise.
+
+        Returns
+        -------
+        :returns: None
+        """
         Settings.GRACEFUL_EXIT_ENABLED = enabled
 
     @staticmethod
-    def set_verbosity(verbosity: bool = True):
-        Settings.VERBOSITY = verbosity
+    def set_verbosity(verbosity: VerbosityLevel = 'normal') -> None:
+        """
+        Sets the verbosity level.
+
+        Parameters
+        ----------
+        :param verbosity: The level of verbosity. Can be a number or an enum.
+
+        Returns
+        -------
+        :returns: None
+
+        Raises
+        ------
+        ValueError: If the level is not a valid number or enum.
+        ValueError: If the level is not of a valid type.
+        """
+        Settings.VERBOSITY = Verbosity(verbosity)
