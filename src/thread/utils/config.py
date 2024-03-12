@@ -35,12 +35,12 @@ class Verbosity:
         ValueError: If the level is not of a valid type.
         """
         if isinstance(level, str):
-            if level not in ['quiet', 'normal', 'verbose']:
+            if level not in VerbosityMapping.keys():
                 raise ValueError('Invalid verbosity level')
             self.level_string = level
             self.level_number = VerbosityMapping[level]
         elif isinstance(level, int):
-            if level not in [0, 1, 2]:
+            if level not in VerbosityMapping.values():
                 raise ValueError('Invalid verbosity level')
             self.level_number = level
             self.level_string = list(VerbosityMapping.keys())[level]
