@@ -9,14 +9,14 @@ identifiers:
     value: 10.5281/zenodo.10799219
     description: This is the collection of archived snapshots of all versions of thread.
   - type: doi
-    value: 10.5281/zenodo.10799220
-    description: This is the archived snapshot of version 1.0.0 of thread.
+    value: 10.5281/zenodo.10808243
+    description: This is the archived snapshot of version 1.0.1 of thread.
   - type: url
-    value: https://github.com/python-thread/thread/releases/tag/v1.0.0
-    description: The GitHub release URL of tag v1.0.0.
+    value: https://github.com/python-thread/thread/releases/tag/v1.0.1
+    description: The GitHub release URL of tag v1.0.1.
   - type: url
-    value: https://pypi.org/project/thread/1.0.0
-    description: The PyPI release URL of tag v1.0.0.
+    value: https://pypi.org/project/thread/1.0.1
+    description: The PyPI release URL of tag v1.0.1.
 cff-version: 1.2.0
 date-released: 2024-03-07
 keywords:
@@ -35,6 +35,6 @@ repository-code: https://github.com/python-thread/thread
 reposistory-artifact: https://pypi.org/project/thread
 title: thread
 type: software
-version: 1.0.0
+version: 1.0.1
 url: https://thread.ngjx.org
 
