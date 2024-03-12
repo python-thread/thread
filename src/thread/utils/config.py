@@ -1,5 +1,4 @@
-from typing import Any, Literal, Union, Callable
-
+from typing import Any, Callable, Literal, Union
 
 _Verbosity_Num = Literal[0, 1, 2]
 _Verbosity_Enum = Literal['quiet', 'normal', 'verbose']
