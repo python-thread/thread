@@ -273,11 +273,11 @@ class Thread(threading.Thread, Generic[_Target_P, _Target_T]):
 
         self.status = 'Kill Scheduled'
 
-        res: int = ctypes.pythonapi.PyThreadState_SetAsyncExc(
+        res: Optional[int] = self.ident and ctypes.pythonapi.PyThreadState_SetAsyncExc(
             ctypes.c_long(self.ident), ctypes.py_object(SystemExit)
         )
 
-        if res == 0:
+        if not res or res == 0:
             raise ValueError('Thread IDENT does not exist')
         elif res > 1:
             # Unexpected behaviour, something seriously went wrong
