@@ -33,5 +33,5 @@ TargetFunction = Callable[_Target_P, _Target_T]
 
 HookFunction = Callable[[_Target_T], Union[Any, None]]
 
-_Dataset_T = TypeVar('_Dataset_T')
+_Dataset_T = TypeVar('_Dataset_T', covariant=True)
 DatasetFunction = Callable[Concatenate[_Dataset_T, _Target_P], _Target_T]
