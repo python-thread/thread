@@ -33,9 +33,23 @@ from ._types import (
     DatasetFunction,
     _Dataset_T,
     HookFunction,
+    SupportsLength,
+    SupportsGetItem,
+    SupportsLengthGetItem,
 )
 from typing_extensions import Generic
-from typing import List, Optional, Union, Mapping, Sequence, Tuple, Generator
+from typing import (
+    Any,
+    List,
+    Optional,
+    Union,
+    Mapping,
+    Sequence,
+    Tuple,
+    Callable,
+    Generator,
+    overload,
+)
 
 
 Threads: set['Thread'] = set()
@@ -337,18 +351,68 @@ class ParallelProcessing(Generic[_Target_P, _Target_T, _Dataset_T]):
 
     status: ThreadStatus
     function: TargetFunction
-    dataset: Sequence[Data_In]
+    dataset: Union[
+        Sequence[_Dataset_T],
+        SupportsLength,
+        SupportsGetItem[_Dataset_T],
+        SupportsLengthGetItem[_Dataset_T],
+    ]
     max_threads: int
 
     overflow_args: Sequence[Overflow_In]
     overflow_kwargs: Mapping[str, Overflow_In]
 
+    @overload
     def __init__(
         self,
         function: DatasetFunction[_Dataset_T, _Target_P, _Target_T],
-        dataset: Sequence[_Dataset_T],
+        dataset: Union[Sequence[_Dataset_T], SupportsLengthGetItem[_Dataset_T]],
         max_threads: int = 8,
         *overflow_args: Overflow_In,
+        _get_value: Optional[Callable[[Sequence[_Dataset_T], int], _Dataset_T]] = None,
+        _length: Optional[Union[int, Callable[[Sequence[_Dataset_T]], int]]] = None,
+        **overflow_kwargs: Overflow_In,
+    ) -> None: ...
+
+    # Has __len__, require _get_value to be set
+    @overload
+    def __init__(
+        self,
+        function: DatasetFunction[_Dataset_T, _Target_P, _Target_T],
+        dataset: SupportsLength,
+        max_threads: int = 8,
+        *overflow_args: Overflow_In,
+        _get_value: Callable[[Sequence[_Dataset_T], int], _Dataset_T],
+        _length: Optional[Union[int, Callable[[Sequence[_Dataset_T]], int]]] = None,
+        **overflow_kwargs: Overflow_In,
+    ) -> None: ...
+
+    # Has __getitem__, require _length to be set
+    @overload
+    def __init__(
+        self,
+        function: DatasetFunction[_Dataset_T, _Target_P, _Target_T],
+        dataset: SupportsLength,
+        max_threads: int = 8,
+        *overflow_args: Overflow_In,
+        _get_value: Optional[Callable[[Sequence[_Dataset_T], int], _Dataset_T]] = None,
+        _length: Union[int, Callable[[Sequence[_Dataset_T]], int]],
+        **overflow_kwargs: Overflow_In,
+    ) -> None: ...
+
+    def __init__(
+        self,
+        function: DatasetFunction[_Dataset_T, _Target_P, _Target_T],
+        dataset: Union[
+            Sequence[_Dataset_T],
+            SupportsLength,
+            SupportsGetItem[_Dataset_T],
+            SupportsLengthGetItem[_Dataset_T],
+        ],
+        max_threads: int = 8,
+        *overflow_args: Overflow_In,
+        _get_value: Optional[Callable[[Sequence[_Dataset_T], int], _Dataset_T]] = None,
+        _length: Optional[Union[int, Callable[[Sequence[_Dataset_T]], int]]] = None,
         **overflow_kwargs: Overflow_In,
     ) -> None:
         """
@@ -363,6 +427,8 @@ class ParallelProcessing(Generic[_Target_P, _Target_T, _Dataset_T]):
         :param dataset: This should be an iterable sequence of data entries
         :param max_threads: This should be an integer value of the max threads allowed
         :param *: These are arguments parsed to `threading.Thread` and `Thread`
+        :param _get_value: This should be a function that takes in the dataset and the index and returns the data entry
+        :param _length: This should be an integer or a function that takes in the dataset and returns the length
         :param **: These are arguments parsed to `thread.Thread` and `Thread`
 
         Raises
