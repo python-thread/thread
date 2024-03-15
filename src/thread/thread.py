@@ -346,6 +346,7 @@ class ParallelProcessing(Generic[_Target_P, _Target_T, _Dataset_T]):
     Type-Safe and provides more functionality on top
     """
 
+    _length: int
     _threads: List[_ThreadWorker]
     _completed: int
 
@@ -436,9 +437,16 @@ class ParallelProcessing(Generic[_Target_P, _Target_T, _Dataset_T]):
         AssertionError: invalid `dataset`
         AssertionError: invalid `max_threads`
         """
-        assert len(dataset) > 0, 'dataset cannot be empty'
         assert 0 <= max_threads, 'max_threads cannot be set to 0'
 
+
+        _length = _length(dataset) if callable(_length) else _length
+        _length = len(dataset) if isinstance(dataset, SupportsLength) else _length
+
+        assert isinstance(_length, int), '`_length` must be an integer'
+        assert _length > 0, 'dataset cannot be empty'
+
+        self._length = _length
         self._threads = []
         self._completed = 0
 
