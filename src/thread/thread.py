@@ -32,7 +32,7 @@ from ._types import (
     _Dataset_T,
     HookFunction,
 )
-from typing_extensions import Generic, ParamSpec
+from typing_extensions import Generic
 from typing import List, Optional, Union, Mapping, Sequence, Tuple, Generator
 
 
@@ -311,9 +311,6 @@ class Thread(threading.Thread, Generic[_Target_P, _Target_T]):
             raise exceptions.ThreadStillRunningError()
 
         super().start()
-
-
-_P = ParamSpec('_P')
 
 
 class _ThreadWorker:
