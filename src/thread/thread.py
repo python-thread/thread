@@ -370,7 +370,7 @@ class ParallelProcessing(Generic[_Target_P, _Target_T, _Dataset_T]):
         ------
         AssertionError: invalid `max_threads`
         """
-        assert 0 <= max_threads, 'Cannot run a thread pool with max threads set to 0'
+        assert 0 <= max_threads, 'max_threads cannot be set to 0'
 
         self._threads = []
         self._completed = 0
