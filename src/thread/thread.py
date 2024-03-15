@@ -439,6 +439,16 @@ class ParallelProcessing(Generic[_Target_P, _Target_T, _Dataset_T]):
         """
         assert 0 <= max_threads, 'max_threads cannot be set to 0'
 
+        # Enforce required arguments
+        if not isinstance(dataset, SupportsLength):
+            assert (
+                _length
+            ), '`_length` must be set if `dataset` does not support `__len__`'
+
+        if not hasattr(dataset, '__getitem__'):
+            assert (
+                _get_value
+            ), '`_get_value` must be set if `dataset` does not support `__getitem__`'
 
         _length = _length(dataset) if callable(_length) else _length
         _length = len(dataset) if isinstance(dataset, SupportsLength) else _length
