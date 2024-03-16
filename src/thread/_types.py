@@ -57,8 +57,8 @@ class SupportsGetItem(Protocol[_SupportsGetItem_T]):
     __getitem__: Callable[..., _SupportsGetItem_T]
 
 
+# Looks like having this inherit __getitem__ from SupportsGetItem breaks isinstance checks in python3.12
+# Thus we explicitly define it
 @runtime_checkable
-class SupportsLengthGetItem(
-    SupportsGetItem[_SupportsGetItem_T], SupportsLength, Protocol
-):
-    pass
+class SupportsLengthGetItem(Sized, Protocol[_SupportsGetItem_T]):
+    __getitem__: Callable[..., _SupportsGetItem_T]
