@@ -3,12 +3,12 @@ from src.thread import ParallelProcessing
 
 
 class DummyLengthOnly:
-    length: int
+    length: typing.Any
 
-    def __init__(self, length: int):
+    def __init__(self, length: typing.Any):
         self.length = length
 
-    def __len__(self) -> int:
+    def __len__(self) -> typing.Any:
         return self.length
 
 
@@ -22,10 +22,10 @@ class DummyGetOnly:
         return self.dataset[i]
 
 
-class DummyNonSequence(DummyLengthOnly, DummyGetOnly):
-    length: int
+class DummySequenceLike(DummyLengthOnly, DummyGetOnly):
+    length: typing.Any
     dataset: list
 
-    def __init__(self, length: int, dataset: list):
+    def __init__(self, length: typing.Any, dataset: list):
         DummyLengthOnly.__init__(self, length)
         DummyGetOnly.__init__(self, dataset)
