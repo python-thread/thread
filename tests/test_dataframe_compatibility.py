@@ -77,11 +77,20 @@ def test_LO_init_missingGetValueError_lengthFunc() -> None:
         )
 
 
-def test_LO_init_invalidLengthValueError() -> None:
+def test_LO_init_invalidLengthValueError_negative() -> None:
     with pytest.raises(ValueError):
         ParallelProcessing(
             function=lambda x: x,
             dataset=DummyLengthOnly(-10),
+            _get_value=lambda *_: _,
+        )
+
+
+def test_LO_init_invalidLengthValueError_zero() -> None:
+    with pytest.raises(AssertionError):
+        ParallelProcessing(
+            function=lambda x: x,
+            dataset=DummyLengthOnly(0),
             _get_value=lambda *_: _,
         )
 
