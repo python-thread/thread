@@ -648,7 +648,7 @@ class ParallelProcessing(Generic[_Target_P, _Target_T, _Dataset_T]):
 
 
 # Handle abrupt exit
-def service_shutdown(signum, frame):
+def service_shutdown(signum, _):
     if Settings.GRACEFUL_EXIT_ENABLED:
         if Settings.VERBOSITY > 'quiet':
             print('\nCaught signal %d' % signum)
