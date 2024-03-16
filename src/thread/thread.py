@@ -357,7 +357,7 @@ class ParallelProcessing(Generic[_Target_P, _Target_T, _Dataset_T]):
         SupportsLengthGetItem[_Dataset_T],
         SupportsGetItem[_Dataset_T],
         SupportsLength,
-        Any[_Dataset_T],
+        Any,
     ]
     max_threads: int
 
@@ -414,11 +414,11 @@ class ParallelProcessing(Generic[_Target_P, _Target_T, _Dataset_T]):
     def __init__(
         self,
         function: DatasetFunction[_Dataset_T, _Target_P, _Target_T],
-        dataset: Any[_Dataset_T],
+        dataset: Any,
         max_threads: int = 8,
         *overflow_args: Overflow_In,
-        _get_value: Callable[[Any[_Dataset_T], int], _Dataset_T],
-        _length: Union[int, Callable[[Any[_Dataset_T]], int]],
+        _get_value: Callable[[Any, int], _Dataset_T],
+        _length: Union[int, Callable[[Any], int]],
         **overflow_kwargs: Overflow_In,
     ) -> None: ...
 
@@ -429,7 +429,7 @@ class ParallelProcessing(Generic[_Target_P, _Target_T, _Dataset_T]):
             SupportsLengthGetItem[_Dataset_T],
             SupportsGetItem[_Dataset_T],
             SupportsLength,
-            Any[_Dataset_T],
+            Any,
         ],
         max_threads: int = 8,
         *overflow_args: Overflow_In,
@@ -438,7 +438,7 @@ class ParallelProcessing(Generic[_Target_P, _Target_T, _Dataset_T]):
                 Callable[[SupportsLengthGetItem[_Dataset_T], int], _Dataset_T],
                 Callable[[SupportsGetItem[_Dataset_T], int], _Dataset_T],
                 Callable[[SupportsLength, int], _Dataset_T],
-                Callable[[Any[_Dataset_T], int], _Dataset_T],
+                Callable[[Any, int], _Dataset_T],
             ]
         ] = None,
         _length: Optional[
