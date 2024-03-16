@@ -347,6 +347,7 @@ class ParallelProcessing(Generic[_Target_P, _Target_T, _Dataset_T]):
     """
 
     _length: int
+    _retrieve_value: Callable[[Any, int], _Dataset_T]
     _threads: List[_ThreadWorker]
     _completed: int
 
@@ -484,6 +485,7 @@ class ParallelProcessing(Generic[_Target_P, _Target_T, _Dataset_T]):
         assert get_value, '`_get_value` must be set'
 
         self._length = length
+        self._retrieve_value = get_value
         self._threads = []
         self._completed = 0
 
@@ -613,7 +615,7 @@ class ParallelProcessing(Generic[_Target_P, _Target_T, _Dataset_T]):
             raise exceptions.ThreadStillRunningError()
 
         self.status = 'Running'
-        max_threads = min(self.max_threads, len(self.dataset))
+        max_threads = min(self.max_threads, self._length)
 
         parsed_args = self.overflow_kwargs.get('args', [])
         name_format = (
@@ -624,13 +626,16 @@ class ParallelProcessing(Generic[_Target_P, _Target_T, _Dataset_T]):
         }
 
         i = 0
-        for chunkStart, chunkEnd in chunk_split(len(self.dataset), max_threads):
+        for chunkStart, chunkEnd in chunk_split(self._length, max_threads):
             chunk_thread = Thread(
                 target=self.function,
                 args=[
                     i,
                     chunkEnd - chunkStart,
-                    (self.dataset[x] for x in range(chunkStart, chunkEnd)),
+                    (
+                        self._retrieve_value(self.dataset, x)
+                        for x in range(chunkStart, chunkEnd)
+                    ),
                     *parsed_args,
                     *self.overflow_args,
                 ],
