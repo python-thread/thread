@@ -512,7 +512,7 @@ class ParallelProcessing(Generic[_Target_P, _Target_T, _Dataset_T]):
                     '`_get_value` must be set if `dataset` does not support `__getitem__`'
                 )
 
-            length = _length
+            length = _length(dataset) if callable(_length) else _length
             get_value = _get_value
 
         if not isinstance(length, int):
