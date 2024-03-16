@@ -87,7 +87,7 @@ def test_LO_init_invalidLengthValueError_negative() -> None:
 
 
 def test_LO_init_invalidLengthValueError_zero() -> None:
-    with pytest.raises(AssertionError):
+    with pytest.raises(ValueError):
         ParallelProcessing(
             function=lambda x: x,
             dataset=DummyLengthOnly(0),
