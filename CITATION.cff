@@ -8,9 +8,6 @@ identifiers:
   - type: doi
     value: 10.5281/zenodo.10799219
     description: This is the collection of archived snapshots of all versions of thread.
-  - type: doi
-    value: 10.5281/zenodo.10808243
-    description: This is the archived snapshot of version 1.0.1 of thread.
   - type: url
     value: https://github.com/python-thread/thread/releases/tag/v1.0.1
     description: The GitHub release URL of tag v1.0.1.
