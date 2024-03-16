@@ -134,3 +134,87 @@ def test_LO_len() -> None:
         _get_value=lambda *_: _,
     )
     assert process._length == 10
+
+
+# >>>>>>>>>> Get Only <<<<<<<<<< #
+def test_GO_init_int() -> None:
+    ParallelProcessing(function=lambda x: x, dataset=DummyGetOnly([1, 2, 3]), _length=3)
+
+
+def test_GO_init_func() -> None:
+    ParallelProcessing(
+        function=lambda x: x, dataset=DummyGetOnly([1, 2, 3]), _length=lambda _: 3
+    )
+
+
+def test_GO_init_missingLengthError() -> None:
+    with pytest.raises(TypeError):
+        ParallelProcessing(
+            function=lambda x: x,
+            dataset=DummyGetOnly([1, 2, 3]),  # type: ignore
+        )
+
+
+def test_GO_init_nonIntLengthError_strLike() -> None:
+    with pytest.raises(TypeError):
+        ParallelProcessing(
+            function=lambda x: x,
+            dataset=DummyGetOnly([1, 2, 3]),
+            _length='10',  # type: ignore
+        )
+
+
+def test_GO_init_nonIntLengthError_numLike() -> None:
+    with pytest.raises(TypeError):
+        ParallelProcessing(
+            function=lambda x: x,
+            dataset=DummyGetOnly([1, 2, 3]),
+            _length=10.5,  # type: ignore
+        )
+
+
+def test_GO_init_nonIntLengthError_negative() -> None:
+    with pytest.raises(ValueError):
+        ParallelProcessing(
+            function=lambda x: x,
+            dataset=DummyGetOnly([1, 2, 3]),
+            _length=-10,  # type: ignore
+        )
+
+
+def test_GO_enforceTypes() -> None:
+    def validate(x, i):
+        assert isinstance(x, DummyGetOnly)
+        assert isinstance(i, int)
+
+    process = ParallelProcessing(
+        function=lambda x: x,
+        dataset=DummyGetOnly([1, 2, 3]),
+        _length=3,
+        _get_value=validate,
+    )
+    process.start()
+    process.join()
+
+
+def test_GO_len() -> None:
+    process = ParallelProcessing(
+        function=lambda x: x,
+        dataset=DummyGetOnly([1, 2, 3]),
+        _length=3,
+        _get_value=lambda *_: _,
+    )
+    assert process._length == 3
+
+
+def test_GO_get() -> None:
+    def get(*_):
+        return _
+
+    process = ParallelProcessing(
+        function=lambda x: x,
+        dataset=DummyGetOnly([1, 2, 3]),
+        _length=3,
+        _get_value=get,
+    )
+    assert process._retrieve_value == get
