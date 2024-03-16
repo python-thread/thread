@@ -4,7 +4,7 @@
 Documentation: https://thread.ngjx.org/docs/v1.0.0
 """
 
-from typing import Any, Literal, Callable, Union, Sized, Sequence
+from typing import Any, Literal, Callable, Union, Sized
 from typing_extensions import (
     ParamSpec,
     TypeVar,
