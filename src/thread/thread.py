@@ -362,19 +362,7 @@ class ParallelProcessing(Generic[_Target_P, _Target_T, _Dataset_T]):
     overflow_args: Sequence[Overflow_In]
     overflow_kwargs: Mapping[str, Overflow_In]
 
-    @overload
-    def __init__(
-        self,
-        function: DatasetFunction[_Dataset_T, _Target_P, _Target_T],
-        dataset: Sequence[_Dataset_T],
-        max_threads: int = 8,
-        *overflow_args: Overflow_In,
-        _get_value: Optional[Callable[[Sequence[_Dataset_T], int], _Dataset_T]] = None,
-        _length: Optional[Union[int, Callable[[Sequence[_Dataset_T]], int]]] = None,
-        **overflow_kwargs: Overflow_In,
-    ) -> None: ...
-
-    # Has __len__ and __getitem__ but is not a sequence
+    # Has __len__ and __getitem__
     @overload
     def __init__(
         self,
@@ -431,19 +419,15 @@ class ParallelProcessing(Generic[_Target_P, _Target_T, _Dataset_T]):
         *overflow_args: Overflow_In,
         _get_value: Optional[
             Union[
-                Callable[[Sequence[_Dataset_T], int], _Dataset_T],
+                Callable[[SupportsLengthGetItem[_Dataset_T], int], _Dataset_T],
                 Callable[[SupportsGetItem[_Dataset_T], int], _Dataset_T],
                 Callable[[SupportsLength, int], _Dataset_T],
-                Callable[[SupportsLengthGetItem[_Dataset_T], int], _Dataset_T],
             ]
         ] = None,
         _length: Optional[
             Union[
                 int,
-                Callable[[Sequence[_Dataset_T]], int],
-                Callable[[SupportsGetItem[_Dataset_T]], int],
-                Callable[[SupportsLength], int],
-                Callable[[SupportsLengthGetItem[_Dataset_T]], int],
+                Callable[[Any], int],
             ]
         ] = None,
         **overflow_kwargs: Overflow_In,
