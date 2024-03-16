@@ -357,6 +357,7 @@ class ParallelProcessing(Generic[_Target_P, _Target_T, _Dataset_T]):
         SupportsLengthGetItem[_Dataset_T],
         SupportsGetItem[_Dataset_T],
         SupportsLength,
+        type[_Dataset_T],
     ]
     max_threads: int
 
@@ -408,6 +409,19 @@ class ParallelProcessing(Generic[_Target_P, _Target_T, _Dataset_T]):
         **overflow_kwargs: Overflow_In,
     ) -> None: ...
 
+    # Does not support __getitem__ and __len__
+    @overload
+    def __init__(
+        self,
+        function: DatasetFunction[_Dataset_T, _Target_P, _Target_T],
+        dataset: type[_Dataset_T],
+        max_threads: int = 8,
+        *overflow_args: Overflow_In,
+        _get_value: Callable[[type[_Dataset_T], int], _Dataset_T],
+        _length: Union[int, Callable[[type[_Dataset_T]], int]],
+        **overflow_kwargs: Overflow_In,
+    ) -> None: ...
+
     def __init__(
         self,
         function: DatasetFunction[_Dataset_T, _Target_P, _Target_T],
@@ -415,6 +429,7 @@ class ParallelProcessing(Generic[_Target_P, _Target_T, _Dataset_T]):
             SupportsLengthGetItem[_Dataset_T],
             SupportsGetItem[_Dataset_T],
             SupportsLength,
+            type[_Dataset_T],
         ],
         max_threads: int = 8,
         *overflow_args: Overflow_In,
@@ -423,6 +438,7 @@ class ParallelProcessing(Generic[_Target_P, _Target_T, _Dataset_T]):
                 Callable[[SupportsLengthGetItem[_Dataset_T], int], _Dataset_T],
                 Callable[[SupportsGetItem[_Dataset_T], int], _Dataset_T],
                 Callable[[SupportsLength, int], _Dataset_T],
+                Callable[[type[_Dataset_T], int], _Dataset_T],
             ]
         ] = None,
         _length: Optional[
@@ -479,6 +495,17 @@ class ParallelProcessing(Generic[_Target_P, _Target_T, _Dataset_T]):
             length = _length(dataset) if callable(_length) else _length
 
             get_value = _get_value or dataset.__class__.__getitem__
+
+        else:
+            assert (
+                _length
+            ), '`_length` must be set if `dataset` does not support `__len__`'
+            assert (
+                _get_value
+            ), '`_get_value` must be set if `dataset` does not support `__getitem__`'
+
+            length = _length
+            get_value = _get_value
 
         assert isinstance(length, int), '`_length` must be an integer'
         assert length > 0, 'dataset cannot be empty'
