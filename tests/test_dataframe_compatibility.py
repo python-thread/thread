@@ -218,3 +218,94 @@ def test_GO_get() -> None:
         _get_value=get,
     )
     assert process._retrieve_value == get
+
+
+# >>>>>>>> Sequence Like <<<<<<<< #
+def test_SO_init() -> None:
+    ParallelProcessing(
+        function=lambda x: x,
+        dataset=DummySequenceLike(10, list(range(10))),
+    )
+
+
+def test_SO_init_list() -> None:
+    ParallelProcessing(
+        function=lambda x: x,
+        dataset=[1, 2, 3],
+    )
+
+
+def test_SO_init_tuple() -> None:
+    ParallelProcessing(
+        function=lambda x: x,
+        dataset=(1, 2, 3),
+    )
+
+
+def test_SO_init_set() -> None:
+    with pytest.raises(TypeError):
+        ParallelProcessing(
+            function=lambda x: x,
+            dataset=set([1, 2, 3]),  # type: ignore
+        )
+
+
+def test_SO_init_dict() -> None:
+    ParallelProcessing(
+        function=lambda x: x,
+        dataset={1: 1, 2: 2, 3: 3},  # type: ignore
+    )
+
+
+def test_SO_init_str() -> None:
+    ParallelProcessing(
+        function=lambda x: x,
+        dataset='123',
+    )
+
+
+def test_SO_init_withLength() -> None:
+    ParallelProcessing(
+        function=lambda x: x,
+        dataset=DummySequenceLike(10, list(range(10))),
+        _length=10,
+    )
+
+
+def test_SO_init_withGet() -> None:
+    ParallelProcessing(
+        function=lambda x: x,
+        dataset=DummySequenceLike(10, list(range(10))),
+        _get_value=lambda *_: _,
+    )
+
+
+def test_SO_init_withLengthAndGet() -> None:
+    ParallelProcessing(
+        function=lambda x: x,
+        dataset=DummySequenceLike(10, list(range(10))),
+        _length=10,
+        _get_value=lambda *_: _,
+    )
+
+
+def test_SO_len() -> None:
+    process = ParallelProcessing(
+        function=lambda x: x,
+        dataset=DummySequenceLike(10, list(range(10))),
+    )
+    assert process._length == 10
+
+
+def test_SO_enforceTypes() -> None:
+    def validate(x, i):
+        assert isinstance(x, DummySequenceLike)
+        assert isinstance(i, int)
+
+    process = ParallelProcessing(
+        function=lambda x: x,
+        dataset=DummySequenceLike(10, list(range(10))),
+        _get_value=validate,
+    )
+    process.start()
+    process.join()
