@@ -507,8 +507,10 @@ class ParallelProcessing(Generic[_Target_P, _Target_T, _Dataset_T]):
             length = _length
             get_value = _get_value
 
-        assert isinstance(length, int), '`_length` must be an integer'
-        assert length > 0, 'dataset cannot be empty'
+        if not isinstance(length, int):
+            raise TypeError('`_length` must be an integer')
+        if length <= 0:
+            raise ValueError('dataset cannot be empty')
         assert get_value, '`_get_value` must be set'
 
         self._length = length
