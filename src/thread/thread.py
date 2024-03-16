@@ -455,24 +455,35 @@ class ParallelProcessing(Generic[_Target_P, _Target_T, _Dataset_T]):
         """
         assert 0 <= max_threads, 'max_threads cannot be set to 0'
 
-        # Enforce required arguments
-        if not isinstance(dataset, SupportsLength):
-            assert (
-                _length
-            ), '`_length` must be set if `dataset` does not support `__len__`'
+        # Impose requirements
+        if isinstance(dataset, SupportsLengthGetItem):
+            _length = _length(dataset) if callable(_length) else _length
+            length = len(dataset) if _length is None else _length
 
-        if not hasattr(dataset, '__getitem__'):
+            get_value = _get_value or dataset.__class__.__getitem__
+
+        elif isinstance(dataset, SupportsLength):
             assert (
                 _get_value
             ), '`_get_value` must be set if `dataset` does not support `__getitem__`'
+            _length = _length(dataset) if callable(_length) else _length
+            length = len(dataset) if _length is None else _length
 
-        _length = _length(dataset) if callable(_length) else _length
-        _length = len(dataset) if isinstance(dataset, SupportsLength) else _length
+            get_value = _get_value
 
-        assert isinstance(_length, int), '`_length` must be an integer'
-        assert _length > 0, 'dataset cannot be empty'
+        elif isinstance(dataset, SupportsGetItem):
+            assert (
+                _length
+            ), '`_length` must be set if `dataset` does not support `__len__`'
+            length = _length(dataset) if callable(_length) else _length
 
-        self._length = _length
+            get_value = _get_value or dataset.__class__.__getitem__
+
+        assert isinstance(length, int), '`_length` must be an integer'
+        assert length > 0, 'dataset cannot be empty'
+        assert get_value, '`_get_value` must be set'
+
+        self._length = length
         self._threads = []
         self._completed = 0
 
