@@ -467,10 +467,14 @@ class ParallelProcessing(Generic[_Target_P, _Target_T, _Dataset_T]):
 
         Raises
         ------
-        AssertionError: invalid `dataset`
-        AssertionError: invalid `max_threads`
+        ValueError: `max_threads` is 0 or negative
+        ValueError: `_length` is not an integer
+        ValueError: empty dataset or `_length` is/returned 0
+        TypeError: missing `_length`
+        TypeError: missing `_get_value`
         """
-        assert 0 <= max_threads, 'max_threads cannot be set to 0'
+        if max_threads <= 0:
+            raise ValueError('`max_threads` must be greater than 0')
 
         # Impose requirements
         if isinstance(dataset, SupportsLengthGetItem):
@@ -480,29 +484,33 @@ class ParallelProcessing(Generic[_Target_P, _Target_T, _Dataset_T]):
             get_value = _get_value or dataset.__class__.__getitem__
 
         elif isinstance(dataset, SupportsLength):
-            assert (
-                _get_value
-            ), '`_get_value` must be set if `dataset` does not support `__getitem__`'
+            if not _get_value:
+                raise TypeError(
+                    '`_get_value` must be set if `dataset` does not support `__getitem__`'
+                )
             _length = _length(dataset) if callable(_length) else _length
             length = len(dataset) if _length is None else _length
 
             get_value = _get_value
 
         elif isinstance(dataset, SupportsGetItem):
-            assert (
-                _length
-            ), '`_length` must be set if `dataset` does not support `__len__`'
+            if not _length:
+                raise TypeError(
+                    '`_length` must be set if `dataset` does not support `__len__`'
+                )
             length = _length(dataset) if callable(_length) else _length
 
             get_value = _get_value or dataset.__class__.__getitem__
 
         else:
-            assert (
-                _length
-            ), '`_length` must be set if `dataset` does not support `__len__`'
-            assert (
-                _get_value
-            ), '`_get_value` must be set if `dataset` does not support `__getitem__`'
+            if not _length:
+                raise TypeError(
+                    '`_length` must be set if `dataset` does not support `__len__`'
+                )
+            if not _get_value:
+                raise TypeError(
+                    '`_get_value` must be set if `dataset` does not support `__getitem__`'
+                )
 
             length = _length
             get_value = _get_value
@@ -511,7 +519,8 @@ class ParallelProcessing(Generic[_Target_P, _Target_T, _Dataset_T]):
             raise TypeError('`_length` must be an integer')
         if length <= 0:
             raise ValueError('dataset cannot be empty')
-        assert get_value, '`_get_value` must be set'
+        if not get_value:
+            raise TypeError('`_get_value` must be set')
 
         self._length = length
         self._retrieve_value = get_value

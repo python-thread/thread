@@ -52,7 +52,7 @@ def test_LO_init() -> None:
 
 
 def test_LO_init_missingGetValueError_nothing() -> None:
-    with pytest.raises(AssertionError):
+    with pytest.raises(TypeError):
         ParallelProcessing(
             function=lambda x: x,
             dataset=DummyLengthOnly(10),  # type: ignore
@@ -60,7 +60,7 @@ def test_LO_init_missingGetValueError_nothing() -> None:
 
 
 def test_LO_init_missingGetValueError_lengthNum() -> None:
-    with pytest.raises(AssertionError):
+    with pytest.raises(TypeError):
         ParallelProcessing(
             function=lambda x: x,
             dataset=DummyLengthOnly(10),  # type: ignore
@@ -69,7 +69,7 @@ def test_LO_init_missingGetValueError_lengthNum() -> None:
 
 
 def test_LO_init_missingGetValueError_lengthFunc() -> None:
-    with pytest.raises(AssertionError):
+    with pytest.raises(TypeError):
         ParallelProcessing(
             function=lambda x: x,
             dataset=DummyLengthOnly(10),  # type: ignore
