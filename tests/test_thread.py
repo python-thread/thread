@@ -14,12 +14,6 @@ def _dummy_raiseException(x: Exception, delay: float = 0):
     raise x
 
 
-def _dummy_iterative(itemCount: int, pTime: float = 0.1, delay: float = 0):
-    time.sleep(delay)
-    for i in range(itemCount):
-        time.sleep(pTime)
-
-
 # >>>>>>>>>> General Use <<<<<<<<<< #
 def test_threadCreation():
     """This test is for testing parsing of args and kwargs and `.join()` method"""
@@ -127,7 +121,7 @@ def test_raises_HookError():
     """This test should raise"""
     new = Thread(target=_dummy_target_raiseToPower, args=[4, 2], daemon=True)
 
-    def newhook(x: int):
+    def newhook(_: int):
         raise RuntimeError()
 
     new.add_hook(newhook)
