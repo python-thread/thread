@@ -49,11 +49,16 @@ class SupportsLength(Sized, Protocol):
     pass
 
 
-@runtime_checkable
-class SupportsGetItem(Protocol[_Dataset_T]):
-    def __getitem__(self, i: int) -> _Dataset_T: ...
+_SupportsGetItem_T = TypeVar('_SupportsGetItem_T')
 
 
 @runtime_checkable
-class SupportsLengthGetItem(SupportsGetItem[_Dataset_T], SupportsLength, Protocol):
+class SupportsGetItem(Protocol[_SupportsGetItem_T]):
+    __getitem__: Callable[..., _SupportsGetItem_T]
+
+
+@runtime_checkable
+class SupportsLengthGetItem(
+    SupportsGetItem[_SupportsGetItem_T], SupportsLength, Protocol
+):
     pass
