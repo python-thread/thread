@@ -29,3 +29,13 @@ class DummySequenceLike(DummyLengthOnly, DummyGetOnly):
     def __init__(self, length: typing.Any, dataset: list):
         DummyLengthOnly.__init__(self, length)
         DummyGetOnly.__init__(self, dataset)
+
+
+class DummyUnlikeSequence1:
+    def __init__(self) -> None: ...
+
+
+class DummyUnlikeSequence2:
+    def __init__(self) -> None: ...
+    def __str__(self) -> str:
+        return 'invalid'
