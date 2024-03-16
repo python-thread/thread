@@ -57,11 +57,3 @@ class SupportsGetItem(Protocol[_Dataset_T]):
 @runtime_checkable
 class SupportsLengthGetItem(SupportsGetItem[_Dataset_T], SupportsLength, Protocol):
     pass
-
-
-Dataset = Union[
-    Sequence[_Dataset_T],
-    SupportsLength,
-    SupportsGetItem[_Dataset_T],
-    SupportsLengthGetItem[_Dataset_T],
-]

@@ -31,7 +31,6 @@ from ._types import (
     _Target_P,
     _Target_T,
     DatasetFunction,
-    Dataset,
     _Dataset_T,
     HookFunction,
     SupportsLength,
@@ -353,7 +352,11 @@ class ParallelProcessing(Generic[_Target_P, _Target_T, _Dataset_T]):
 
     status: ThreadStatus
     function: TargetFunction
-    dataset: Dataset[_Dataset_T]
+    dataset: Union[
+        SupportsLengthGetItem[_Dataset_T],
+        SupportsGetItem[_Dataset_T],
+        SupportsLength,
+    ]
     max_threads: int
 
     overflow_args: Sequence[Overflow_In]
@@ -419,7 +422,11 @@ class ParallelProcessing(Generic[_Target_P, _Target_T, _Dataset_T]):
     def __init__(
         self,
         function: DatasetFunction[_Dataset_T, _Target_P, _Target_T],
-        dataset: Dataset[_Dataset_T],
+        dataset: Union[
+            SupportsLengthGetItem[_Dataset_T],
+            SupportsGetItem[_Dataset_T],
+            SupportsLength,
+        ],
         max_threads: int = 8,
         *overflow_args: Overflow_In,
         _get_value: Optional[
