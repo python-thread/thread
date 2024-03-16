@@ -3,10 +3,12 @@
 
 ```py
 class Thread: ...
+
+
 class ParallelProcessing: ...
 ```
 
-Documentation: https://thread.ngjx.org/docs/v1.0.0
+Documentation: https://thread.ngjx.org/docs/v1.1.0
 """
 
 import sys
@@ -31,9 +33,23 @@ from ._types import (
     DatasetFunction,
     _Dataset_T,
     HookFunction,
+    SupportsLength,
+    SupportsGetItem,
+    SupportsLengthGetItem,
 )
-from typing_extensions import Generic, ParamSpec
-from typing import List, Optional, Union, Mapping, Sequence, Tuple, Generator
+from typing_extensions import Generic
+from typing import (
+    Any,
+    List,
+    Optional,
+    Union,
+    Mapping,
+    Sequence,
+    Tuple,
+    Callable,
+    Generator,
+    overload,
+)
 
 
 Threads: set['Thread'] = set()
@@ -273,11 +289,11 @@ class Thread(threading.Thread, Generic[_Target_P, _Target_T]):
 
         self.status = 'Kill Scheduled'
 
-        res: int = ctypes.pythonapi.PyThreadState_SetAsyncExc(
+        res: Optional[int] = self.ident and ctypes.pythonapi.PyThreadState_SetAsyncExc(
             ctypes.c_long(self.ident), ctypes.py_object(SystemExit)
         )
 
-        if res == 0:
+        if not res or res == 0:
             raise ValueError('Thread IDENT does not exist')
         elif res > 1:
             # Unexpected behaviour, something seriously went wrong
@@ -313,9 +329,6 @@ class Thread(threading.Thread, Generic[_Target_P, _Target_T]):
         super().start()
 
 
-_P = ParamSpec('_P')
-
-
 class _ThreadWorker:
     progress: float
     thread: Thread
@@ -333,23 +346,107 @@ class ParallelProcessing(Generic[_Target_P, _Target_T, _Dataset_T]):
     Type-Safe and provides more functionality on top
     """
 
+    _length: int
+    _retrieve_value: Callable[[Any, int], _Dataset_T]
     _threads: List[_ThreadWorker]
     _completed: int
 
     status: ThreadStatus
     function: TargetFunction
-    dataset: Sequence[Data_In]
+    dataset: Union[
+        SupportsLengthGetItem[_Dataset_T],
+        SupportsGetItem[_Dataset_T],
+        SupportsLength,
+        Any,
+    ]
     max_threads: int
 
     overflow_args: Sequence[Overflow_In]
     overflow_kwargs: Mapping[str, Overflow_In]
 
+    # Has __len__ and __getitem__
+    @overload
     def __init__(
         self,
         function: DatasetFunction[_Dataset_T, _Target_P, _Target_T],
-        dataset: Sequence[_Dataset_T],
+        dataset: SupportsLengthGetItem[_Dataset_T],
         max_threads: int = 8,
         *overflow_args: Overflow_In,
+        _get_value: Optional[
+            Callable[[SupportsLengthGetItem[_Dataset_T], int], _Dataset_T]
+        ] = None,
+        _length: Optional[
+            Union[int, Callable[[SupportsLengthGetItem[_Dataset_T]], int]]
+        ] = None,
+        **overflow_kwargs: Overflow_In,
+    ) -> None: ...
+
+    # Has __len__, require _get_value to be set
+    @overload
+    def __init__(
+        self,
+        function: DatasetFunction[_Dataset_T, _Target_P, _Target_T],
+        dataset: SupportsLength,
+        max_threads: int = 8,
+        *overflow_args: Overflow_In,
+        _get_value: Callable[[SupportsLength, int], _Dataset_T],
+        _length: Optional[Union[int, Callable[[SupportsLength], int]]] = None,
+        **overflow_kwargs: Overflow_In,
+    ) -> None: ...
+
+    # Has __getitem__, require _length to be set
+    @overload
+    def __init__(
+        self,
+        function: DatasetFunction[_Dataset_T, _Target_P, _Target_T],
+        dataset: SupportsGetItem[_Dataset_T],
+        max_threads: int = 8,
+        *overflow_args: Overflow_In,
+        _get_value: Optional[
+            Callable[[SupportsGetItem[_Dataset_T], int], _Dataset_T]
+        ] = None,
+        _length: Union[int, Callable[[SupportsGetItem[_Dataset_T]], int]],
+        **overflow_kwargs: Overflow_In,
+    ) -> None: ...
+
+    # Does not support __getitem__ and __len__
+    @overload
+    def __init__(
+        self,
+        function: DatasetFunction[_Dataset_T, _Target_P, _Target_T],
+        dataset: Any,
+        max_threads: int = 8,
+        *overflow_args: Overflow_In,
+        _get_value: Callable[[Any, int], _Dataset_T],
+        _length: Union[int, Callable[[Any], int]],
+        **overflow_kwargs: Overflow_In,
+    ) -> None: ...
+
+    def __init__(
+        self,
+        function: DatasetFunction[_Dataset_T, _Target_P, _Target_T],
+        dataset: Union[
+            SupportsLengthGetItem[_Dataset_T],
+            SupportsGetItem[_Dataset_T],
+            SupportsLength,
+            Any,
+        ],
+        max_threads: int = 8,
+        *overflow_args: Overflow_In,
+        _get_value: Optional[
+            Union[
+                Callable[[SupportsLengthGetItem[_Dataset_T], int], _Dataset_T],
+                Callable[[SupportsGetItem[_Dataset_T], int], _Dataset_T],
+                Callable[[SupportsLength, int], _Dataset_T],
+                Callable[[Any, int], _Dataset_T],
+            ]
+        ] = None,
+        _length: Optional[
+            Union[
+                int,
+                Callable[[Any], int],
+            ]
+        ] = None,
         **overflow_kwargs: Overflow_In,
     ) -> None:
         """
@@ -364,16 +461,69 @@ class ParallelProcessing(Generic[_Target_P, _Target_T, _Dataset_T]):
         :param dataset: This should be an iterable sequence of data entries
         :param max_threads: This should be an integer value of the max threads allowed
         :param *: These are arguments parsed to `threading.Thread` and `Thread`
+        :param _get_value: This should be a function that takes in the dataset and the index and returns the data entry
+        :param _length: This should be an integer or a function that takes in the dataset and returns the length
         :param **: These are arguments parsed to `thread.Thread` and `Thread`
 
         Raises
         ------
-        AssertionError: invalid `dataset`
-        AssertionError: invalid `max_threads`
+        ValueError: `max_threads` is 0 or negative
+        ValueError: `_length` is not an integer
+        ValueError: empty dataset or `_length` is/returned 0
+        TypeError: missing `_length`
+        TypeError: missing `_get_value`
         """
-        assert len(dataset) > 0, 'dataset cannot be empty'
-        assert 0 <= max_threads, 'max_threads cannot be set to 0'
+        if max_threads <= 0:
+            raise ValueError('`max_threads` must be greater than 0')
 
+        # Impose requirements
+        if isinstance(dataset, SupportsLengthGetItem):
+            _length = _length(dataset) if callable(_length) else _length
+            length = len(dataset) if _length is None else _length
+
+            get_value = _get_value or dataset.__class__.__getitem__
+
+        elif isinstance(dataset, SupportsLength):
+            if not _get_value:
+                raise TypeError(
+                    '`_get_value` must be set if `dataset` does not support `__getitem__`'
+                )
+            _length = _length(dataset) if callable(_length) else _length
+            length = len(dataset) if _length is None else _length
+
+            get_value = _get_value
+
+        elif isinstance(dataset, SupportsGetItem):
+            if not _length:
+                raise TypeError(
+                    '`_length` must be set if `dataset` does not support `__len__`'
+                )
+            length = _length(dataset) if callable(_length) else _length
+
+            get_value = _get_value or dataset.__class__.__getitem__
+
+        else:
+            if not _length:
+                raise TypeError(
+                    '`_length` must be set if `dataset` does not support `__len__`'
+                )
+            if not _get_value:
+                raise TypeError(
+                    '`_get_value` must be set if `dataset` does not support `__getitem__`'
+                )
+
+            length = _length(dataset) if callable(_length) else _length
+            get_value = _get_value
+
+        if not isinstance(length, int):
+            raise TypeError('`_length` must be an integer')
+        if length <= 0:
+            raise ValueError('dataset cannot be empty')
+        if not get_value:
+            raise TypeError('`_get_value` must be set')
+
+        self._length = length
+        self._retrieve_value = get_value
         self._threads = []
         self._completed = 0
 
@@ -503,7 +653,7 @@ class ParallelProcessing(Generic[_Target_P, _Target_T, _Dataset_T]):
             raise exceptions.ThreadStillRunningError()
 
         self.status = 'Running'
-        max_threads = min(self.max_threads, len(self.dataset))
+        max_threads = min(self.max_threads, self._length)
 
         parsed_args = self.overflow_kwargs.get('args', [])
         name_format = (
@@ -514,13 +664,16 @@ class ParallelProcessing(Generic[_Target_P, _Target_T, _Dataset_T]):
         }
 
         i = 0
-        for chunkStart, chunkEnd in chunk_split(len(self.dataset), max_threads):
+        for chunkStart, chunkEnd in chunk_split(self._length, max_threads):
             chunk_thread = Thread(
                 target=self.function,
                 args=[
                     i,
                     chunkEnd - chunkStart,
-                    (self.dataset[x] for x in range(chunkStart, chunkEnd)),
+                    (
+                        self._retrieve_value(self.dataset, x)
+                        for x in range(chunkStart, chunkEnd)
+                    ),
                     *parsed_args,
                     *self.overflow_args,
                 ],
@@ -533,7 +686,7 @@ class ParallelProcessing(Generic[_Target_P, _Target_T, _Dataset_T]):
 
 
 # Handle abrupt exit
-def service_shutdown(signum, frame):
+def service_shutdown(signum, _):
     if Settings.GRACEFUL_EXIT_ENABLED:
         if Settings.VERBOSITY > 'quiet':
             print('\nCaught signal %d' % signum)

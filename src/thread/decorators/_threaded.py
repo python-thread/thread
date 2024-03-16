@@ -1,7 +1,7 @@
 """
 ## Threaded
 
-Documentation: https://thread.ngjx.org/docs/v1.0.0
+Documentation: https://thread.ngjx.org/docs/v1.1.0
 """
 
 from functools import wraps
@@ -23,8 +23,7 @@ FullParamReturn = Callable[P, Thread[P, T]]
 
 
 @overload
-def threaded(__function: TargetFunction[P, T]) -> NoParamReturn[P, T]:
-    ...
+def threaded(__function: TargetFunction[P, T]) -> NoParamReturn[P, T]: ...
 
 
 @overload
@@ -35,8 +34,7 @@ def threaded(
     ignore_errors: Sequence[type[Exception]] = (),
     suppress_errors: bool = False,
     **overflow_kwargs: Overflow_In,
-) -> WithParamReturn[P, T]:
-    ...
+) -> WithParamReturn[P, T]: ...
 
 
 @overload
@@ -48,8 +46,7 @@ def threaded(
     ignore_errors: Sequence[type[Exception]] = (),
     suppress_errors: bool = False,
     **overflow_kwargs: Overflow_In,
-) -> FullParamReturn[P, T]:
-    ...
+) -> FullParamReturn[P, T]: ...
 
 
 def threaded(
@@ -90,8 +87,7 @@ def threaded(
 
     You can also pass keyword arguments to change the thread behaviour, it otherwise follows the defaults of `thread.Thread`
     >>> @thread.threaded(daemon = True)
-    >>> def myfunction():
-    ...     ...
+    >>> def myfunction(): ...
 
     Args will be ordered infront of function-parsed args parsed into `thread.Thread.args`
     >>> @thread.threaded(args = (1))

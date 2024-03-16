@@ -1,11 +1,17 @@
 """
 ## Types
 
-Documentation: https://thread.ngjx.org/docs/v1.0.0
+Documentation: https://thread.ngjx.org/docs/v1.1.0
 """
 
-from typing import Any, Literal, Callable, Union
-from typing_extensions import ParamSpec, TypeVar, Concatenate
+from typing import Any, Literal, Callable, Union, Sized
+from typing_extensions import (
+    ParamSpec,
+    TypeVar,
+    Concatenate,
+    Protocol,
+    runtime_checkable,
+)
 
 
 # Descriptive Types
@@ -33,5 +39,26 @@ TargetFunction = Callable[_Target_P, _Target_T]
 
 HookFunction = Callable[[_Target_T], Union[Any, None]]
 
-_Dataset_T = TypeVar('_Dataset_T')
+_Dataset_T = TypeVar('_Dataset_T', covariant=True)
 DatasetFunction = Callable[Concatenate[_Dataset_T, _Target_P], _Target_T]
+
+
+# Protocols
+@runtime_checkable
+class SupportsLength(Sized, Protocol):
+    pass
+
+
+_SupportsGetItem_T = TypeVar('_SupportsGetItem_T')
+
+
+@runtime_checkable
+class SupportsGetItem(Protocol[_SupportsGetItem_T]):
+    __getitem__: Callable[..., _SupportsGetItem_T]
+
+
+# Looks like having this inherit __getitem__ from SupportsGetItem breaks isinstance checks in python3.12
+# Thus we explicitly define it
+@runtime_checkable
+class SupportsLengthGetItem(Sized, Protocol[_SupportsGetItem_T]):
+    __getitem__: Callable[..., _SupportsGetItem_T]

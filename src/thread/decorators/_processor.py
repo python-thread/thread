@@ -1,14 +1,20 @@
 """
 ## Processor
 
-Documentation: https://thread.ngjx.org/docs/v1.0.0
+Documentation: https://thread.ngjx.org/docs/v1.1.0
 """
 
 from functools import wraps
 from ..thread import ParallelProcessing
 
-from .._types import Overflow_In, Data_In
-from typing import Callable, Mapping, Sequence, Optional, Union, overload
+from .._types import (
+    Overflow_In,
+    Data_In,
+    SupportsGetItem,
+    SupportsLength,
+    SupportsLengthGetItem,
+)
+from typing import Any, Callable, Mapping, Sequence, Optional, Union, overload
 from typing_extensions import ParamSpec, TypeVar, Concatenate
 
 
@@ -16,10 +22,13 @@ _TargetT = TypeVar('_TargetT')
 _TargetP = ParamSpec('_TargetP')
 _DataT = TypeVar('_DataT')
 TargetFunction = Callable[Concatenate[_DataT, _TargetP], _TargetT]
+Dataset = Union[
+    SupportsLengthGetItem[_DataT], SupportsGetItem[_DataT], SupportsLength, Any
+]
 
 
 NoParamReturn = Callable[
-    Concatenate[Sequence[_DataT], _TargetP],
+    Concatenate[Dataset[_DataT], _TargetP],
     ParallelProcessing[_TargetP, _TargetT, _DataT],
 ]
 WithParamReturn = Callable[
@@ -27,7 +36,7 @@ WithParamReturn = Callable[
     NoParamReturn[_DataT, _TargetP, _TargetT],
 ]
 FullParamReturn = Callable[
-    Concatenate[Sequence[_DataT], _TargetP],
+    Concatenate[Dataset[_DataT], _TargetP],
     ParallelProcessing[_TargetP, _TargetT, _DataT],
 ]
 
@@ -35,8 +44,7 @@ FullParamReturn = Callable[
 @overload
 def processor(
     __function: TargetFunction[_DataT, _TargetP, _TargetT],
-) -> NoParamReturn[_DataT, _TargetP, _TargetT]:
-    ...
+) -> NoParamReturn[_DataT, _TargetP, _TargetT]: ...
 
 
 @overload
@@ -47,8 +55,7 @@ def processor(
     ignore_errors: Sequence[type[Exception]] = (),
     suppress_errors: bool = False,
     **overflow_kwargs: Overflow_In,
-) -> WithParamReturn[_DataT, _TargetP, _TargetT]:
-    ...
+) -> WithParamReturn[_DataT, _TargetP, _TargetT]: ...
 
 
 @overload
@@ -60,8 +67,7 @@ def processor(
     ignore_errors: Sequence[type[Exception]] = (),
     suppress_errors: bool = False,
     **overflow_kwargs: Overflow_In,
-) -> FullParamReturn[_DataT, _TargetP, _TargetT]:
-    ...
+) -> FullParamReturn[_DataT, _TargetP, _TargetT]: ...
 
 
 def processor(
@@ -106,8 +112,7 @@ def processor(
 
     You can also pass keyword arguments to change the thread behaviour, it otherwise follows the defaults of `thread.Thread`
     >>> @thread.threaded(daemon = True)
-    >>> def myfunction():
-    ...     ...
+    >>> def myfunction(): ...
 
     Args will be ordered infront of function-parsed args parsed into `thread.Thread.args`
     >>> @thread.threaded(args = (1))
@@ -142,7 +147,7 @@ def processor(
 
     @wraps(__function)
     def wrapped(
-        data: Sequence[_DataT],
+        data: Dataset[_DataT],
         *parsed_args: _TargetP.args,
         **parsed_kwargs: _TargetP.kwargs,
     ) -> ParallelProcessing[_TargetP, _TargetT, _DataT]:
