@@ -309,3 +309,82 @@ def test_SO_enforceTypes() -> None:
     )
     process.start()
     process.join()
+
+
+# >>>>>>>>>> Unlike Sequence <<<<<<<<<< #
+def test_UO_init_clean() -> None:
+    with pytest.raises(TypeError):
+        ParallelProcessing(
+            function=lambda x: x,
+            dataset=DummyUnlikeSequence1(),  # type: ignore
+        )
+
+
+def test_UO_init_withOtherMethods() -> None:
+    with pytest.raises(TypeError):
+        ParallelProcessing(
+            function=lambda x: x,
+            dataset=DummyUnlikeSequence2(),  # type: ignore
+        )
+
+
+def test_UO_init_onlyLength() -> None:
+    with pytest.raises(TypeError):
+        ParallelProcessing(
+            function=lambda x: x,
+            dataset=DummyUnlikeSequence1(),  # type: ignore
+            _length=10,
+        )
+
+
+def test_UO_init_onlyGet() -> None:
+    with pytest.raises(TypeError):
+        ParallelProcessing(
+            function=lambda x: x,
+            dataset=DummyUnlikeSequence1(),  # type: ignore
+            _get_value=lambda *_: _,
+        )
+
+
+def test_UO_init_onlyLengthAndGet() -> None:
+    ParallelProcessing(
+        function=lambda x: x,
+        dataset=DummyUnlikeSequence1(),  # type: ignore
+        _length=10,
+        _get_value=lambda *_: _,
+    )
+
+
+def test_UO_lengthInt() -> None:
+    process = ParallelProcessing(
+        function=lambda x: x,
+        dataset=DummyUnlikeSequence1(),
+        _length=10,
+        _get_value=lambda *_: _,
+    )
+    assert process._length == 10
+
+
+def test_UO_lengthFunc() -> None:
+    process = ParallelProcessing(
+        function=lambda x: x,
+        dataset=DummyUnlikeSequence1(),
+        _length=lambda _: 10,
+        _get_value=lambda *_: _,
+    )
+    assert process._length == 10
+
+
+def test_UO_enforceTypes() -> None:
+    def validate(x, i):
+        assert isinstance(x, DummyUnlikeSequence1)
+        assert isinstance(i, int)
+
+    process = ParallelProcessing(
+        function=lambda x: x,
+        dataset=DummyUnlikeSequence1(),
+        _length=10,
+        _get_value=validate,
+    )
+    process.start()
+    process.join()
