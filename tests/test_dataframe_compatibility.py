@@ -1,4 +1,5 @@
 import typing
+import pytest
 from src.thread import ParallelProcessing
 
 
@@ -39,3 +40,88 @@ class DummyUnlikeSequence2:
     def __init__(self) -> None: ...
     def __str__(self) -> str:
         return 'invalid'
+
+
+# >>>>>>>>>> Length Only <<<<<<<<<< #
+def test_LO_init() -> None:
+    ParallelProcessing(
+        function=lambda x: x,
+        dataset=DummyLengthOnly(10),
+        _get_value=lambda *_: _,
+    )
+
+
+def test_LO_init_missingGetValueError_nothing() -> None:
+    with pytest.raises(AssertionError):
+        ParallelProcessing(
+            function=lambda x: x,
+            dataset=DummyLengthOnly(10),  # type: ignore
+        )
+
+
+def test_LO_init_missingGetValueError_lengthNum() -> None:
+    with pytest.raises(AssertionError):
+        ParallelProcessing(
+            function=lambda x: x,
+            dataset=DummyLengthOnly(10),  # type: ignore
+            _length=1,
+        )
+
+
+def test_LO_init_missingGetValueError_lengthFunc() -> None:
+    with pytest.raises(AssertionError):
+        ParallelProcessing(
+            function=lambda x: x,
+            dataset=DummyLengthOnly(10),  # type: ignore
+            _length=lambda _: 1,
+        )
+
+
+def test_LO_init_invalidLengthValueError() -> None:
+    with pytest.raises(ValueError):
+        ParallelProcessing(
+            function=lambda x: x,
+            dataset=DummyLengthOnly(-10),
+            _get_value=lambda *_: _,
+        )
+
+
+def test_LO_init_nonIntLengthError_numLike() -> None:
+    with pytest.raises(TypeError):
+        ParallelProcessing(
+            function=lambda x: x,
+            dataset=DummyLengthOnly(10.5),
+            _get_value=lambda *_: _,
+        )
+
+
+def test_LO_init_nonIntLengthError() -> None:
+    with pytest.raises(TypeError):
+        ParallelProcessing(
+            function=lambda x: x,
+            dataset=DummyLengthOnly('10'),
+            _get_value=lambda *_: _,
+        )
+
+
+def test_LO_enforceTypes() -> None:
+    def validate(x, i):
+        assert isinstance(x, DummyLengthOnly)
+        assert isinstance(i, int)
+
+    process = ParallelProcessing(
+        function=lambda x: x,
+        dataset=DummyLengthOnly(10),
+        _get_value=validate,
+    )
+    process.start()
+    process.join()
+
+
+def test_LO_len() -> None:
+    process = ParallelProcessing(
+        function=lambda x: x,
+        dataset=DummyLengthOnly(10),
+        _get_value=lambda *_: _,
+    )
+    assert process._length == 10
