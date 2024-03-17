@@ -32,7 +32,6 @@ exclude = [
 indent-style = "space"
 line-ending = "lf"
 quote-style = "single"
-docstring-code-format = true
 
 
 [lint]
