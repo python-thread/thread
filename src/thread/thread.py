@@ -113,13 +113,13 @@ class Thread(threading.Thread, Generic[_Target_P, _Target_T]):
         self.suppress_errors = suppress_errors
 
         super().__init__(
-            target=_target,
-            args=args,
-            kwargs=kwargs,
-            name=name,
-            daemon=daemon,
-            group=group,
+            group,
+            _target,
+            name,
+            args,
+            kwargs,
             *overflow_args,
+            daemon=daemon,
             **overflow_kwargs,
         )
 

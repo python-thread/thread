@@ -100,7 +100,7 @@ def test_raises_stillRunningError():
     new.start()
 
     with pytest.raises(exceptions.ThreadStillRunningError):
-        new.result
+        _ = new.result
 
 
 def test_raises_ignoreSpecificError():

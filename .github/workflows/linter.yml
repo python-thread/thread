@@ -1,0 +1,29 @@
+name: Linting
+
+on: [push, pull_request]
+
+env:
+  PIP_DISABLE_PIP_VERSION_CHECK: 1
+
+jobs:
+  linting:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.x
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.x
+
+      - name: Install requirements
+        run: |
+          set -xe
+          python -m pip install ruff
+
+      - name: Lint with ruff
+        run: |
+          set -xe
+          python -m ruff --per-file-ignores="__init__.py:F401" --per-file-ignores="__init__.py:E402" .

@@ -1,4 +1,8 @@
 labels:
+  - name: "Type: CI"
+    color: 54b2ff
+    description: A problem or enhancement related to continuous integration.
+
   - name: "Type: Breaking"
     color: a90000
     description: A problem or enhancement related to a breaking change.
@@ -86,3 +90,24 @@ labels:
   - name: "Skip-Changelog"
     color: AEB1C2
     description: Skip changelog in release tag
+
+  - name: "help wanted"
+    color: 008672
+    description: Help wanted
+
+  - name: "CI: Template Sync"
+    color: AEB1C2
+    description: Sync with upstream template
+
+  - name: "Scope: Core"
+    color: F9D0C4
+    description: A change that affects the core of thread
+
+  - name: "Scope: Decorator"
+    color: F9D0C4
+    description: A change that affects decorators
+
+  - name: "Scope: Utils"
+    color: 9BD0E6
+    description: A change that affects utilities or configuration
+
