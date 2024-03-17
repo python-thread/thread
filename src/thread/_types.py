@@ -1,7 +1,7 @@
 """
 ## Types
 
-Documentation: https://thread.ngjx.org/docs/v1.1.0
+Documentation: https://thread.ngjx.org/docs/v1.1.1
 """
 
 from typing import Any, Literal, Callable, Union, Sized
@@ -62,3 +62,8 @@ class SupportsGetItem(Protocol[_SupportsGetItem_T]):
 @runtime_checkable
 class SupportsLengthGetItem(Sized, Protocol[_SupportsGetItem_T]):
     __getitem__: Callable[..., _SupportsGetItem_T]
+
+
+LengthLike_T = TypeVar('LengthLike_T', bound=SupportsLength)
+GetLike_T = TypeVar('GetLike_T', bound=SupportsGetItem)
+LengthandGetLike_T = TypeVar('LengthandGetLike_T', bound=SupportsLengthGetItem)
