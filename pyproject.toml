@@ -15,7 +15,7 @@ repository = "https://github.com/python-thread/thread"
 documentation = "https://thread.ngjx.org/docs"
 keywords = ["thread", "threading", "extension", "multiprocessing"]
 classifiers = [
-  "Development Status :: 3 - Alpha",
+  "Development Status :: 4 - Beta",
   "Intended Audience :: Developers",
   "License :: OSI Approved :: BSD License",
   "Operating System :: OS Independent",
