@@ -8,7 +8,7 @@ class Thread: ...
 class ParallelProcessing: ...
 ```
 
-Documentation: https://thread.ngjx.org/docs/v1.1.0
+Documentation: https://thread.ngjx.org/docs/v1.1.1
 """
 
 import sys

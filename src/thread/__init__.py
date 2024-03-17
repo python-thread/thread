@@ -1,6 +1,6 @@
 """
 ## Thread Library
-Documentation at https://thread.ngjx.org/docs/v1.1.0
+Documentation at https://thread.ngjx.org/docs/v1.1.1
 
 
 ---
@@ -18,7 +18,7 @@ import thread
 """
 
 
-__version__ = '1.1.0'
+__version__ = '1.1.1'
 
 
 # Export Core
