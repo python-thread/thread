@@ -32,6 +32,7 @@ classifiers = [
 Homepage = "https://thread.ngjx.org"
 Documentation = "https://thread.ngjx.org/docs/v1.1.0"
 Source = "https://github.com/python-thread/thread"
+Download = "https://pypi.org/project/thread/#files"
 "Release Notes" = "https://github.com/python-thread/thread/releases"
 "Bug Tracker" = "https://github.com/python-thread/thread/issues"
 
