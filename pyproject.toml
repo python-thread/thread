@@ -29,9 +29,9 @@ classifiers = [
 ]
 
 [tool.poetry.urls]
-homepage = "https://thread.ngjx.org"
-documentation = "https://thread.ngjx.org/docs/v1.1.0"
-repository = "https://github.com/python-thread/thread"
+Homepage = "https://thread.ngjx.org"
+Documentation = "https://thread.ngjx.org/docs/v1.1.0"
+Source = "https://github.com/python-thread/thread"
 "Release Notes" = "https://github.com/python-thread/thread/releases"
 "Bug Tracker" = "https://github.com/python-thread/thread/issues"
 
