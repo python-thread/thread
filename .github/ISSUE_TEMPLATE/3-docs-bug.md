@@ -1,7 +1,7 @@
 ---
 name: "Documentation or README.md issue report"
 about: "Report an issue in the project's documentation or README.md file."
-title: ""
+title: "[Docs] "
 labels: "Documentation"
 assignees: caffeine-addictt
 
