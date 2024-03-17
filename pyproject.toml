@@ -10,22 +10,30 @@ packages = [
   { include = "thread/py.typed", from = "src" },
 ]
 include = [{ path = "tests", format = "sdist" }]
-homepage = "https://thread.ngjx.org"
-repository = "https://github.com/python-thread/thread"
-documentation = "https://thread.ngjx.org/docs"
 keywords = ["thread", "threading", "extension", "multiprocessing"]
 classifiers = [
-  "Development Status :: 3 - Alpha",
+  "Development Status :: 4 - Beta",
   "Intended Audience :: Developers",
   "License :: OSI Approved :: BSD License",
+  "Topic :: Software Development",
   "Operating System :: OS Independent",
   "Programming Language :: Python",
   "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: Implementation :: CPython",
   "Typing :: Typed",
 ]
 
 [tool.poetry.urls]
-Changelog = "https://github.com/python-thread/thread/releases"
+Homepage = "https://thread.ngjx.org"
+Documentation = "https://thread.ngjx.org/docs/v1.1.0"
+Source = "https://github.com/python-thread/thread"
+Download = "https://pypi.org/project/thread/#files"
+"Release Notes" = "https://github.com/python-thread/thread/releases"
 "Bug Tracker" = "https://github.com/python-thread/thread/issues"
 
 [tool.poetry.scripts]
@@ -38,7 +46,6 @@ typing-extensions = "^4.9.0"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.4.3"
-coverage = "^7.3.2"
 ruff = "^0.1.5"
 
 [build-system]
