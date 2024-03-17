@@ -1,7 +1,7 @@
 ---
 name: "Feature Request"
 about: "Suggest an idea or possible new feature for this project."
-title: ""
+title: "[Feature] "
 labels: "Type: Feature"
 assignees: caffeine-addictt
 

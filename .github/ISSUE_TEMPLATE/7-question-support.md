@@ -1,8 +1,8 @@
 ---
 name: "Question or Support Request"
 about: "Questions and requests for support."
-title: ""
 labels: "Type: Question"
+title: "[Question] "
 assignees: caffeine-addictt
 
 ---
