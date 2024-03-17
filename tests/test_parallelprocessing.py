@@ -48,7 +48,7 @@ def test_raises_StillRunningError():
     )
     new.start()
     with pytest.raises(exceptions.ThreadStillRunningError):
-        new.results
+        _ = new.results
 
 
 def test_raises_RunTimeError():

@@ -48,19 +48,19 @@ def test_geTrue():
 # >>>>>>>>>> Raising <<<<<<<<<< #
 def test_ltRaise():
     with pytest.raises(ValueError):
-        return Verbosity(0) < Exception()
+        _ = Verbosity(0) < Exception()
 
 
 def test_leRaise():
     with pytest.raises(ValueError):
-        return Verbosity(0) <= Exception()
+        _ = Verbosity(0) <= Exception()
 
 
 def test_gtRaise():
     with pytest.raises(ValueError):
-        return Verbosity(1) > Exception()
+        _ = Verbosity(1) > Exception()
 
 
 def test_geRaise():
     with pytest.raises(ValueError):
-        return Verbosity(1) >= Exception()
+        _ = Verbosity(1) >= Exception()
