@@ -36,6 +36,9 @@ from ._types import (
     SupportsLength,
     SupportsGetItem,
     SupportsLengthGetItem,
+    LengthLike_T,
+    GetLike_T,
+    LengthandGetLike_T,
 )
 from typing_extensions import Generic
 from typing import (
@@ -369,15 +372,11 @@ class ParallelProcessing(Generic[_Target_P, _Target_T, _Dataset_T]):
     def __init__(
         self,
         function: DatasetFunction[_Dataset_T, _Target_P, _Target_T],
-        dataset: SupportsLengthGetItem[_Dataset_T],
+        dataset: LengthandGetLike_T,
         max_threads: int = 8,
         *overflow_args: Overflow_In,
-        _get_value: Optional[
-            Callable[[SupportsLengthGetItem[_Dataset_T], int], _Dataset_T]
-        ] = None,
-        _length: Optional[
-            Union[int, Callable[[SupportsLengthGetItem[_Dataset_T]], int]]
-        ] = None,
+        _get_value: Optional[Callable[[LengthandGetLike_T, int], _Dataset_T]] = None,
+        _length: Optional[Union[int, Callable[[Any], int]]] = None,
         **overflow_kwargs: Overflow_In,
     ) -> None: ...
 
@@ -386,11 +385,11 @@ class ParallelProcessing(Generic[_Target_P, _Target_T, _Dataset_T]):
     def __init__(
         self,
         function: DatasetFunction[_Dataset_T, _Target_P, _Target_T],
-        dataset: SupportsLength,
+        dataset: LengthLike_T,
         max_threads: int = 8,
         *overflow_args: Overflow_In,
-        _get_value: Callable[[SupportsLength, int], _Dataset_T],
-        _length: Optional[Union[int, Callable[[SupportsLength], int]]] = None,
+        _get_value: Callable[[LengthLike_T, int], _Dataset_T],
+        _length: Optional[Union[int, Callable[[Any], int]]] = None,
         **overflow_kwargs: Overflow_In,
     ) -> None: ...
 
@@ -399,13 +398,11 @@ class ParallelProcessing(Generic[_Target_P, _Target_T, _Dataset_T]):
     def __init__(
         self,
         function: DatasetFunction[_Dataset_T, _Target_P, _Target_T],
-        dataset: SupportsGetItem[_Dataset_T],
+        dataset: GetLike_T,
         max_threads: int = 8,
         *overflow_args: Overflow_In,
-        _get_value: Optional[
-            Callable[[SupportsGetItem[_Dataset_T], int], _Dataset_T]
-        ] = None,
-        _length: Union[int, Callable[[SupportsGetItem[_Dataset_T]], int]],
+        _get_value: Optional[Callable[[GetLike_T, int], _Dataset_T]] = None,
+        _length: Union[int, Callable[[GetLike_T], int]],
         **overflow_kwargs: Overflow_In,
     ) -> None: ...
 
@@ -435,18 +432,13 @@ class ParallelProcessing(Generic[_Target_P, _Target_T, _Dataset_T]):
         *overflow_args: Overflow_In,
         _get_value: Optional[
             Union[
-                Callable[[SupportsLengthGetItem[_Dataset_T], int], _Dataset_T],
-                Callable[[SupportsGetItem[_Dataset_T], int], _Dataset_T],
-                Callable[[SupportsLength, int], _Dataset_T],
+                Callable[[LengthLike_T, int], _Dataset_T],
+                Callable[[GetLike_T, int], _Dataset_T],
+                Callable[[LengthLike_T, int], _Dataset_T],
                 Callable[[Any, int], _Dataset_T],
             ]
         ] = None,
-        _length: Optional[
-            Union[
-                int,
-                Callable[[Any], int],
-            ]
-        ] = None,
+        _length: Optional[Union[int, Callable[[Any], int]]] = None,
         **overflow_kwargs: Overflow_In,
     ) -> None:
         """
