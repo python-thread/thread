@@ -12,7 +12,7 @@ packages = [
 include = [{ path = "tests", format = "sdist" }]
 homepage = "https://thread.ngjx.org"
 repository = "https://github.com/python-thread/thread"
-documentation = "https://thread.ngjx.org/docs"
+documentation = "https://thread.ngjx.org/docs/v1.1.0"
 keywords = ["thread", "threading", "extension", "multiprocessing"]
 classifiers = [
   "Development Status :: 4 - Beta",
