@@ -373,7 +373,8 @@ class ConcurrentProcessing(Generic[_Target_P, _Target_T, _Dataset_T]):
         _get_value: Optional[Callable[[LengthandGetLike_T, int], _Dataset_T]] = None,
         _length: Optional[Union[int, Callable[[Any], int]]] = None,
         **overflow_kwargs: Overflow_In,
-    ) -> None: ...
+    ) -> None:
+        ...
 
     # Has __len__, require _get_value to be set
     @overload
@@ -386,7 +387,8 @@ class ConcurrentProcessing(Generic[_Target_P, _Target_T, _Dataset_T]):
         _get_value: Callable[[LengthLike_T, int], _Dataset_T],
         _length: Optional[Union[int, Callable[[Any], int]]] = None,
         **overflow_kwargs: Overflow_In,
-    ) -> None: ...
+    ) -> None:
+        ...
 
     # Has __getitem__, require _length to be set
     @overload
@@ -399,7 +401,8 @@ class ConcurrentProcessing(Generic[_Target_P, _Target_T, _Dataset_T]):
         _get_value: Optional[Callable[[GetLike_T, int], _Dataset_T]] = None,
         _length: Union[int, Callable[[GetLike_T], int]],
         **overflow_kwargs: Overflow_In,
-    ) -> None: ...
+    ) -> None:
+        ...
 
     # Does not support __getitem__ and __len__
     @overload
@@ -412,7 +415,8 @@ class ConcurrentProcessing(Generic[_Target_P, _Target_T, _Dataset_T]):
         _get_value: Callable[[Any, int], _Dataset_T],
         _length: Union[int, Callable[[Any], int]],
         **overflow_kwargs: Overflow_In,
-    ) -> None: ...
+    ) -> None:
+        ...
 
     def __init__(
         self,
