@@ -5,7 +5,7 @@ Documentation at https://thread.ngjx.org/docs/v1.1.1
 
 ---
 
-Released under the GPG-3 License
+Released under the BSD-3 License
 
 Copyright (c) thread.ngjx.org, All rights reserved
 """
