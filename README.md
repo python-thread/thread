@@ -98,7 +98,7 @@ Our docs are [here!](https://thread.ngjx.org)
 <!-- ROADMAP -->
 ## Roadmap
 
-- [x] v1.1.1 Release
+- [x] v2.0.0 Release
 - [ ] Bug fixes
 - [ ] New features
 - [ ] Testing

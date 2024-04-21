@@ -8,7 +8,7 @@ class Thread: ...
 class ConcurrentProcessing: ...
 ```
 
-Documentation: https://thread.ngjx.org/docs/v1.1.1
+Documentation: https://thread.ngjx.org/docs/v2.0.0
 """
 
 import sys
