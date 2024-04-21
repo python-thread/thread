@@ -5,10 +5,10 @@
 class Thread: ...
 
 
-class ParallelProcessing: ...
+class ConcurrentProcessing: ...
 ```
 
-Documentation: https://thread.ngjx.org/docs/v1.1.1
+Documentation: https://thread.ngjx.org/docs/v2.0.0
 """
 
 import sys
@@ -230,17 +230,13 @@ class Thread(threading.Thread, Generic[_Target_P, _Target_T]):
         """
         self.hooks.append(hook)
 
-    def join(self, timeout: Optional[float] = None) -> bool:
+    def join(self, timeout: Optional[float] = None) -> None:
         """
         Halts the current thread execution until a thread completes or exceeds the timeout
 
         Parameters
         ----------
         :param timeout: The maximum time allowed to halt the thread
-
-        Returns
-        -------
-        :returns bool: True if the thread is no-longer alive
 
         Raises
         ------
@@ -255,7 +251,6 @@ class Thread(threading.Thread, Generic[_Target_P, _Target_T]):
 
         super().join(timeout)
         self._handle_exceptions()
-        return not self.is_alive()
 
     def get_return_value(self) -> _Target_T:
         """
@@ -341,9 +336,9 @@ class _ThreadWorker:
         self.progress = progress
 
 
-class ParallelProcessing(Generic[_Target_P, _Target_T, _Dataset_T]):
+class ConcurrentProcessing(Generic[_Target_P, _Target_T, _Dataset_T]):
     """
-    Multi-Threaded Parallel Processing
+    Concurrent Processing
     ---------------------------------------
 
     Type-Safe and provides more functionality on top
@@ -378,7 +373,8 @@ class ParallelProcessing(Generic[_Target_P, _Target_T, _Dataset_T]):
         _get_value: Optional[Callable[[LengthandGetLike_T, int], _Dataset_T]] = None,
         _length: Optional[Union[int, Callable[[Any], int]]] = None,
         **overflow_kwargs: Overflow_In,
-    ) -> None: ...
+    ) -> None:
+        ...
 
     # Has __len__, require _get_value to be set
     @overload
@@ -391,7 +387,8 @@ class ParallelProcessing(Generic[_Target_P, _Target_T, _Dataset_T]):
         _get_value: Callable[[LengthLike_T, int], _Dataset_T],
         _length: Optional[Union[int, Callable[[Any], int]]] = None,
         **overflow_kwargs: Overflow_In,
-    ) -> None: ...
+    ) -> None:
+        ...
 
     # Has __getitem__, require _length to be set
     @overload
@@ -404,7 +401,8 @@ class ParallelProcessing(Generic[_Target_P, _Target_T, _Dataset_T]):
         _get_value: Optional[Callable[[GetLike_T, int], _Dataset_T]] = None,
         _length: Union[int, Callable[[GetLike_T], int]],
         **overflow_kwargs: Overflow_In,
-    ) -> None: ...
+    ) -> None:
+        ...
 
     # Does not support __getitem__ and __len__
     @overload
@@ -417,7 +415,8 @@ class ParallelProcessing(Generic[_Target_P, _Target_T, _Dataset_T]):
         _get_value: Callable[[Any, int], _Dataset_T],
         _length: Union[int, Callable[[Any], int]],
         **overflow_kwargs: Overflow_In,
-    ) -> None: ...
+    ) -> None:
+        ...
 
     def __init__(
         self,
@@ -442,10 +441,10 @@ class ParallelProcessing(Generic[_Target_P, _Target_T, _Dataset_T]):
         **overflow_kwargs: Overflow_In,
     ) -> None:
         """
-        Initializes a new Multi-Threaded Pool\n
+        Initializes a new Concurrent Process\n
         Best for data processing
 
-        Splits a dataset as evenly as it can among the threads and run them in parallel
+        Splits a dataset as evenly as it can among the threads and run them concurrently
 
         Parameters
         ----------
@@ -598,13 +597,9 @@ class ParallelProcessing(Generic[_Target_P, _Target_T, _Dataset_T]):
             results += entry.thread.result
         return results
 
-    def join(self) -> bool:
+    def join(self) -> None:
         """
         Halts the current thread execution until a thread completes or exceeds the timeout
-
-        Returns
-        -------
-        :returns bool: True if the thread is no-longer alive
 
         Raises
         ------
@@ -619,7 +614,6 @@ class ParallelProcessing(Generic[_Target_P, _Target_T, _Dataset_T]):
 
         for entry in self._threads:
             entry.thread.join()
-        return True
 
     def kill(self) -> None:
         """

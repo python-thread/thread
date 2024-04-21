@@ -21,7 +21,8 @@ def test_threadCreation():
         target=_dummy_target_raiseToPower, args=[4], kwargs={'power': 2}, daemon=True
     )
     new.start()
-    assert new.join()
+    new.join()
+    assert not new.is_alive()
     assert new.result == 16
 
 

@@ -1,11 +1,11 @@
 """
 ## Thread Library
-Documentation at https://thread.ngjx.org/docs/v1.1.1
+Documentation at https://thread.ngjx.org/docs/2.0.0
 
 
 ---
 
-Released under the GPG-3 License
+Released under the BSD-3 License
 
 Copyright (c) thread.ngjx.org, All rights reserved
 """
@@ -18,11 +18,11 @@ import thread
 """
 
 
-__version__ = '1.1.1'
+__version__ = '2.0.0'
 
 
 # Export Core
-from .thread import Thread, ParallelProcessing
+from .thread import Thread, ConcurrentProcessing
 
 
 from . import _types as types, exceptions
@@ -39,7 +39,7 @@ from .utils import Settings
 # Wildcard Export
 __all__ = [
     'Thread',
-    'ParallelProcessing',
+    'ConcurrentProcessing',
     'threaded',
     'processor',
     'types',

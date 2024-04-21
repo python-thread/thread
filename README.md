@@ -79,7 +79,7 @@ _Below is an example of how you can install and use thread._
 2. Import thread into your library!
    ```py
    import thread
-   from thread import Thread, ParallelProcessing
+   from thread import Thread, ConcurrentProcessing
    ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -98,7 +98,7 @@ Our docs are [here!](https://thread.ngjx.org)
 <!-- ROADMAP -->
 ## Roadmap
 
-- [x] v1.1.1 Release
+- [x] v2.0.0 Release
 - [ ] Bug fixes
 - [ ] New features
 - [ ] Testing
