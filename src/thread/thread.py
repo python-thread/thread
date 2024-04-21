@@ -230,17 +230,13 @@ class Thread(threading.Thread, Generic[_Target_P, _Target_T]):
         """
         self.hooks.append(hook)
 
-    def join(self, timeout: Optional[float] = None) -> bool:
+    def join(self, timeout: Optional[float] = None) -> None:
         """
         Halts the current thread execution until a thread completes or exceeds the timeout
 
         Parameters
         ----------
         :param timeout: The maximum time allowed to halt the thread
-
-        Returns
-        -------
-        :returns bool: True if the thread is no-longer alive
 
         Raises
         ------
@@ -255,7 +251,6 @@ class Thread(threading.Thread, Generic[_Target_P, _Target_T]):
 
         super().join(timeout)
         self._handle_exceptions()
-        return not self.is_alive()
 
     def get_return_value(self) -> _Target_T:
         """
@@ -598,13 +593,9 @@ class ConcurrentProcessing(Generic[_Target_P, _Target_T, _Dataset_T]):
             results += entry.thread.result
         return results
 
-    def join(self) -> bool:
+    def join(self) -> None:
         """
         Halts the current thread execution until a thread completes or exceeds the timeout
-
-        Returns
-        -------
-        :returns bool: True if the thread is no-longer alive
 
         Raises
         ------
@@ -619,7 +610,6 @@ class ConcurrentProcessing(Generic[_Target_P, _Target_T, _Dataset_T]):
 
         for entry in self._threads:
             entry.thread.join()
-        return True
 
     def kill(self) -> None:
         """
