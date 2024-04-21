@@ -1,6 +1,6 @@
 import time
 import pytest
-from src.thread import ParallelProcessing, exceptions
+from src.thread import ConcurrentProcessing, exceptions
 
 
 # >>>>>>>>>> Dummy Functions <<<<<<<<<< #
@@ -18,7 +18,7 @@ def _dummy_raiseException(x: Exception, delay: float = 0):
 def test_threadsScaleDown():
     """This test is for testing if threads scale down `max_threads` when the dataset is lesser than the thread count"""
     dataset = list(range(0, 2))
-    new = ParallelProcessing(
+    new = ConcurrentProcessing(
         function=_dummy_dataProcessor,
         dataset=dataset,
         max_threads=4,
@@ -32,7 +32,7 @@ def test_threadsScaleDown():
 def test_threadsProcessing():
     """This test is for testing if threads correctly order data in the `dataset` arrangement"""
     dataset = list(range(0, 500))
-    new = ParallelProcessing(
+    new = ConcurrentProcessing(
         function=_dummy_dataProcessor, dataset=dataset, args=[0.001], daemon=True
     )
     new.start()
@@ -43,7 +43,7 @@ def test_threadsProcessing():
 def test_raises_StillRunningError():
     """This test should raise ThreadStillRunningError"""
     dataset = list(range(0, 8))
-    new = ParallelProcessing(
+    new = ConcurrentProcessing(
         function=_dummy_dataProcessor, dataset=dataset, args=[1], daemon=True
     )
     new.start()
@@ -54,7 +54,7 @@ def test_raises_StillRunningError():
 def test_raises_RunTimeError():
     """This test should raise a RunTimeError"""
     dataset = [RuntimeError()] * 8
-    new = ParallelProcessing(
+    new = ConcurrentProcessing(
         function=_dummy_raiseException, dataset=dataset, args=[0.01], daemon=True
     )
     with pytest.raises(RuntimeError):

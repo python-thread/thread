@@ -22,7 +22,7 @@ __version__ = '1.1.1'
 
 
 # Export Core
-from .thread import Thread, ParallelProcessing
+from .thread import Thread, ConcurrentProcessing
 
 
 from . import _types as types, exceptions
@@ -39,7 +39,7 @@ from .utils import Settings
 # Wildcard Export
 __all__ = [
     'Thread',
-    'ParallelProcessing',
+    'ConcurrentProcessing',
     'threaded',
     'processor',
     'types',

@@ -5,7 +5,7 @@
 class Thread: ...
 
 
-class ParallelProcessing: ...
+class ConcurrentProcessing: ...
 ```
 
 Documentation: https://thread.ngjx.org/docs/v1.1.1
@@ -341,9 +341,9 @@ class _ThreadWorker:
         self.progress = progress
 
 
-class ParallelProcessing(Generic[_Target_P, _Target_T, _Dataset_T]):
+class ConcurrentProcessing(Generic[_Target_P, _Target_T, _Dataset_T]):
     """
-    Multi-Threaded Parallel Processing
+    Concurrent Processing
     ---------------------------------------
 
     Type-Safe and provides more functionality on top
@@ -442,10 +442,10 @@ class ParallelProcessing(Generic[_Target_P, _Target_T, _Dataset_T]):
         **overflow_kwargs: Overflow_In,
     ) -> None:
         """
-        Initializes a new Multi-Threaded Pool\n
+        Initializes a new Concurrent Process\n
         Best for data processing
 
-        Splits a dataset as evenly as it can among the threads and run them in parallel
+        Splits a dataset as evenly as it can among the threads and run them concurrently
 
         Parameters
         ----------

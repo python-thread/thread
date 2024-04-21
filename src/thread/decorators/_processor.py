@@ -5,7 +5,7 @@ Documentation: https://thread.ngjx.org/docs/v1.1.1
 """
 
 from functools import wraps
-from ..thread import ParallelProcessing
+from ..thread import ConcurrentProcessing
 
 from .._types import (
     Overflow_In,
@@ -29,7 +29,7 @@ Dataset = Union[
 
 NoParamReturn = Callable[
     Concatenate[Dataset[_DataT], _TargetP],
-    ParallelProcessing[_TargetP, _TargetT, _DataT],
+    ConcurrentProcessing[_TargetP, _TargetT, _DataT],
 ]
 WithParamReturn = Callable[
     [TargetFunction[_DataT, _TargetP, _TargetT]],
@@ -37,7 +37,7 @@ WithParamReturn = Callable[
 ]
 FullParamReturn = Callable[
     Concatenate[Dataset[_DataT], _TargetP],
-    ParallelProcessing[_TargetP, _TargetT, _DataT],
+    ConcurrentProcessing[_TargetP, _TargetT, _DataT],
 ]
 
 
@@ -150,7 +150,7 @@ def processor(
         data: Dataset[_DataT],
         *parsed_args: _TargetP.args,
         **parsed_kwargs: _TargetP.kwargs,
-    ) -> ParallelProcessing[_TargetP, _TargetT, _DataT]:
+    ) -> ConcurrentProcessing[_TargetP, _TargetT, _DataT]:
         kwargs.update(parsed_kwargs)
 
         processed_args = (*args, *parsed_args)
@@ -158,7 +158,7 @@ def processor(
             i: v for i, v in kwargs.items() if i not in ['args', 'kwargs']
         }
 
-        job = ParallelProcessing(
+        job = ConcurrentProcessing(
             function=__function,
             dataset=data,
             args=processed_args,

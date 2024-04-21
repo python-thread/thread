@@ -79,7 +79,7 @@ _Below is an example of how you can install and use thread._
 2. Import thread into your library!
    ```py
    import thread
-   from thread import Thread, ParallelProcessing
+   from thread import Thread, ConcurrentProcessing
    ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
