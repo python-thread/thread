@@ -1,6 +1,6 @@
 import typing
 import pytest
-from src.thread import ConcurrentProcessing
+from thread import ConcurrentProcessing
 
 
 class DummyLengthOnly:
