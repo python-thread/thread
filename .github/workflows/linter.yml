@@ -21,7 +21,8 @@ jobs:
       - name: Install requirements
         run: |
           set -xe
-          python -m pip install ruff
+          python -m pip install poetry
+          python -m poetry install
 
       - name: Lint with ruff
         run: |
