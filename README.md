@@ -118,10 +118,6 @@ Distributed under the BSD-3-Clause License. See [LICENSE.txt](./LICENSE.txt) for
 
 Alex - [contact@thread.ngjx.org](mailto:contact@thread.ngjx.org)
 
-Project Board: [https://github.com/orgs/python-thread/projects/2](https://github.com/orgs/python-thread/projects/2)
-
-Project Link: [https://github.com/python-thread/thread](https://github.com/python-thread/thread)
-
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
