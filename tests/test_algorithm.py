@@ -1,17 +1,23 @@
 import random
+from typing import Generator
+
 from src.thread.utils import algorithm
 
 
+def test_type():
+    assert isinstance(algorithm.chunk_split(5, 1), Generator)
+
+
 def test_chunking_1():
-    assert algorithm.chunk_split(5, 1) == [(0, 5)]
+    assert list(algorithm.chunk_split(5, 1)) == [(0, 5)]
 
 
 def test_chunking_2():
-    assert algorithm.chunk_split(5, 2) == [(0, 3), (3, 5)]
+    assert list(algorithm.chunk_split(5, 2)) == [(0, 3), (3, 5)]
 
 
 def test_chunking_3():
-    assert algorithm.chunk_split(100, 8) == [
+    assert list(algorithm.chunk_split(100, 8)) == [
         (0, 13),
         (13, 26),
         (26, 39),
@@ -41,5 +47,5 @@ def test_chunking_dynamic():
         i = b
 
     assert (
-        algorithm.chunk_split(dataset_length, thread_count) == heap
+        list(algorithm.chunk_split(dataset_length, thread_count)) == heap
     ), f'\nLength: {dataset_length}\nThreads: {thread_count}\nExpected: {heap}\nActual: {algorithm.chunk_split(dataset_length, thread_count)}'

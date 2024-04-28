@@ -8,10 +8,12 @@ If it gets too dense, we could consider splitting it into a library import
   |_ b.py
 """
 
-from typing import List, Tuple
+from typing import Tuple, Generator
 
 
-def chunk_split(dataset_length: int, number_of_chunks: int) -> List[Tuple[int, int]]:
+def chunk_split(
+    dataset_length: int, number_of_chunks: int
+) -> Generator[Tuple[int, int], None, None]:
     """
     Splits a dataset into balanced chunks
 
@@ -41,13 +43,10 @@ def chunk_split(dataset_length: int, number_of_chunks: int) -> List[Tuple[int, i
     overflow = dataset_length % number_of_chunks
 
     i = 0
-    split = []
     while i < dataset_length:
         chunk_length = chunk_count + int(overflow > 0)
         b = i + chunk_length
 
-        split.append((i, b))
+        yield (i, b)
         overflow -= 1
         i = b
-
-    return split
