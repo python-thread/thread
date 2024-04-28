@@ -29,7 +29,7 @@ def chunk_split(
 
     Returns
     -------
-    :returns list[tuple[int, int]]: The chunked dataset slices
+    :returns Generator[tuple[int, int], None, None]: The chunked dataset slices
 
     Raises
     ------
