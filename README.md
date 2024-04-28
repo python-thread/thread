@@ -86,21 +86,6 @@ _Below is an example of how you can install and use thread._
 
 
 
-<!-- ROADMAP -->
-## Roadmap
-
-- [x] v2.0.0 Release
-- [ ] Bug fixes
-- [ ] New features
-- [ ] Testing
-- [ ] Next release...
-
-See the [open issues](https://github.com/python-thread/thread/issues) for a full list of proposed features (and known issues).
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
-
 <!-- CONTRIBUTING -->
 ## Contributing
 
