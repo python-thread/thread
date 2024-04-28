@@ -27,4 +27,4 @@ jobs:
       - name: Lint with ruff
         run: |
           set -xe
-          python -m ruff format --check
+          python -m poetry run ruff format --check
