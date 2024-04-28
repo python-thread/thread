@@ -86,15 +86,6 @@ _Below is an example of how you can install and use thread._
 
 
 
-<!-- DOCS -->
-## Documentation
-
-Our docs are [here!](https://thread.ngjx.org)
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
-
 <!-- ROADMAP -->
 ## Roadmap
 
