@@ -1,7 +1,7 @@
 """
 ## Threaded
 
-Documentation: https://thread.ngjx.org/docs/v2.0.0
+Documentation: https://thread.ngjx.org/docs/v2.0.1
 """
 
 from functools import wraps
