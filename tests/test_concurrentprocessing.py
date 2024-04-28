@@ -1,6 +1,6 @@
 import time
 import pytest
-from src.thread import ConcurrentProcessing, exceptions
+from thread import ConcurrentProcessing, exceptions
 
 
 # >>>>>>>>>> Dummy Functions <<<<<<<<<< #

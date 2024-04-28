@@ -1,7 +1,7 @@
 import random
 from typing import Generator
 
-from src.thread.utils import algorithm
+from thread.utils import algorithm
 
 
 def test_type():

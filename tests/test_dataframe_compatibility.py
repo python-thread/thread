@@ -1,6 +1,6 @@
 import typing
 import pytest
-from src.thread import ConcurrentProcessing
+from thread import ConcurrentProcessing
 
 
 class DummyLengthOnly:
@@ -33,13 +33,11 @@ class DummySequenceLike(DummyLengthOnly, DummyGetOnly):
 
 
 class DummyUnlikeSequence1:
-    def __init__(self) -> None:
-        ...
+    def __init__(self) -> None: ...
 
 
 class DummyUnlikeSequence2:
-    def __init__(self) -> None:
-        ...
+    def __init__(self) -> None: ...
 
     def __str__(self) -> str:
         return 'invalid'

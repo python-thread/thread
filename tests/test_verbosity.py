@@ -1,5 +1,5 @@
 import pytest
-from src.thread.utils.config import Verbosity
+from thread.utils.config import Verbosity
 
 
 # >>>>>>>>>> General Use <<<<<<<<<< #

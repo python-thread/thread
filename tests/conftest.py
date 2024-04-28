@@ -1,3 +1,3 @@
-from src.thread import Settings
+from thread import Settings
 
 Settings.set_verbosity('quiet')
