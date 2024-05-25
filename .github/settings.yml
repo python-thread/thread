@@ -99,15 +99,4 @@ labels:
     color: AEB1C2
     description: Sync with upstream template
 
-  - name: "Scope: Core"
-    color: F9D0C4
-    description: A change that affects the core of thread
-
-  - name: "Scope: Decorator"
-    color: F9D0C4
-    description: A change that affects decorators
-
-  - name: "Scope: Utils"
-    color: 9BD0E6
-    description: A change that affects utilities or configuration
 
