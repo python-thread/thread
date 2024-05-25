@@ -17,24 +17,19 @@ import thread
 ```
 """
 
+from .version import __version__
 
-__version__ = '2.0.1'
-
-
-# Export Core
-from .thread import Thread, ConcurrentProcessing
-
-
-from . import _types as types, exceptions
-
+from . import _types as types
+from . import exceptions
 
 # Export decorators
-from .decorators import threaded, processor
+from .decorators import processor, threaded
 
+# Export Core
+from .thread import ConcurrentProcessing, Thread
 
 # Configuration
 from .utils import Settings
-
 
 # Wildcard Export
 __all__ = [
