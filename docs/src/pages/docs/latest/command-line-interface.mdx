@@ -1,19 +1,13 @@
-import { Callout, Tabs, Steps } from 'nextra/components'
+import { Callout, Tabs, Steps } from "nextra/components";
 
-
-
-<Callout type='warning'>
-  This documentation is still in development.
-  Please report any issues [here](https://github.com/python-thread/thread.ngjx.org/issues).
+<Callout type="warning">
+  This documentation is still in development. Please report any issues
+  [here](https://github.com/python-thread/thread.ngjx.org/issues).
 </Callout>
-
-
 
 # CLI Documentation
 
 Commands Line Interface (CLI) Documentation.
-
-
 
 ## Installation
 
@@ -21,9 +15,7 @@ Commands Line Interface (CLI) Documentation.
 
 ### Prerequisites
 
-* Python 3.9+
-
-
+- Python 3.9+
 
 ### Installing
 
@@ -38,11 +30,8 @@ We recommend using a packaging manager like `pip` or `poetry`.
     ```
   </Tabs.Tab>
 
-  <Tabs.Tab>
-    ```sh
-    pipx install thread-cli
-    ```
-  </Tabs.Tab>
+{" "}
+<Tabs.Tab>```sh pipx install thread-cli ```</Tabs.Tab>
 
   <Tabs.Tab>
     ```sh
@@ -53,8 +42,8 @@ We recommend using a packaging manager like `pip` or `poetry`.
   </Tabs.Tab>
 </Tabs>
 
-
 #### Building From Source
+
 ```sh
 # Clone this repository
 git clone https://github.com/python-thread/thread-cli
@@ -76,95 +65,82 @@ pip install poetry
 poetry install
 ```
 
-
-
 ### Running the CLI
 
 Open your terminal and run:
+
 ```sh
 thread
 ```
 
 </Steps>
 
-
-
 ## Getting started
 
 Try running the help command!
+
 ```sh
 thread -h/--help
 ```
-
-
 
 ## Log levels
 
 Thread CLI uses the [python logging library.](https://docs.python.org/3/library/logging.html)
 
 |   Name   | Level |
-| :-----:  | :---: |
-|   NOTSET | 0     |
-|    DEBUG | 10    |
-|     INFO | 20    |
-|     WARN | 30    |
-|    ERROR | 40    |
-| CRITICAL | 50    |
-
-
+| :------: | :---: |
+|  NOTSET  |   0   |
+|  DEBUG   |  10   |
+|   INFO   |  20   |
+|   WARN   |  30   |
+|  ERROR   |  40   |
+| CRITICAL |  50   |
 
 ## Commands
 
 List of commands
-
-
 
 ### Documentation (thread docs)
 
 ```sh
 thread docs
 ```
+
 Ran with no arguments and options, this command will attempt to open your browser to this MD file!
 If unable, will instead print out the link.
-
-
 
 ### Help (thread help)
 
 ```sh
 thread help
 ```
+
 Ran with no arguments and options, this command will attempt to open your browser to the issue tracker!
 If unable, will instead print out the link.
-
-
-
 
 ### Report (thread report)
 
 ```sh
 thread report
 ```
+
 Ran with no arguments and options, this command will attempt to open your browser to this MD file!
 If unable, will instead print out the link.
-
-
-
 
 ### Configuration (thread config ...)
 
 ```sh
 thread config
 ```
+
 Coming soon.
-
-
 
 ### Parallel Processing (thread process ...)
 
 ```sh
 thread process
 ```
+
 Invokes the [ParallelProcessing](/docs/parallel-processing#importing-the-class) class.
 
 #### Examples
@@ -221,6 +197,6 @@ Invokes the [ParallelProcessing](/docs/parallel-processing#importing-the-class) 
     with open('./output.json', 'w') as output:
       output.write(worker.results)
     ```
+
   </Tabs.Tab>
 </Tabs>
-

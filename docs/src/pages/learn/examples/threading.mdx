@@ -1,4 +1,4 @@
-import { Callout } from 'nextra/components'
+import { Callout } from "nextra/components";
 
 # Threading Examples
 
@@ -9,6 +9,7 @@ Here are some examples of using **thread** to run code in sub threads.
 Here are the most common ways to spawn threads.
 
 ### On-Demand Threads
+
 These threads are created on runtime and are not started automatically.
 Calling `thread.Thread.start()` will start the thread immediately.
 
@@ -33,6 +34,7 @@ worker.join() # Halt the main thread until the background thread finishes.
 ```
 
 ### Decoratored Functions
+
 Decoratored functions automatically spawn new threads and run in the background everytime they are called,
 simply use `thread.threaded` to decorate the function.
 
@@ -61,6 +63,7 @@ Thread supports type annotations for Python **3.9+**.
 This will help your LSP to detect type errors and reduce the risk of runtime errors.
 
 ### A Simple Example
+
 All that is needed is to annotate the function like you would in Python.
 
 ```py
@@ -73,4 +76,3 @@ worker = Thread(target=background_function, args=(5,))
 worker.start()
 returned = worker.get_return_value() # int
 ```
-

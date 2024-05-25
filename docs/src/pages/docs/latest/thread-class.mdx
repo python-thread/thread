@@ -1,40 +1,56 @@
-import { cn } from '@utils'
-import { Tabs, Callout } from 'nextra/components'
-import { Statuses, ThreadStatuses, ThreadExceptions } from '@components/typedata'
+import { cn } from "@utils";
+import { Tabs, Callout } from "nextra/components";
+import {
+  Statuses,
+  ThreadStatuses,
+  ThreadExceptions,
+} from "@components/typedata";
 
+export function ArgumentWrapper({ children, className, ...props }) {
+  return (
+    <details
+      {...props}
+      className={cn(
+        "last-of-type:mb-0 rounded-lg bg-neutral-50 dark:bg-neutral-800 p-2 mt-4",
+        className,
+      )}
+    >
+      {children}
+    </details>
+  );
+}
 
-export function ArgumentWrapper({ children, className, ...props }) {return (
-  <details {...props} className={cn('last-of-type:mb-0 rounded-lg bg-neutral-50 dark:bg-neutral-800 p-2 mt-4', className)}>
-    {children}
-  </details>
-)}
+export function ArgumentBody({ children, className, ...props }) {
+  return (
+    <div {...props} className={cn("nx-p-2", className)}>
+      {children}
+    </div>
+  );
+}
 
-export function ArgumentBody({ children, className, ...props }) {return (
-  <div {...props} className={cn('nx-p-2', className)}>
-    {children}
-  </div>
-)}
+export function ArgumentExtra({ children, className, ...props }) {
+  return (
+    <span {...props} className={cn("ml-4 text-neutral-500", className)}>
+      {children}
+    </span>
+  );
+}
 
-export function ArgumentExtra({ children, className, ...props }) {return (
-  <span {...props} className={cn('ml-4 text-neutral-500', className)}>
-    {children}
-  </span>
-)}
-
-export function TabbedData({ type, keys = [] }) {return (
-  <Tabs items={keys}>
-    {keys.map((key, i) => (
-      <Tabs.Tab key={i}>{type === 'status' ? ThreadStatuses[key] : ThreadExceptions[key]}</Tabs.Tab>
-    ))}
-  </Tabs>
-)}
-
-
+export function TabbedData({ type, keys = [] }) {
+  return (
+    <Tabs items={keys}>
+      {keys.map((key, i) => (
+        <Tabs.Tab key={i}>
+          {type === "status" ? ThreadStatuses[key] : ThreadExceptions[key]}
+        </Tabs.Tab>
+      ))}
+    </Tabs>
+  );
+}
 
 # Thread Class Documentation
 
 Documentation for `thread.Thread`.
-
 
 ## Importing the class
 
@@ -47,14 +63,14 @@ thread.Thread
 from thread import Thread
 ```
 
-
-
 ## Quick Start
 
 There are main 2 ways of initializing a thread.
 
 ### On-Demand
+
 You can create a simple thread by initializing `thread.Thread` and passing the `target` function.
+
 ```python
 def my_target(): ...
 
@@ -69,11 +85,13 @@ my_thread = Thread(my_target)
 ```
 
 A thread can be ran by invoking the `start()` method
+
 ```py
 my_thread.start()
 ```
 
 ### Decoratored Function
+
 You can decorate a function with `thread.threaded` which uses `thread.Thread`.
 When the decorated function is invoked, it will automatically be ran in a new thread each time and return a `thread.Thread` object.
 
@@ -89,19 +107,18 @@ worker = my_target() # thread.Thread()
 <Callout type='info'>
   Did you know?
 
-  Decorators can take in keyword arguments that change the behavior of the thread.
-  ```py
-  import thread
+Decorators can take in keyword arguments that change the behavior of the thread.
 
-  @thread.threaded(name = 'my_thread', suppress_errors = True)
-  def my_target(): ...
-  ```
+```py
+import thread
 
-  See the full list of arguments [here](#initialization)
+@thread.threaded(name = 'my_thread', suppress_errors = True)
+def my_target(): ...
+```
+
+See the full list of arguments [here](#initialization)
 
 </Callout>
-
-
 
 ## Initialization
 
@@ -156,9 +173,9 @@ This will cover the required and optional arguments initializing a thread.
       worker.result # This will be inferred as int
       ```
     </Callout>
+
   </ArgumentBody>
 </ArgumentWrapper>
-
 
 ### Optional
 
@@ -184,6 +201,7 @@ This will cover the required and optional arguments initializing a thread.
     <Callout type='warning'>
       Args used in `Thread.__init__()` cannot offer static type checking. [Learn More](/learn/cautions/type-safety)
     </Callout>
+
   </ArgumentBody>
 </ArgumentWrapper>
 
@@ -209,6 +227,7 @@ This will cover the required and optional arguments initializing a thread.
     <Callout type='warning'>
       Kwargs used in `Thread.__init__()` cannot offer static type checking. [Learn More](/learn/cautions/type-safety)
     </Callout>
+
   </ArgumentBody>
 </ArgumentWrapper>
 
@@ -263,6 +282,7 @@ This will cover the required and optional arguments initializing a thread.
       # Program End
       ```
     </Callout>
+
   </ArgumentBody>
 </ArgumentWrapper>
 
@@ -288,6 +308,7 @@ This will cover the required and optional arguments initializing a thread.
     # hooks begin execution
     thread.Thread(target = raiseRuntimeError, suppress_errors = True)
     ```
+
   </ArgumentBody>
 </ArgumentWrapper>
 
@@ -312,6 +333,7 @@ This will cover the required and optional arguments initializing a thread.
     ```
 
     See [`threading` documentation](https://docs.python.org/3/library/threading.html#threading.Thread) for more details.
+
   </ArgumentBody>
 </ArgumentWrapper>
 
@@ -327,6 +349,7 @@ This will cover the required and optional arguments initializing a thread.
     This should be a boolean indicating whether the thread should be a daemon thread.
 
     See [`threading` documentation](https://docs.python.org/3/library/threading.html#threading.Thread) for more details.
+
   </ArgumentBody>
 </ArgumentWrapper>
 
@@ -342,10 +365,9 @@ This will cover the required and optional arguments initializing a thread.
     These overloads are parsed to `threading.Thread.__init__()`
 
     See [`threading` documentation](https://docs.python.org/3/library/threading.html#threading.Thread) for more details.
+
   </ArgumentBody>
 </ArgumentWrapper>
-
-
 
 ## Properties
 
@@ -367,6 +389,7 @@ These are attributes of `thread.Thread` class.
       Exceptions Raised
       <TabbedData type='exception' keys={['ThreadNotInitializedError', 'ThreadNotRunningError', 'ThreadStillRunningError']} />
     </Callout>
+
   </ArgumentBody>
 </ArgumentWrapper>
 
@@ -384,6 +407,7 @@ These are attributes of `thread.Thread` class.
       These Are The Possible Values
       <TabbedData type='status' keys={Statuses} />
     </Callout>
+
   </ArgumentBody>
 </ArgumentWrapper>
 
@@ -404,6 +428,7 @@ These are attributes of `thread.Thread` class.
     worker = thread.Thread(target = my_target)
     worker.errors
     ```
+
   </ArgumentBody>
 </ArgumentWrapper>
 
@@ -424,10 +449,9 @@ These are attributes of `thread.Thread` class.
     worker = thread.Thread(target = my_target)
     worker.hooks
     ```
+
   </ArgumentBody>
 </ArgumentWrapper>
-
-
 
 ### Methods
 
@@ -455,6 +479,7 @@ These are methods of `thread.Thread` class.
       Exceptions Raised
       <TabbedData type='exception' keys={['ThreadStillRunningError']} />
     </Callout>
+
   </ArgumentBody>
 </ArgumentWrapper>
 
@@ -480,6 +505,7 @@ These are methods of `thread.Thread` class.
       Exceptions Raised
       <TabbedData type='exception' keys={['ThreadNotInitializedError']} />
     </Callout>
+
   </ArgumentBody>
 </ArgumentWrapper>
 
@@ -512,6 +538,7 @@ These are methods of `thread.Thread` class.
       Exceptions Raised
       <TabbedData type='exception' keys={['ThreadNotInitializedError', 'ThreadNotRunningError']} />
     </Callout>
+
   </ArgumentBody>
 </ArgumentWrapper>
 
@@ -537,6 +564,7 @@ These are methods of `thread.Thread` class.
       Exceptions Raised
       <TabbedData type='exception' keys={['ThreadNotInitializedError', 'ThreadNotRunningError']} />
     </Callout>
+
   </ArgumentBody>
 </ArgumentWrapper>
 
@@ -563,6 +591,7 @@ These are methods of `thread.Thread` class.
       Exceptions Raised
       <TabbedData type='exception' keys={['ThreadNotInitializedError', 'ThreadNotRunningError']} />
     </Callout>
+
   </ArgumentBody>
 </ArgumentWrapper>
 
@@ -599,6 +628,6 @@ These are methods of `thread.Thread` class.
 
       Meaning that if your `target` has a long `time.wait()` call, it will only be killed after it moves onto the next line.
     </Callout>
+
   </ArgumentBody>
 </ArgumentWrapper>
-

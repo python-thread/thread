@@ -1,163 +1,250 @@
-import Link from 'next/link'
-import { ExternalLinkIcon } from '@radix-ui/react-icons'
+import Link from "next/link";
+import { ExternalLinkIcon } from "@radix-ui/react-icons";
 
-import { cn } from '@utils'
-
+import { cn } from "@utils";
 
 export const linkVariant = {
-  default: cn('bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-700 border border-neutral-300 dark:border-neutral-700'),
-}
+  default: cn(
+    "bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-700 border border-neutral-300 dark:border-neutral-700",
+  ),
+};
 
-export function VersionLink({ variant='default', className, href, ...props }) {return (
-  <Link
-    {...props}
-    href={href}
-    target={href.startsWith('http') ? '_blank' : '_self'}
-    className={cn(
-      'flex items-center justify-center text-center gap-2 px-4 py-2 rounded-md transition-colors',
-      'text-neutral-800 dark:text-neutral-50',
-      'h-44',
-      linkVariant[variant],
-      className
-    )}
-  />
-)}
+export function VersionLink({
+  variant = "default",
+  className,
+  href,
+  ...props
+}) {
+  return (
+    <Link
+      {...props}
+      href={href}
+      target={href.startsWith("http") ? "_blank" : "_self"}
+      className={cn(
+        "flex items-center justify-center text-center gap-2 px-4 py-2 rounded-md transition-colors",
+        "text-neutral-800 dark:text-neutral-50",
+        "h-44",
+        linkVariant[variant],
+        className,
+      )}
+    />
+  );
+}
 
 export const statusVariant = {
-  latest: cn('bg-blue-200 dark:bg-blue-700/50'),
-  stable: cn('bg-green-200 dark:bg-green-800/50'),
-  beta: cn('bg-yellow-200 dark:bg-yellow-500/50'),
-  dev: cn('bg-purple-200 dark:bg-purple-700/50')
+  latest: cn("bg-blue-200 dark:bg-blue-700/50"),
+  stable: cn("bg-green-200 dark:bg-green-800/50"),
+  beta: cn("bg-yellow-200 dark:bg-yellow-500/50"),
+  dev: cn("bg-purple-200 dark:bg-purple-700/50"),
+};
+export function StatusBadge({ children, variant = "beta", className }) {
+  return (
+    <span
+      className={cn(
+        "px-2 py-1 rounded-md nx-mt-0",
+        statusVariant[variant],
+        className,
+      )}
+    >
+      {children}
+    </span>
+  );
 }
-export function StatusBadge({ children, variant='beta', className }) {return <span className={cn('px-2 py-1 rounded-md nx-mt-0', statusVariant[variant], className)}>{children}</span>}
-export function Text({ children, className }) {return <p className={cn('text-sm font-medium nx-mt-0', className)}>{children}</p>}
-
+export function Text({ children, className }) {
+  return (
+    <p className={cn("text-sm font-medium nx-mt-0", className)}>{children}</p>
+  );
+}
 
 <div className='w-full flex-col flex items-center pt-12'>
 
-  # Releases
+# Releases
 
-  This is a list of all the available releases.
+This is a list of all the available releases.
 
-  <div className='flex flex-wrap items-center justify-center gap-8 mt-12'>
-    <VersionLink className='w-56 flex-col justify-between items-start' href='/docs/v2'>
-      <div className='flex flex-row items-center gap-2'>
-        <ExternalLinkIcon className='w-6 h-6' />
-        <Text className='text-lg font-bold'>Latest v2.0.2</Text>
-      </div>
-      <Text className='text-sm font-light text-left ml-4'>This is the latest ***stable*** release.</Text>
-      <div className='flex flex-row self-end mt-auto mb-1 gap-2'>
-        <StatusBadge variant='latest'>latest</StatusBadge>
-        <StatusBadge variant='stable'>stable</StatusBadge>
-      </div>
-    </VersionLink>
-    <VersionLink className='w-56 flex-col justify-between items-start' href='/docs/v1'>
-      <div className='flex flex-row items-center gap-2'>
-        <ExternalLinkIcon className='w-6 h-6' />
-        <Text className='text-lg font-bold'>v1.1.1</Text>
-      </div>
-      <Text className='text-sm font-light text-left ml-4'>This is the last ***stable*** v1.1.1 release.</Text>
-      <div className='flex flex-row self-end mt-auto mb-1 gap-2'>
-        <StatusBadge variant='stable'>stable</StatusBadge>
-      </div>
-    </VersionLink>
-  </div>
-
-  <div className="w-[95%] md:w-3/5 mt-10 mb-5 h-[0.1rem] mx-auto rounded bg-black/50 dark:bg-white/50" />
-
-  <div className="mx-auto items-center flex flex-col gap-4 md:min-w-[30rem] w-5/6 md:w-2/5">
-    <Link target="_blank" href='https://github.com/python-thread/thread' className="flex flex-row w-full justify-between px-4 py-2 rounded-md items-center text-sm font-light hover:bg-neutral-100/40 dark:hover:bg-neutral-800/20 transition-all">
-      <div className="flex flex-col justify-between">
-        <h1 className="font-normal text-lg">Development</h1>
-        <p>Now</p>
-      </div>
-      <StatusBadge variant='dev'>dev</StatusBadge>
-    </Link>
-    <Link target="_blank" href='/github/v2.0.2' className="flex flex-row w-full justify-between px-4 py-2 rounded-md items-center text-sm font-light hover:bg-neutral-100/40 dark:hover:bg-neutral-800/20 transition-all">
-      <div className="flex flex-col justify-between">
-        <h1 className="font-normal text-lg">Release v2.0.2</h1>
-        <p>25 May 2024</p>
-      </div>
-      <StatusBadge variant='stable'>stable</StatusBadge>
-    </Link>
-    <Link target="_blank" href='/github/v2.0.1' className="flex flex-row w-full justify-between px-4 py-2 rounded-md items-center text-sm font-light hover:bg-neutral-100/40 dark:hover:bg-neutral-800/20 transition-all">
-      <div className="flex flex-col justify-between">
-        <h1 className="font-normal text-lg">Release v2.0.1</h1>
-        <p>28 April 2024</p>
-      </div>
-      <StatusBadge variant='stable'>stable</StatusBadge>
-    </Link>
-    <Link target="_blank" href='/github/v2.0.0' className="flex flex-row w-full justify-between px-4 py-2 rounded-md items-center text-sm font-light hover:bg-neutral-100/40 dark:hover:bg-neutral-800/20 transition-all">
-      <div className="flex flex-col justify-between">
-        <h1 className="font-normal text-lg">Release v2.0.0</h1>
-        <p>21 April 2024</p>
-      </div>
-      <StatusBadge variant='stable'>stable</StatusBadge>
-    </Link>
-    <Link target="_blank" href='/github/v1.1.1' className="flex flex-row w-full justify-between px-4 py-2 rounded-md items-center text-sm font-light hover:bg-neutral-100/40 dark:hover:bg-neutral-800/20 transition-all">
-      <div className="flex flex-col justify-between">
-        <h1 className="font-normal text-lg">Release v1.1.1</h1>
-        <p>17 March 2024</p>
-      </div>
-      <StatusBadge variant='stable'>stable</StatusBadge>
-    </Link>
-    <Link target="_blank" href='/github/v1.1.0' className="flex flex-row w-full justify-between px-4 py-2 rounded-md items-center text-sm font-light hover:bg-neutral-100/40 dark:hover:bg-neutral-800/20 transition-all">
-      <div className="flex flex-col justify-between">
-        <h1 className="font-normal text-lg">Release v1.1.0</h1>
-        <p>17 March 2024</p>
-      </div>
-      <StatusBadge variant='stable'>stable</StatusBadge>
-    </Link>
-    <Link target="_blank" href='/github/v1.0.1' className="flex flex-row w-full justify-between px-4 py-2 rounded-md items-center text-sm font-light hover:bg-neutral-100/40 dark:hover:bg-neutral-800/20 transition-all">
-      <div className="flex flex-col justify-between">
-        <h1 className="font-normal text-lg">Release v1.0.1</h1>
-        <p>12 March 2024</p>
-      </div>
-      <StatusBadge variant='stable'>stable</StatusBadge>
-    </Link>
-    <Link target="_blank" href='/github/v1.0.0' className="flex flex-row w-full justify-between px-4 py-2 rounded-md items-center text-sm font-light hover:bg-neutral-100/40 dark:hover:bg-neutral-800/20 transition-all">
-      <div className="flex flex-col justify-between">
-        <h1 className="font-normal text-lg">Release v1.0.0</h1>
-        <p>9 March 2024</p>
-      </div>
-      <StatusBadge variant='stable'>stable</StatusBadge>
-    </Link>
-    <Link target="_blank" href='/github/v0.1.3' className="flex flex-row w-full justify-between px-4 py-2 rounded-md items-center text-sm font-light hover:bg-neutral-100/40 dark:hover:bg-neutral-800/20 transition-all">
-      <div className="flex flex-col justify-between">
-        <h1 className="font-normal text-lg">Release v0.1.3</h1>
-        <p>10 December 2023</p>
-      </div>
-      <StatusBadge variant='stable'>stable</StatusBadge>
-    </Link>
-    <Link target="_blank" href='/github/v0.1.2' className="flex flex-row w-full justify-between px-4 py-2 rounded-md items-center text-sm font-light hover:bg-neutral-100/40 dark:hover:bg-neutral-800/20 transition-all">
-      <div className="flex flex-col justify-between">
-        <h1 className="font-normal text-lg">Release v0.1.2</h1>
-        <p>16 November 2023</p>
-      </div>
-      <StatusBadge variant='stable'>stable</StatusBadge>
-    </Link>
-    <Link target="_blank" href='/github/v0.1.1' className="flex flex-row w-full justify-between px-4 py-2 rounded-md items-center text-sm font-light hover:bg-neutral-100/40 dark:hover:bg-neutral-800/20 transition-all">
-      <div className="flex flex-col justify-between">
-        <h1 className="font-normal text-lg">Release v0.1.1</h1>
-        <p>14 November 2023</p>
-      </div>
-      <StatusBadge variant='stable'>stable</StatusBadge>
-    </Link>
-    <Link target="_blank" href='/github/v0.1.0' className="flex flex-row w-full justify-between px-4 py-2 rounded-md items-center text-sm font-light hover:bg-neutral-100/40 dark:hover:bg-neutral-800/20 transition-all">
-      <div className="flex flex-col justify-between">
-        <h1 className="font-normal text-lg">Release v0.1.0</h1>
-        <p>14 November 2023</p>
-      </div>
-      <StatusBadge variant='stable'>stable</StatusBadge>
-    </Link>
-    <Link target="_blank" href='/github/v0.0.1' className="flex flex-row w-full justify-between px-4 py-2 rounded-md items-center text-sm font-light hover:bg-neutral-100/40 dark:hover:bg-neutral-800/20 transition-all">
-      <div className="flex flex-col justify-between">
-        <h1 className="font-normal text-lg">Release v0.0.1</h1>
-        <p>14 November 2023</p>
-      </div>
-      <StatusBadge variant='stable'>stable</StatusBadge>
-    </Link>
-  </div>
-
+{" "}
+<div className="flex flex-wrap items-center justify-center gap-8 mt-12">
+  <VersionLink
+    className="w-56 flex-col justify-between items-start"
+    href="/docs/v2"
+  >
+    <div className="flex flex-row items-center gap-2">
+      <ExternalLinkIcon className="w-6 h-6" />
+      <Text className="text-lg font-bold">Latest v2.0.2</Text>
+    </div>
+    <Text className="text-sm font-light text-left ml-4">
+      This is the latest ***stable*** release.
+    </Text>
+    <div className="flex flex-row self-end mt-auto mb-1 gap-2">
+      <StatusBadge variant="latest">latest</StatusBadge>
+      <StatusBadge variant="stable">stable</StatusBadge>
+    </div>
+  </VersionLink>
+  <VersionLink
+    className="w-56 flex-col justify-between items-start"
+    href="/docs/v1"
+  >
+    <div className="flex flex-row items-center gap-2">
+      <ExternalLinkIcon className="w-6 h-6" />
+      <Text className="text-lg font-bold">v1.1.1</Text>
+    </div>
+    <Text className="text-sm font-light text-left ml-4">
+      This is the last ***stable*** v1.1.1 release.
+    </Text>
+    <div className="flex flex-row self-end mt-auto mb-1 gap-2">
+      <StatusBadge variant="stable">stable</StatusBadge>
+    </div>
+  </VersionLink>
 </div>
 
+{" "}
+<div className="w-[95%] md:w-3/5 mt-10 mb-5 h-[0.1rem] mx-auto rounded bg-black/50 dark:bg-white/50" />
+
+{" "}
+<div className="mx-auto items-center flex flex-col gap-4 md:min-w-[30rem] w-5/6 md:w-2/5">
+  <Link
+    target="_blank"
+    href="https://github.com/python-thread/thread"
+    className="flex flex-row w-full justify-between px-4 py-2 rounded-md items-center text-sm font-light hover:bg-neutral-100/40 dark:hover:bg-neutral-800/20 transition-all"
+  >
+    <div className="flex flex-col justify-between">
+      <h1 className="font-normal text-lg">Development</h1>
+      <p>Now</p>
+    </div>
+    <StatusBadge variant="dev">dev</StatusBadge>
+  </Link>
+  <Link
+    target="_blank"
+    href="/github/v2.0.2"
+    className="flex flex-row w-full justify-between px-4 py-2 rounded-md items-center text-sm font-light hover:bg-neutral-100/40 dark:hover:bg-neutral-800/20 transition-all"
+  >
+    <div className="flex flex-col justify-between">
+      <h1 className="font-normal text-lg">Release v2.0.2</h1>
+      <p>25 May 2024</p>
+    </div>
+    <StatusBadge variant="stable">stable</StatusBadge>
+  </Link>
+  <Link
+    target="_blank"
+    href="/github/v2.0.1"
+    className="flex flex-row w-full justify-between px-4 py-2 rounded-md items-center text-sm font-light hover:bg-neutral-100/40 dark:hover:bg-neutral-800/20 transition-all"
+  >
+    <div className="flex flex-col justify-between">
+      <h1 className="font-normal text-lg">Release v2.0.1</h1>
+      <p>28 April 2024</p>
+    </div>
+    <StatusBadge variant="stable">stable</StatusBadge>
+  </Link>
+  <Link
+    target="_blank"
+    href="/github/v2.0.0"
+    className="flex flex-row w-full justify-between px-4 py-2 rounded-md items-center text-sm font-light hover:bg-neutral-100/40 dark:hover:bg-neutral-800/20 transition-all"
+  >
+    <div className="flex flex-col justify-between">
+      <h1 className="font-normal text-lg">Release v2.0.0</h1>
+      <p>21 April 2024</p>
+    </div>
+    <StatusBadge variant="stable">stable</StatusBadge>
+  </Link>
+  <Link
+    target="_blank"
+    href="/github/v1.1.1"
+    className="flex flex-row w-full justify-between px-4 py-2 rounded-md items-center text-sm font-light hover:bg-neutral-100/40 dark:hover:bg-neutral-800/20 transition-all"
+  >
+    <div className="flex flex-col justify-between">
+      <h1 className="font-normal text-lg">Release v1.1.1</h1>
+      <p>17 March 2024</p>
+    </div>
+    <StatusBadge variant="stable">stable</StatusBadge>
+  </Link>
+  <Link
+    target="_blank"
+    href="/github/v1.1.0"
+    className="flex flex-row w-full justify-between px-4 py-2 rounded-md items-center text-sm font-light hover:bg-neutral-100/40 dark:hover:bg-neutral-800/20 transition-all"
+  >
+    <div className="flex flex-col justify-between">
+      <h1 className="font-normal text-lg">Release v1.1.0</h1>
+      <p>17 March 2024</p>
+    </div>
+    <StatusBadge variant="stable">stable</StatusBadge>
+  </Link>
+  <Link
+    target="_blank"
+    href="/github/v1.0.1"
+    className="flex flex-row w-full justify-between px-4 py-2 rounded-md items-center text-sm font-light hover:bg-neutral-100/40 dark:hover:bg-neutral-800/20 transition-all"
+  >
+    <div className="flex flex-col justify-between">
+      <h1 className="font-normal text-lg">Release v1.0.1</h1>
+      <p>12 March 2024</p>
+    </div>
+    <StatusBadge variant="stable">stable</StatusBadge>
+  </Link>
+  <Link
+    target="_blank"
+    href="/github/v1.0.0"
+    className="flex flex-row w-full justify-between px-4 py-2 rounded-md items-center text-sm font-light hover:bg-neutral-100/40 dark:hover:bg-neutral-800/20 transition-all"
+  >
+    <div className="flex flex-col justify-between">
+      <h1 className="font-normal text-lg">Release v1.0.0</h1>
+      <p>9 March 2024</p>
+    </div>
+    <StatusBadge variant="stable">stable</StatusBadge>
+  </Link>
+  <Link
+    target="_blank"
+    href="/github/v0.1.3"
+    className="flex flex-row w-full justify-between px-4 py-2 rounded-md items-center text-sm font-light hover:bg-neutral-100/40 dark:hover:bg-neutral-800/20 transition-all"
+  >
+    <div className="flex flex-col justify-between">
+      <h1 className="font-normal text-lg">Release v0.1.3</h1>
+      <p>10 December 2023</p>
+    </div>
+    <StatusBadge variant="stable">stable</StatusBadge>
+  </Link>
+  <Link
+    target="_blank"
+    href="/github/v0.1.2"
+    className="flex flex-row w-full justify-between px-4 py-2 rounded-md items-center text-sm font-light hover:bg-neutral-100/40 dark:hover:bg-neutral-800/20 transition-all"
+  >
+    <div className="flex flex-col justify-between">
+      <h1 className="font-normal text-lg">Release v0.1.2</h1>
+      <p>16 November 2023</p>
+    </div>
+    <StatusBadge variant="stable">stable</StatusBadge>
+  </Link>
+  <Link
+    target="_blank"
+    href="/github/v0.1.1"
+    className="flex flex-row w-full justify-between px-4 py-2 rounded-md items-center text-sm font-light hover:bg-neutral-100/40 dark:hover:bg-neutral-800/20 transition-all"
+  >
+    <div className="flex flex-col justify-between">
+      <h1 className="font-normal text-lg">Release v0.1.1</h1>
+      <p>14 November 2023</p>
+    </div>
+    <StatusBadge variant="stable">stable</StatusBadge>
+  </Link>
+  <Link
+    target="_blank"
+    href="/github/v0.1.0"
+    className="flex flex-row w-full justify-between px-4 py-2 rounded-md items-center text-sm font-light hover:bg-neutral-100/40 dark:hover:bg-neutral-800/20 transition-all"
+  >
+    <div className="flex flex-col justify-between">
+      <h1 className="font-normal text-lg">Release v0.1.0</h1>
+      <p>14 November 2023</p>
+    </div>
+    <StatusBadge variant="stable">stable</StatusBadge>
+  </Link>
+  <Link
+    target="_blank"
+    href="/github/v0.0.1"
+    className="flex flex-row w-full justify-between px-4 py-2 rounded-md items-center text-sm font-light hover:bg-neutral-100/40 dark:hover:bg-neutral-800/20 transition-all"
+  >
+    <div className="flex flex-col justify-between">
+      <h1 className="font-normal text-lg">Release v0.0.1</h1>
+      <p>14 November 2023</p>
+    </div>
+    <StatusBadge variant="stable">stable</StatusBadge>
+  </Link>
+</div>
+
+</div>

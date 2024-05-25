@@ -1,12 +1,10 @@
-import { Callout } from 'nextra/components'
+import { Callout } from "nextra/components";
 
 # Type Safety Cautions
 
 ## 1. Types Are Not Enforced at Runtime
 
-<Callout type='info'>
-  This is not a bug, but rather a feature.
-</Callout>
+<Callout type="info">This is not a bug, but rather a feature.</Callout>
 
 ### The Scope
 
@@ -33,10 +31,9 @@ Consider the following code;
 The parsed argument, `"a"`, is not an integer. Thread **will not** raise a type error, however,
 a type error will be raised at runtime due to the invalid opperand between a string and an integer.
 
-
 ## 2. Args and Kwargs do not provide static type checking
 
-<Callout type='warning'>
+<Callout type="warning">
   This is unfortunately due to Python&gt;s typing library
 </Callout>
 
@@ -86,4 +83,3 @@ def __init__(
 
 Yes, if we change how we write `thread.Thread()`'s initialization.
 However, we want to make migrating to **thread** easy from the default threading library, and thus we will not change this for now and focus on adding new features.
-

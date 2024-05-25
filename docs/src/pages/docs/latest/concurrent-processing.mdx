@@ -1,54 +1,72 @@
-import { cn } from '@utils'
-import { Callout, Steps, Tabs } from 'nextra/components'
-import { CheckIcon, Cross2Icon, DotFilledIcon } from '@radix-ui/react-icons'
-import { Statuses, ThreadStatuses, ThreadExceptions } from '@components/typedata'
+import { cn } from "@utils";
+import { Callout, Steps, Tabs } from "nextra/components";
+import { CheckIcon, Cross2Icon, DotFilledIcon } from "@radix-ui/react-icons";
+import {
+  Statuses,
+  ThreadStatuses,
+  ThreadExceptions,
+} from "@components/typedata";
 
+export function ArgumentWrapper({ children, className, ...props }) {
+  return (
+    <details
+      {...props}
+      className={cn(
+        "last-of-type:mb-0 rounded-lg bg-neutral-50 dark:bg-neutral-800 p-2 mt-4",
+        className,
+      )}
+    >
+      {children}
+    </details>
+  );
+}
 
-export function ArgumentWrapper({ children, className, ...props }) {return (
-  <details {...props} className={cn('last-of-type:mb-0 rounded-lg bg-neutral-50 dark:bg-neutral-800 p-2 mt-4', className)}>
-    {children}
-  </details>
-)}
+export function ArgumentBody({ children, className, ...props }) {
+  return (
+    <div {...props} className={cn("nx-p-2", className)}>
+      {children}
+    </div>
+  );
+}
 
-export function ArgumentBody({ children, className, ...props }) {return (
-  <div {...props} className={cn('nx-p-2', className)}>
-    {children}
-  </div>
-)}
+export function ArgumentExtra({ children, className, ...props }) {
+  return (
+    <span {...props} className={cn("ml-4 text-neutral-500", className)}>
+      {children}
+    </span>
+  );
+}
 
-export function ArgumentExtra({ children, className, ...props }) {return (
-  <span {...props} className={cn('ml-4 text-neutral-500', className)}>
-    {children}
-  </span>
-)}
+export function TabbedData({ type, keys = [] }) {
+  return (
+    <Tabs items={keys}>
+      {keys.map((key, i) => (
+        <Tabs.Tab key={i}>
+          {type === "status" ? ThreadStatuses[key] : ThreadExceptions[key]}
+        </Tabs.Tab>
+      ))}
+    </Tabs>
+  );
+}
 
-export function TabbedData({ type, keys = [] }) {return (
-  <Tabs items={keys}>
-    {keys.map((key, i) => (
-      <Tabs.Tab key={i}>{type === 'status' ? ThreadStatuses[key] : ThreadExceptions[key]}</Tabs.Tab>
-    ))}
-  </Tabs>
-)}
-
-export function Text({ children, className, ...props }) {return (
-  <p {...props} className={cn('nx-mt-0', className)}>
-    {children}
-  </p>
-)}
-
-
+export function Text({ children, className, ...props }) {
+  return (
+    <p {...props} className={cn("nx-mt-0", className)}>
+      {children}
+    </p>
+  );
+}
 
 # Concurrent Processing Documentation
 
 Documentation for `thread.ConcurrentProcessing`.
-
-
 
 ## Why Concurrent Processing?
 
 Concurrent Processing is used to speed up the data processing of large datasets by splitting workflow into multiple threads.
 
 Traditionally, this is achieved with a for loop.
+
 ```py
 my_dataset = [] # Large dataset
 def my_data_processor(Data_In) -> Data_Out:
@@ -65,47 +83,47 @@ While this is simple and decent enough for a small dataset, this is not ideal fo
 By using `thread.ConcurrentProcessing` we can split the large dataset into multiple chunks and process each chunk simultaneously.
 
 <Callout>
-  Concurrent Processing is not True Parallel.
-  Learn more [here](/learn/cautions/parallelism).
+  Concurrent Processing is not True Parallel. Learn more
+  [here](/learn/cautions/parallelism).
 </Callout>
-
-
 
 ## How It Works
 
 <Steps>
 
-  ### Determine Thread Count
+### Determine Thread Count
 
-  The number of threads used is determined by the following formula:
-  ```py
-  thread_count = min(max_threads, len(dataset))
-  ```
+The number of threads used is determined by the following formula:
 
-  This ensures that the number of threads used will always be less than or equal to the length of the dataset,
-  which prevents redundant threads to be initialized for small datasets.
+```py
+thread_count = min(max_threads, len(dataset))
+```
 
-  ### Chunking
+This ensures that the number of threads used will always be less than or equal to the length of the dataset,
+which prevents redundant threads to be initialized for small datasets.
 
-  The dataset is split as evenly as possible into chunks, preserving the order of data.
-  Chunks follow the structure:
-  ```py
-  chunks = [[1, 2, 3, ...], [50, 51, 52, ...], ...]
-  ```
+### Chunking
 
-  Let $N$ be the length of the dataset
-  and let $M$ be the number of threads.
+The dataset is split as evenly as possible into chunks, preserving the order of data.
+Chunks follow the structure:
 
-  The individual chunk lengths decrease down the chunk list.
-  The length of each chunk will can be either $\lfloor{N/M + 0.5}\rfloor + 1$ or $N/M$.
+```py
+chunks = [[1, 2, 3, ...], [50, 51, 52, ...], ...]
+```
 
-  <Callout type='info'>
-    The chunks generated are generators, meaning they will not take up much memory.
-  </Callout>
+Let $N$ be the length of the dataset
+and let $M$ be the number of threads.
+
+The individual chunk lengths decrease down the chunk list.
+The length of each chunk will can be either $\lfloor{N/M + 0.5}\rfloor + 1$ or $N/M$.
+
+{" "}
+<Callout type="info">
+  The chunks generated are generators, meaning they will not take up much
+  memory.
+</Callout>
 
 </Steps>
-
-
 
 ## Importing the class
 
@@ -116,14 +134,14 @@ thread.ConcurrentProcessing
 from thread import ConcurrentProcessing
 ```
 
-
-
 ## Quick Start
 
 There are main 2 ways of initializing a concurrent processing object.
 
 ### On-Demand
+
 You can create a simple process by initializing `thread.ConcurrentProcessing` and passing the `function` and `dataset`.
+
 ```py
 def my_data_processor(Data_In) -> Data_Out: ...
 
@@ -139,11 +157,13 @@ my_processor = ConcurrentProcessing(my_data_processor, [i in range(0, n)])
 ```
 
 It can be ran by invoking the `start()` method
+
 ```py
 my_processor.start()
 ```
 
 ### Decorated Function
+
 You can decorate a function with `thread.processor` which uses `thread.ConcurrentProcessing`.
 When the decorated function is invoked, it will automatically be ran in a new thread each time and return a `thread.ConcurrentProcessing` object.
 
@@ -162,26 +182,28 @@ worker = my_target(dataset, arg1, arg2, arg3 = True) # thread.ConcurrentProcessi
 <Callout type='info'>
   Did you know?
 
-  Decorators can take in keyword arguments that change the behavior of the thread.
-  ```py
-  import thread
+Decorators can take in keyword arguments that change the behavior of the thread.
 
-  @thread.processor(name = 'my_thread', suppress_errors = True)
-  def my_target(): ...
-  ```
+```py
+import thread
 
-  See the full list of arguments [here](#initialization)
+@thread.processor(name = 'my_thread', suppress_errors = True)
+def my_target(): ...
+```
+
+See the full list of arguments [here](#initialization)
 
 </Callout>
 
-
 ### Compatibility
+
 Data processing is usually achieved with external libraries like `pandas`.
 However, there is no native support for dataset objects without both of the **\_\_len\_\_()** and **\_\_getitem\_\_()** methods.
 
 #### This is primarily because:
-* The `__len__()` method is used to determine the length of the dataset using the `len(dataset)` method.
-* The `__getitem__()` method is used to access the dataset using the `dataset[index]` method.
+
+- The `__len__()` method is used to determine the length of the dataset using the `len(dataset)` method.
+- The `__getitem__()` method is used to access the dataset using the `dataset[index]` method.
 
 This is also why `thread.ConcurrentProcessing` does not support `Generator` objects or `Iterator` objects out of the box.
 
@@ -192,20 +214,45 @@ We now non-natively support all most dataset types.
 We stopped explicitly supporting the `Sequence` type and instead now use `Protocol`s to check if `__len__()` or `__getitem__()` are implemented.
 We also added context-specific optional/required `_length` and `_get_value` arguments when initializing `thread.ConcurrentProcessing`.
 
-You can find out more about the valid __length_ and _get_value_ arguments [here](#optional).
+You can find out more about the valid \__length_ and _get_value_ arguments [here](#optional).
 
 ##### Mapping
-<Text className='flex flex-row items-center gap-1 nx-my-2 mt-4'><DotFilledIcon className='w-5 h-5 mr-4' /> <Cross2Icon className='w-5 h-5' /> <Cross2Icon className='w-5 h-5 mr-2' /> Has `__len__` and `__getitem__`</Text>
-<Text className='flex flex-row items-center gap-1 mx-my-2 mt-2'><DotFilledIcon className='w-5 h-5 mr-4' /> <CheckIcon className='w-5 h-5 text-green-600' /> <CheckIcon className='w-5 h-5 text-blue-600 mr-2' /> Does not have `__len__` and `__getitem__`</Text>
-<Text className='flex flex-row items-center gap-1 mx-my-2 mt-2'><DotFilledIcon className='w-5 h-5 mr-4' /> <CheckIcon className='w-5 h-5 text-green-600' /> <Cross2Icon className='w-5 h-5 mr-2' /> Does not have `__len__` and has `__getitem__`</Text>
-<Text className='flex flex-row items-center gap-1 mx-my-2 mt-2'><DotFilledIcon className='w-5 h-5 mr-4' /> <Cross2Icon className='w-5 h-5' /> <CheckIcon className='w-5 h-5 text-blue-600 mr-2' /> Has `__len__` and does not have `__getitem__`</Text>
 
-<div className='flex flex-wrap gap-4 mt-4'>
-  <Text className='flex flex-row gap-1 text-sm'><CheckIcon className='w-4 h-4 my-auto text-green-600' /> **_length** Required</Text>
-  <Text className='flex flex-row gap-1 text-sm'><CheckIcon className='w-4 h-4 my-auto text-blue-600' /> **_get_value** Required</Text>
+<Text className="flex flex-row items-center gap-1 nx-my-2 mt-4">
+  <DotFilledIcon className="w-5 h-5 mr-4" /> <Cross2Icon className="w-5 h-5" />{" "}
+  <Cross2Icon className="w-5 h-5 mr-2" /> Has `__len__` and `__getitem__`
+</Text>
+<Text className="flex flex-row items-center gap-1 mx-my-2 mt-2">
+  <DotFilledIcon className="w-5 h-5 mr-4" />{" "}
+  <CheckIcon className="w-5 h-5 text-green-600" />{" "}
+  <CheckIcon className="w-5 h-5 text-blue-600 mr-2" /> Does not have `__len__`
+  and `__getitem__`
+</Text>
+<Text className="flex flex-row items-center gap-1 mx-my-2 mt-2">
+  <DotFilledIcon className="w-5 h-5 mr-4" />{" "}
+  <CheckIcon className="w-5 h-5 text-green-600" />{" "}
+  <Cross2Icon className="w-5 h-5 mr-2" /> Does not have `__len__` and has
+  `__getitem__`
+</Text>
+<Text className="flex flex-row items-center gap-1 mx-my-2 mt-2">
+  <DotFilledIcon className="w-5 h-5 mr-4" /> <Cross2Icon className="w-5 h-5" />{" "}
+  <CheckIcon className="w-5 h-5 text-blue-600 mr-2" /> Has `__len__` and does
+  not have `__getitem__`
+</Text>
+
+<div className="flex flex-wrap gap-4 mt-4">
+  <Text className="flex flex-row gap-1 text-sm">
+    <CheckIcon className="w-4 h-4 my-auto text-green-600" /> **_length**
+    Required
+  </Text>
+  <Text className="flex flex-row gap-1 text-sm">
+    <CheckIcon className="w-4 h-4 my-auto text-blue-600" /> **_get_value**
+    Required
+  </Text>
 </div>
 
 ##### Example
+
 Now you do not have to pre-convert the dataset to a supported dataset type.
 
 ```py
@@ -221,11 +268,10 @@ process = ConcurrentProcessing(
 )
 ```
 
-<Callout type='info'>
-  Static type checking will reflect the whether `_length` and `_get_value` are required or optional depending on the dataset type.
+<Callout type="info">
+  Static type checking will reflect the whether `_length` and `_get_value` are
+  required or optional depending on the dataset type.
 </Callout>
-
-
 
 ## Initialization
 
@@ -280,6 +326,7 @@ This will cover the required and optional arguments initializing a concurrent pr
       worker.results # This will be inferred as a list[int]
       ```
     </Callout>
+
   </ArgumentBody>
 </ArgumentWrapper>
 
@@ -306,11 +353,12 @@ This will cover the required and optional arguments initializing a concurrent pr
     thread.ConcurrentProcessing(function = my_function, dataset = [1, 2, 3])
     thread.ConcurrentProcessing(function = my_function, dataset = ('hi')) # This will be highlighted by your LSP/Linter
     ```
+
   </ArgumentBody>
 </ArgumentWrapper>
 
-
 ### Optional
+
 <ArgumentWrapper>
   <summary>
     <strong className='text-lg'>
@@ -325,6 +373,7 @@ This will cover the required and optional arguments initializing a concurrent pr
     <Callout type='warning'>
       This value is not always the number of threads created. See [here](#determine-thread-count) for more details.
     </Callout>
+
   </ArgumentBody>
 </ArgumentWrapper>
 
@@ -357,6 +406,7 @@ This will cover the required and optional arguments initializing a concurrent pr
       _get_value = lambda d, index: d.getIndex(index),
     )
     ```
+
   </ArgumentBody>
 </ArgumentWrapper>
 
@@ -392,6 +442,7 @@ This will cover the required and optional arguments initializing a concurrent pr
       _length = get_length,
     )
     ```
+
   </ArgumentBody>
 </ArgumentWrapper>
 
@@ -412,10 +463,9 @@ This will cover the required and optional arguments initializing a concurrent pr
 
     See [`thread.Thread` documentation](/docs/thread-class#optional) for more details.<br />
     See [`threading` documentation](https://docs.python.org/3/library/threading.html#threading.Thread) for more details.
+
   </ArgumentBody>
 </ArgumentWrapper>
-
-
 
 ## Properties
 
@@ -425,15 +475,23 @@ These are attributes of `thread.ConcurrentProcessing` class.
 
 <ArgumentWrapper>
   <summary>
-    <strong className='text-lg'>
+    <strong className="text-lg">
       results
       <ArgumentExtra>List[Data_Out]</ArgumentExtra>
     </strong>
   </summary>
   <ArgumentBody>
-    This is a list of the data that was returned by the `function` in `thread.ConcurrentProcessing`.
+    This is a list of the data that was returned by the `function` in
+    `thread.ConcurrentProcessing`.
     <Callout>
-      <TabbedData type='exception' keys={['ThreadStillRunningError', 'ThreadNotInitializedError', 'ThreadNotRunningError']} />
+      <TabbedData
+        type="exception"
+        keys={[
+          "ThreadStillRunningError",
+          "ThreadNotInitializedError",
+          "ThreadNotRunningError",
+        ]}
+      />
     </Callout>
   </ArgumentBody>
 </ArgumentWrapper>
@@ -452,10 +510,9 @@ These are attributes of `thread.ConcurrentProcessing` class.
       These Are The Possible Values
       <TabbedData type='status' keys={Statuses} />
     </Callout>
+
   </ArgumentBody>
 </ArgumentWrapper>
-
-
 
 ### Methods
 
@@ -483,6 +540,7 @@ These are methods of `thread.ConcurrentProcessing` class.
       Exceptions Raised
       <TabbedData type='exception' keys={['ThreadStillRunningError']} />
     </Callout>
+
   </ArgumentBody>
 </ArgumentWrapper>
 
@@ -508,6 +566,7 @@ These are methods of `thread.ConcurrentProcessing` class.
       Exceptions Raised
       <TabbedData type='exception' keys={['ThreadNotInitializedError']} />
     </Callout>
+
   </ArgumentBody>
 </ArgumentWrapper>
 
@@ -533,9 +592,9 @@ These are methods of `thread.ConcurrentProcessing` class.
       Exceptions Raised
       <TabbedData type='exception' keys={['ThreadNotInitializedError', 'ThreadNotRunningError']} />
     </Callout>
+
   </ArgumentBody>
 </ArgumentWrapper>
-
 
 <ArgumentWrapper>
   <summary>
@@ -560,6 +619,7 @@ These are methods of `thread.ConcurrentProcessing` class.
       Exceptions Raised
       <TabbedData type='exception' keys={['ThreadNotInitializedError', 'ThreadNotRunningError']} />
     </Callout>
+
   </ArgumentBody>
 </ArgumentWrapper>
 
@@ -596,6 +656,6 @@ These are methods of `thread.ConcurrentProcessing` class.
 
       Meaning that if `function` has a long `time.wait()` call, it will only be killed after it moves onto the next line.
     </Callout>
+
   </ArgumentBody>
 </ArgumentWrapper>
-
