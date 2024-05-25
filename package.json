@@ -6,7 +6,15 @@
     "build": "npm run build --workspace=docs",
     "start": "npm start --workspace=docs",
     "lint:docs": "npm run lint --workspace=docs",
-    "test:docs": "npm run test --workspace=docs"
+    "lint:core": "python -m poetry run ruff format --check",
+    "lint": "npm run lint:docs && npm run lint:core",
+    "lint:docs:fix": "npm run lint:fix --workspace=docs",
+    "lint:core:fix": "python -m poetry run ruff format",
+    "lint:fix": "npm run lint:docs:fix && npm run lint:core:fix",
+    "test:docs": "npm run test --workspace=docs",
+    "test:core": "python -m poetry run pytest -sv",
+    "test": "npm run test:docs && npm run test:core",
+    "postinstall": "python -m pip install poetry && poetry install"
   },
   "workspaces": [
     "docs"
