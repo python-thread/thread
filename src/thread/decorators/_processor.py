@@ -42,8 +42,7 @@ FullParamReturn = Callable[
 @overload
 def processor(
     __function: TargetFunction[_DataT, _TargetP, _TargetT],
-) -> NoParamReturn[_DataT, _TargetP, _TargetT]:
-    ...
+) -> NoParamReturn[_DataT, _TargetP, _TargetT]: ...
 
 
 @overload
@@ -54,8 +53,7 @@ def processor(
     ignore_errors: Sequence[type[Exception]] = (),
     suppress_errors: bool = False,
     **overflow_kwargs: Overflow_In,
-) -> WithParamReturn[_DataT, _TargetP, _TargetT]:
-    ...
+) -> WithParamReturn[_DataT, _TargetP, _TargetT]: ...
 
 
 @overload
@@ -67,8 +65,7 @@ def processor(
     ignore_errors: Sequence[type[Exception]] = (),
     suppress_errors: bool = False,
     **overflow_kwargs: Overflow_In,
-) -> FullParamReturn[_DataT, _TargetP, _TargetT]:
-    ...
+) -> FullParamReturn[_DataT, _TargetP, _TargetT]: ...
 
 
 def processor(

@@ -21,8 +21,7 @@ FullParamReturn = Callable[P, Thread[P, T]]
 
 
 @overload
-def threaded(__function: TargetFunction[P, T]) -> NoParamReturn[P, T]:
-    ...
+def threaded(__function: TargetFunction[P, T]) -> NoParamReturn[P, T]: ...
 
 
 @overload
@@ -33,8 +32,7 @@ def threaded(
     ignore_errors: Sequence[type[Exception]] = (),
     suppress_errors: bool = False,
     **overflow_kwargs: Overflow_In,
-) -> WithParamReturn[P, T]:
-    ...
+) -> WithParamReturn[P, T]: ...
 
 
 @overload
@@ -46,8 +44,7 @@ def threaded(
     ignore_errors: Sequence[type[Exception]] = (),
     suppress_errors: bool = False,
     **overflow_kwargs: Overflow_In,
-) -> FullParamReturn[P, T]:
-    ...
+) -> FullParamReturn[P, T]: ...
 
 
 def threaded(
