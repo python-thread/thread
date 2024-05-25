@@ -18,13 +18,17 @@ jobs:
         with:
           python-version: 3.x
 
+      - name: Setup node
+        uses: actions/setup-node@v4.0.2
+        with:
+          cache: npm
+
       - name: Install requirements
         run: |
           set -xe
-          python -m pip install poetry
-          python -m poetry install
+          npm i
 
-      - name: Lint with ruff
+      - name: Lint with ruff, eslint and prettier
         run: |
           set -xe
-          python -m poetry run ruff format --check
+          npm run lint
