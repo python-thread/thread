@@ -1,0 +1,14 @@
+{
+  "name": "thread",
+  "private": true,
+  "scripts": {
+    "dev": "npm run dev --workspace=docs",
+    "build": "npm run build --workspace=docs",
+    "start": "npm start --workspace=docs",
+    "lint:docs": "npm run lint --workspace=docs",
+    "test:docs": "npm run test --workspace=docs"
+  },
+  "workspaces": [
+    "docs"
+  ]
+}
