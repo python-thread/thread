@@ -6,7 +6,8 @@ env:
   PIP_DISABLE_PIP_VERSION_CHECK: 1
 
 jobs:
-  linting:
+  lint-python:
+    name: Python
     runs-on: ubuntu-latest
 
     steps:
@@ -18,17 +19,71 @@ jobs:
         with:
           python-version: 3.x
 
+      - name: Install requirements
+        run: |
+          set -xe
+          python -m pip install poetry
+          python -m poetry install
+
+      - name: Lint with ruff
+        run: |
+          set -xe
+          python -m poetry run ruff format --check
+
+  lint-docs:
+    name: Docs
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: Setup node
         uses: actions/setup-node@v4.0.2
         with:
           cache: npm
 
-      - name: Install requirements
+      - name: Install dependencies
         run: |
           set -xe
           npm i
 
-      - name: Lint with ruff, eslint and prettier
+      - name: Lint
         run: |
           set -xe
-          npm run lint
+          npm run lint:docs
+
+  lint-project:
+    name: Project
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup node
+        uses: actions/setup-node@v4.0.2
+        with:
+          cache: npm
+
+      - name: Install dependencies
+        run: |
+          set -xe
+          npm i
+
+      - name: Lint
+        run: |
+          set -xe
+          npm run lint:proj
+
+  lint-successful:
+    if: ${{ always() }}
+    name: Lint successful
+    runs-on: ubuntu-latest
+    needs: [lint-python, lint-docs, lint-project]
+
+    steps:
+      - name: Whether the whole linting suite passed
+        uses: re-actors/alls-green@v1.2.2
+        with:
+          jobs: ${{ toJSON(needs) }}
