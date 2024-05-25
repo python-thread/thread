@@ -1,4 +1,4 @@
-from typing import Any, Callable, Literal, Union
+from typing import Any, Callable, Literal, Union, cast
 
 _Verbosity_Num = Literal[0, 1, 2]
 _Verbosity_Enum = Literal['quiet', 'normal', 'verbose']
@@ -79,6 +79,7 @@ class Verbosity:
             return operator(self.level_number, other)
         if isinstance(other, str):
             if Verbosity.is_valid_level(other):
+                other = cast(_Verbosity_Enum, other)
                 return operator(self.level_number, VerbosityMapping[other])
             return operator(self.level_string, other)
         raise ValueError('Cannot compare Verbosity with other types')
