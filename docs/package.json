@@ -6,6 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "test": "exit 0",
     "lint": "eslint . --report-unused-disable-directives --max-warnings 0 --ext .md,.mdx,.ts,.tsx,.js,.jsx && prettier --check --cache .",
     "lint:fix": "eslint . --report-unused-disable-directives --max-warnings 0 --ext .md,.mdx,.ts,.tsx,.js,.jsx --fix && prettier --write --cache .",
     "postbuild": "next-sitemap"
