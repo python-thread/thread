@@ -1,7 +1,5 @@
 """
 ## Types
-
-Documentation: https://thread.ngjx.org/docs/v2.0.1
 """
 
 from typing import Any, Literal, Callable, Union, Sized
