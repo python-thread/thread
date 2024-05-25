@@ -99,4 +99,6 @@ labels:
     color: AEB1C2
     description: Sync with upstream template
 
-
+  - name: "good first issue"
+    color: 008672
+    description: Good first issue
