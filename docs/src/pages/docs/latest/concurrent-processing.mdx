@@ -117,7 +117,6 @@ and let $M$ be the number of threads.
 The individual chunk lengths decrease down the chunk list.
 The length of each chunk will can be either $\lfloor{N/M + 0.5}\rfloor + 1$ or $N/M$.
 
-{" "}
 <Callout type="info">
   The chunks generated are generators, meaning they will not take up much
   memory.
@@ -219,25 +218,25 @@ You can find out more about the valid \__length_ and _get_value_ arguments [here
 ##### Mapping
 
 <Text className="flex flex-row items-center gap-1 nx-my-2 mt-4">
-  <DotFilledIcon className="w-5 h-5 mr-4" /> <Cross2Icon className="w-5 h-5" />{" "}
+  <DotFilledIcon className="w-5 h-5 mr-4" /> <Cross2Icon className="w-5 h-5" />
   <Cross2Icon className="w-5 h-5 mr-2" /> Has `__len__` and `__getitem__`
 </Text>
 <Text className="flex flex-row items-center gap-1 mx-my-2 mt-2">
-  <DotFilledIcon className="w-5 h-5 mr-4" />{" "}
-  <CheckIcon className="w-5 h-5 text-green-600" />{" "}
+  <DotFilledIcon className="w-5 h-5 mr-4" />
+  <CheckIcon className="w-5 h-5 text-green-600" />
   <CheckIcon className="w-5 h-5 text-blue-600 mr-2" /> Does not have `__len__`
   and `__getitem__`
 </Text>
 <Text className="flex flex-row items-center gap-1 mx-my-2 mt-2">
-  <DotFilledIcon className="w-5 h-5 mr-4" />{" "}
-  <CheckIcon className="w-5 h-5 text-green-600" />{" "}
+  <DotFilledIcon className="w-5 h-5 mr-4" />
+  <CheckIcon className="w-5 h-5 text-green-600" />
   <Cross2Icon className="w-5 h-5 mr-2" /> Does not have `__len__` and has
   `__getitem__`
 </Text>
 <Text className="flex flex-row items-center gap-1 mx-my-2 mt-2">
-  <DotFilledIcon className="w-5 h-5 mr-4" /> <Cross2Icon className="w-5 h-5" />{" "}
-  <CheckIcon className="w-5 h-5 text-blue-600 mr-2" /> Has `__len__` and does
-  not have `__getitem__`
+  <DotFilledIcon className="w-5 h-5 mr-4" /> <Cross2Icon className="w-5 h-5" />
+  <CheckIcon className="w-5 h-5 text-blue-600 mr-2" /> Has `__len__` and does not
+  have `__getitem__`
 </Text>
 
 <div className="flex flex-wrap gap-4 mt-4">

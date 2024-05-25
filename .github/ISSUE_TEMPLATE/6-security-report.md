@@ -4,7 +4,6 @@ about: "Report an issue to help the project improve."
 title: "[Security] "
 labels: ["Type: Security", "help wanted"]
 assignees: caffeine-addictt
-
 ---
 
 <!--
@@ -44,19 +43,18 @@ The data that must NOT be posted here:
 -->
 
 # Security Report
+
 Your issue may already be reported!
 Please check out our [active issues](https://github.com/python-thread/thread/issues) before creating one.
 
-
-
 ## Describe the Security Issue
+
 <!--
 A clear and concise description of the security issue
 -->
 
-
-
 ## Steps to Reproduce
+
 <!--
 e.g.:
   1. Navigate to x
@@ -64,34 +62,31 @@ e.g.:
   3. See error
 -->
 
-
-
 ## Expected Behavior
+
 <!--
 A clear and concise description of the expected behavior
 -->
 
-
-
 ## Media Prove
+
 <!--
 If applicable, provide screenshots, videos and/or code snippets
 -->
 
-
-
 ## Additional Context
+
 <!--
 Any other extra context or information
 -->
 
-
-
 ### Your Environment
+
 <!--
 Include as many relevant details about the environment you experienced the bug in
 -->
-* Version used:
-* Python version:
-* Link to your project:
-* Operating System and version (desktop or mobile):
+
+- Version used:
+- Python version:
+- Link to your project:
+- Operating System and version (desktop or mobile):

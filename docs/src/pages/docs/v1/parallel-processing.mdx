@@ -117,7 +117,6 @@ and let $M$ be the number of threads.
 The individual chunk lengths decrease down the chunk list.
 The length of each chunk will can be either $\lfloor{N/M + 0.5}\rfloor + 1$ or $N/M$.
 
-{" "}
 <Callout type="warning">
   The chunks generated are not generators, meaning they will exist alongside
   `dataset` and take up memory. This will change to more memory-efficient

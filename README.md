@@ -1,15 +1,13 @@
 <a name="readme-top"></a>
 
-
-
 <!-- PROJECT SHIELDS -->
 <div align="center">
 
-  <a href="[pypi-url]">[![PYPI - Version][version-shield]][pypi-url]</a>
-  <a href="[pypi-url]">[![PYPI - Downloads][downloads-shield]][pypi-url]</a>
-  <a href="[forks-url]">[![Forks][forks-shield]][forks-url]</a>
-  <a href="[stars-url]">[![Stargazers][stars-shield]][stars-url]</a>
-  <a href="[license-url]">[![BSD-3-Clause License][license-shield]][license-url]</a>
+<a href="[pypi-url]">[![PYPI - Version][version-shield]][pypi-url]</a>
+<a href="[pypi-url]">[![PYPI - Downloads][downloads-shield]][pypi-url]</a>
+<a href="[forks-url]">[![Forks][forks-shield]][forks-url]</a>
+<a href="[stars-url]">[![Stargazers][stars-shield]][stars-url]</a>
+<a href="[license-url]">[![BSD-3-Clause License][license-shield]][license-url]</a>
 
 </div>
 
@@ -34,9 +32,8 @@
   </p>
 </div>
 
-
-
 <!-- ABOUT THE PROJECT -->
+
 ## About The Project
 
 [![Social Card][socialcard]](https://thread.ngjx.org)
@@ -56,9 +53,8 @@ I hope thread will become your threading solution! ♡⸜(˶˃ ᵕ ˂˶)⸝♡
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-
-
 <!-- GETTING STARTED -->
+
 ## Getting Started
 
 This is an example of how you can set up your project locally.
@@ -66,7 +62,7 @@ To get a local copy up and running follow these simple example steps.
 
 ### Prerequisites
 
-* Python 3.9+
+- Python 3.9+
 
 ### Installation
 
@@ -84,9 +80,8 @@ _Below is an example of how you can install and use thread._
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-
-
 <!-- CONTRIBUTING -->
+
 ## Contributing
 
 Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**. ( ˶ˆᗜˆ˵ )
@@ -102,41 +97,37 @@ Don't forget to give the project a star! Thanks again!
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-
-
 <!-- LICENSE -->
+
 ## License
 
 Distributed under the BSD-3-Clause License. See [LICENSE.txt](./LICENSE.txt) for more information.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-
-
 <!-- CONTACT -->
+
 ## Contact
 
 Alex - [contact@thread.ngjx.org](mailto:contact@thread.ngjx.org)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-
-
 <!-- ACKNOWLEDGMENTS -->
+
 ## Acknowledgments
 
-* [Choose an Open Source License](https://choosealicense.com)
-* [GitHub Emoji Cheat Sheet](https://www.webpagefx.com/tools/emoji-cheat-sheet)
-* [Malven's Flexbox Cheatsheet](https://flexbox.malven.co/)
-* [Malven's Grid Cheatsheet](https://grid.malven.co/)
-* [Img Shields](https://shields.io)
+- [Choose an Open Source License](https://choosealicense.com)
+- [GitHub Emoji Cheat Sheet](https://www.webpagefx.com/tools/emoji-cheat-sheet)
+- [Malven's Flexbox Cheatsheet](https://flexbox.malven.co/)
+- [Malven's Grid Cheatsheet](https://grid.malven.co/)
+- [Img Shields](https://shields.io)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-
-
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
+
 [version-shield]: https://img.shields.io/pypi/v/thread.svg?style=for-the-badge&color=efd0cd
 [downloads-shield]: https://img.shields.io/pypi/dm/thread.svg?style=for-the-badge
 [pypi-url]: https://pypi.org/project/thread/
