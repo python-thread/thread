@@ -1,6 +1,6 @@
 """
 ## Thread Library
-Documentation at https://thread.ngjx.org/docs/2.0.1
+Documentation at https://thread.ngjx.org/docs/2.0.2
 
 
 ---
