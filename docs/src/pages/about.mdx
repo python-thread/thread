@@ -1,0 +1,61 @@
+import Link from 'next/link'
+import Image from 'next/image'
+import { Callout } from 'nextra/components'
+
+
+export function Balanced({ children, className = '', ...props }) {return (
+  <div className={'nx-mt-6 nx-leading-7 first:nx-mt-0 ' + className} style={{ textWrap: 'balance' }} {...props}>
+    {children}
+  </div>
+)}
+
+export function Profile({ href, imgLink, role }) {return (
+  <div className='flex flex-col gap-2'>
+    <Link href={href} target='_blank' className='rounded-full h-36 w-36 overflow-hidden flex justify-center items-center'>
+      <Image
+        src={imgLink}
+        alt={href}
+        width={256}
+        height={256}
+      />
+    </Link>
+    <span className='text-lg font-normal'>{role}</span>
+  </div>
+)}
+
+
+<div className='text-center'>
+
+  # About Thread
+
+  <Balanced className='mb-20'>
+    Thread is a *simple*, *performant* and *type-safe* Python threading library that is lightweight and easy to use.
+    Thread strives to be ✨**YOUR** threading library of choice✨.
+  </Balanced>
+
+
+
+  ## The Team
+
+  <div className='flex flex-wrap gap-10 pt-8 justify-center items-center'>
+    <Profile role='Core Maintainer' href='https://github.com/caffeine-addictt' imgLink='https://avatars.githubusercontent.com/u/104479537?v=4' />
+    <Profile role='Core Maintainer' href='https://github.com/ShiroTohu'        imgLink='https://avatars.githubusercontent.com/u/44159210?v=4' />
+    <Profile role='Could be you!'   href='https://github.com/python-thread/thread?tab=readme-ov-file#contributing'    imgLink='/pointing.jpg' />
+  </div>
+
+  <div className='mt-4 mb-20 text-base'>
+    Check out the full list of contributors on [GitHub](https://github.com/python-thread/thread/graphs/contributors).
+  </div>
+
+
+
+  ### Contributing
+
+  We welcome contributions, please see our [Contributing Guide](https://github.com/python-thread/thread/blob/main/.github/CONTRIBUTING.md) for more details.
+
+  ### License
+
+  Thread is licensed under the [BSD 3-Clause "New" or "Revised" License](https://github.com/python-thread/thread/blob/main/LICENSE.txt).
+
+</div>
+

@@ -1,0 +1,45 @@
+{
+  "*": {
+    "type": "page"
+  },
+  "index": {
+    "title": "thread",
+    "display": "hidden",
+    "theme": {
+      "layout": "full",
+      "timestamp": false
+    }
+  },
+  "docs": {
+    "title": "Documentation",
+    "type": "menu",
+    "items": {
+      "latest-release": {
+        "title": "2.0.2 Latest Release",
+        "href": "/docs/latest"
+      },
+      "v1-release": {
+        "title": "1.1.1 Release",
+        "href": "/docs/v1"
+      },
+      "all-releases": {
+        "title": "All Releases",
+        "href": "/docs"
+      }
+    }
+  },
+  "learn": {
+    "title": "Learn"
+  },
+  "about": {
+    "title": "About",
+    "theme": {
+      "timestamp": false
+    }
+  },
+  "404": {
+    "theme": {
+      "timestamp": false
+    }
+  }
+}

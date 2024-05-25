@@ -1,0 +1,226 @@
+import { Callout, Tabs, Steps } from 'nextra/components'
+
+
+
+<Callout type='warning'>
+  This documentation is still in development.
+  Please report any issues [here](https://github.com/python-thread/thread.ngjx.org/issues).
+</Callout>
+
+
+
+# CLI Documentation
+
+Commands Line Interface (CLI) Documentation.
+
+
+
+## Installation
+
+<Steps>
+
+### Prerequisites
+
+* Python 3.9+
+
+
+
+### Installing
+
+#### Published Release
+
+We recommend using a packaging manager like `pip` or `poetry`.
+
+<Tabs items={['pip', 'pipx', 'poetry']}>
+  <Tabs.Tab>
+    ```sh
+    pip install thread-cli
+    ```
+  </Tabs.Tab>
+
+  <Tabs.Tab>
+    ```sh
+    pipx install thread-cli
+    ```
+  </Tabs.Tab>
+
+  <Tabs.Tab>
+    ```sh
+    poetry add thread-cli
+    # OR
+    poetry install thread-cli
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+
+#### Building From Source
+```sh
+# Clone this repository
+git clone https://github.com/python-thread/thread-cli
+
+# Install the upstream package
+pip install -e .
+```
+
+#### Development
+
+```sh
+# Clone this repository
+git clone https://github.com/python-thread/thread-cli
+
+# Install poetry
+pip install poetry
+
+# Install dependencies
+poetry install
+```
+
+
+
+### Running the CLI
+
+Open your terminal and run:
+```sh
+thread
+```
+
+</Steps>
+
+
+
+## Getting started
+
+Try running the help command!
+```sh
+thread -h/--help
+```
+
+
+
+## Log levels
+
+Thread CLI uses the [python logging library.](https://docs.python.org/3/library/logging.html)
+
+|   Name   | Level |
+| :-----:  | :---: |
+|   NOTSET | 0     |
+|    DEBUG | 10    |
+|     INFO | 20    |
+|     WARN | 30    |
+|    ERROR | 40    |
+| CRITICAL | 50    |
+
+
+
+## Commands
+
+List of commands
+
+
+
+### Documentation (thread docs)
+
+```sh
+thread docs
+```
+Ran with no arguments and options, this command will attempt to open your browser to this MD file!
+If unable, will instead print out the link.
+
+
+
+### Help (thread help)
+
+```sh
+thread help
+```
+Ran with no arguments and options, this command will attempt to open your browser to the issue tracker!
+If unable, will instead print out the link.
+
+
+
+
+### Report (thread report)
+
+```sh
+thread report
+```
+Ran with no arguments and options, this command will attempt to open your browser to this MD file!
+If unable, will instead print out the link.
+
+
+
+
+### Configuration (thread config ...)
+
+```sh
+thread config
+```
+Coming soon.
+
+
+
+### Parallel Processing (thread process ...)
+
+```sh
+thread process
+```
+Invokes the [ParallelProcessing](/docs/parallel-processing#importing-the-class) class.
+
+#### Examples
+
+<Tabs items={['Interpreted', 'Imported']}>
+  <Tabs.Tab>
+    Say you wanted to generate a list of the square of every number from 0 to 999.
+    ```sh
+    thread process 'lambda x: x**2' '[ i for i in range(1000) ]'
+    ```
+
+    This is functionally equivalent to:
+    ```py
+    import thread
+
+    # Start processing
+    worker = thread.ParallelProcessing(
+      function = lambda x: x**2,
+      dataset = [ i for i in range(1000) ]
+    )
+    worker.start()
+    worker.join()
+
+    # Write output to "./output.json"
+    with open('./output.json', 'w') as output:
+      output.write(worker.results)
+    ```
+
+  </Tabs.Tab>
+  <Tabs.Tab>
+    Say you have a `csv` file at `./dirty_data.csv` and want to parse every line into a `clean` function in `./clean_data.py`.
+    ```sh
+    thread process 'clean_data:clean' './dirty_data.csv'
+    ```
+
+    This is functionally equivalent to:
+    ```py
+    import thread
+    from .clean_data import clean
+
+    # Read files
+    with open('./dataset.csv', 'r') as dataset:
+      data = dataset.readlines()
+
+    # Starts processing
+    worker = thread.ParallelProcessing(
+      function = clean,
+      dataset = data,
+    )
+    worker.start()
+    worker.join()
+
+    # Writes to "output.json"
+    with open('./output.json', 'w') as output:
+      output.write(worker.results)
+    ```
+  </Tabs.Tab>
+</Tabs>
+

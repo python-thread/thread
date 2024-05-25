@@ -1,0 +1,140 @@
+import { Callout } from 'nextra/components'
+
+
+
+# Exceptions
+<Callout type="info">
+  Exceptions from Python&apos;s `threading` module are not included. For information please refer to Python&apos;s
+  [errors and exceptions page](https://docs.python.org/3/tutorial/errors.html).
+</Callout>
+
+Don't have the thread library? [See here](./installation) for installing thread
+
+
+
+### Suppressing Exceptions
+When initializing a thread, you can parse a `suppress_errors` boolean. When a 
+exception is raised it is stored in the `Thread._errors` attribute. By default this
+is set to false.
+
+For ignoring exceptions see [here](#ignoring-exceptions).
+
+```py
+from thread import Thread
+
+def bad_function():
+  raise RuntimeError('>:cc')
+
+# Suppress exceptions
+thread1 = Thread(
+  target = bad_function,
+  suppress_errors = True
+)
+thread1.start()
+thread1.join()
+print(thread1._errors) # list[RuntimeError('>:cc')]
+```
+
+
+
+### Ignoring Exceptions
+When initializing a thread, you can parse a `ignore_errors` sequence. When a exception is
+raised it will not be stored within `Thread._errors` or raised. By default this is set as an empty
+tuple.
+
+For suppressing exceptions see [here](#suppressing-exceptions).
+
+```py
+from thread import Thread
+
+def bad_function():
+  raise RuntimeError('>:cc')
+
+# Ignore error
+thread2 = Thread(
+  target = bad_function,
+  ignore_errors = [RuntimeError]
+)
+thread2.start()
+thread2.join()
+print(thread2._errors) # list[]
+```
+
+
+
+### Suppressing and Ignoring Errors
+It should be noted that these arguments are not exclusive of each other; you can both suppress and ignore errors.
+
+```py
+# Non-ignored error with suppressing
+thread4 = Thread(
+  target = bad_function,
+  ignore_errors = [ValueError],
+  suppress_errors = True
+)
+thread4.start()
+thread4.join()
+print(thread4._errors) # list[RuntimeError(':<<')]
+```
+
+
+
+## Exceptions
+
+The list of exceptions that can be thrown accompanied by common ways to resolve the error.
+
+
+
+### ThreadErrorBase
+
+This is the base exception class that all exceptions inherit from.
+
+
+
+### ThreadStillRunningError
+
+This exception is raised when you attempt to invoke a method that requires the thread to not be running, but the thread is currently running.
+> You can wait for the thread to terminate with [**Thread.join()**](.thread-class#methods) before invoking the method<br />
+> You can check if the thread is running with [**Thread.is_alive()**](thread-class#methods) before invoking the method
+
+
+
+### ThreadNotRunningError
+
+This exception is raised when you attempt to invoke a method that requires the thread to be running, but the thread is currently not running.
+This is raised when you attempt to invoke a method which requires the thread to be running, but isn't
+> You can run the thread with [**Thread.start()**](thread-class#methods) before invoking the method
+
+
+
+### ThreadNotInitializedError
+
+This exception is raised when you attempt to invoke a method that requires the thread to initialized, but the thread is not initialized.
+> You can initialize and start the thread with [**Thread.start()**](thread-class#methods) before invoking the method
+
+
+
+### HookRuntimeError
+
+This is raised when hooks raise an exception.
+
+This exception conforms to the rules given when a thread is ran with suppressed or ignored arguments.
+
+Example traceback
+```text
+HookRuntimeError: Encountered runtime errors in hooks
+
+1. my_function
+>>>>>>>>>>
+/usr/home/proj/main.py:50
+ZeroDivisionError:
+<<<<<<<<<<
+
+2. my_otherfunction
+>>>>>>>>>>
+ImportError:
+<<<<<<<<<<
+```
+
+
+[See here](./thread-class) for how to using the `thread.Thread` class!

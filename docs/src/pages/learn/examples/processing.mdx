@@ -1,0 +1,86 @@
+import Link from 'next/link'
+import { Callout } from 'nextra/components'
+
+# Parallel Processing
+
+Here are some examples of **parallel processing**.
+
+<Callout type='warning'>
+  **Parallel Processing is Not True Parallel**<br />
+  See [cautions](/learn/caution/parallel) for more information.
+</Callout>
+
+## General usage
+
+Here are the most common ways to spawn processor threads.
+
+### On-Demand Threads
+These threads are created on runtime and are not started automatically.
+Calling `thread.ParallelProcessing.start()` will start the thread immediately.
+1
+```py
+import time
+import thread
+
+def my_processor(x):
+  time.wait(5)
+  print('My processing task is complete.')
+  return x
+
+worker = thread.ParallelProcessing(function=my_processor, dataset=(1,))
+worker.start()
+
+print('Started processing task.')
+
+worker.join() # Halt the main thread until the threads finish.
+worker.get_return_values() # [1]
+
+# Terminal output:
+# > Started processing task.
+# > My processing task is complete.
+```
+
+### Decoratored Functions
+Decoratored functions automatically spawn new threads and run in the background everytime they are called,
+simply use `thread.processor` to decorate the function.
+
+```py
+import time
+import thread
+
+@thread.processor
+def my_processor(x):
+  time.wait(5)
+  print('My processing task is complete.')
+  return x
+
+worker = my_background_task([1, 2, 3])
+print('Started processing task.')
+
+worker.join()
+worker.get_return_values() # [1, 2, 3]
+
+# Terminal output:
+# > Started processing task.
+# > My processing task is complete.
+```
+
+## Type Safety
+
+Thread supports type annotations for Python **3.9+**.
+This will help your LSP to detect type errors and reduce the risk of runtime errors.
+
+### A Simple Example
+All that is needed is to annotate the function like you would in Python.
+
+```py
+import thread
+
+def processor_function(x: int) -> int:
+  return x + 1
+
+worker = thread.ParallelProcessing(function=processor_function, dataset=(1,))
+worker.start()
+returned = worker.get_return_value() # list[int]
+```
+
