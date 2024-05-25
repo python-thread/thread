@@ -3,8 +3,7 @@
 
 Documentation:
   - changed-files:
-      - any-glob-to-any-file: [docs/**, .github/**, "./*.{md,mdx}"]
-      - all-globs-to-all-files: "!.github/workflows/*"
+      - any-glob-to-any-file: [docs/**, "./*.{md,mdx}"]
 
 "Type: Test":
   - changed-files:
@@ -13,17 +12,3 @@ Documentation:
 "Type: CI":
   - changed-files:
       - any-glob-to-any-file: [.github/workflows/**]
-
-"Scope: Core":
-  - changed-files:
-      - any-glob-to-any-file: [src/**]
-        all-globs-to-all-files:
-          ["!src/thread/decorators/*", "!src/thread/utils/*"]
-
-"Scope: Utils":
-  - changed-files:
-      - any-glob-to-any-file: ["src/thread/utils/*"]
-
-"Scope: Decorator":
-  - changed-files:
-      - any-glob-to-any-file: ["src/thread/decorators/*"]
