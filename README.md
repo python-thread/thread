@@ -77,15 +77,18 @@ To get a local copy up and running follow these simple example steps.
 
 _Below is an example of how you can install and use thread._
 
-1. Install the package
-   ```sh
-   pip install -U thread
-   ```
-2. Import thread into your library!
-   ```py
-   import thread
-   from thread import Thread, ConcurrentProcessing
-   ```
+#### 1. Install the package
+
+```sh
+pip install -U thread
+```
+
+#### 2. Import thread into your library
+
+```py
+import thread
+from thread import Thread, ConcurrentProcessing
+```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
