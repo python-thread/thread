@@ -1,0 +1,54 @@
+name: Deploy Documentation
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  vercel:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Cache Dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: ${{ runner.os }}-node-
+
+      - name: Setup node
+        uses: actions/setup-node@v4.0.2
+        with:
+          cache: npm
+
+      - name: Build
+        run: |
+          yarn install --frozen-lockfile
+          npm run build
+
+      - name: Run Tests Locally
+        run: npm run test
+
+      - name: Deploy to Staging
+        id: deploy-vercel-staging
+        uses: amondnet/vercel-action@v25
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID_TL_ENGINE }}
+          scope: ${{ secrets.VERCEL_ORG_ID }}
+
+      - name: Deploy to Production
+        uses: amondnet/vercel-action@v25
+        id: deploy-vercel-production
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID_TL_ENGINE }}
+          vercel-args: "--prod"
+          scope: ${{ secrets.VERCEL_ORG_ID }}
