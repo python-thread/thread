@@ -118,7 +118,7 @@ const config: DocsThemeConfig = {
     link: "https://github.com/python-thread/thread",
   },
   docsRepositoryBase:
-    "https://github.com/python-thread/thread.ngjx.org/tree/main",
+    "https://github.com/python-thread/thread/tree/main",
   chat: {
     link: "https://discord.gg/WTAvycRmqP",
   },
