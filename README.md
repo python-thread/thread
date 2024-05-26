@@ -44,9 +44,12 @@
 
 [![Social Card][socialcard]](https://thread.ngjx.org)
 
-Strictly type-safe and Wraps around the python threading library and provides extra functionality
+Strictly type-safe and Wraps around the python threading library
+and provides extra functionality
 
-Fully compatible with the threading library, this project hopes to provide a more out-of-the-box solution with multi-threaded processing and fetching values from a completed thread, etc.
+Fully compatible with the threading library, this project hopes to
+provide a more out-of-the-box solution with multi-threaded processing
+and fetching values from a completed thread, etc.
 
 <br />
 
@@ -90,9 +93,13 @@ _Below is an example of how you can install and use thread._
 
 ## Contributing
 
-Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**. ( ˶ˆᗜˆ˵ )
+Contributions are what make the open source community
+such an amazing place to learn, inspire, and create.
+Any contributions you make are **greatly appreciated**. ( ˶ˆᗜˆ˵ )
 
-If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
+If you have a suggestion that would make this better,
+please fork the repo and create a pull request.
+You can also simply open an issue with the tag "enhancement".
 Don't forget to give the project a star! Thanks again!
 
 1. Fork the Project
@@ -107,7 +114,8 @@ Don't forget to give the project a star! Thanks again!
 
 ## License
 
-Distributed under the BSD-3-Clause License. See [LICENSE.txt](./LICENSE.txt) for more information.
+Distributed under the BSD-3-Clause License.
+See [LICENSE.txt](./LICENSE.txt) for more information.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
