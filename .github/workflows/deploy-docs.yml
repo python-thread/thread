@@ -31,7 +31,7 @@ jobs:
           npm run build
 
       - name: Run Tests Locally
-        run: npm run test
+        run: npm run test:docs
 
       - name: Deploy to Staging
         id: deploy-vercel-staging
