@@ -1,0 +1,672 @@
+import { cn } from "@utils";
+import { Callout, Steps, Tabs } from "nextra/components";
+import { CheckIcon, Cross2Icon, DotFilledIcon } from "@radix-ui/react-icons";
+import {
+  Statuses,
+  ThreadStatuses,
+  ThreadExceptions,
+} from "@components/typedata";
+
+export function ArgumentWrapper({ children, className, ...props }) {
+  return (
+    <details
+      {...props}
+      className={cn(
+        "last-of-type:mb-0 rounded-lg bg-neutral-50 dark:bg-neutral-800 p-2 mt-4",
+        className,
+      )}
+    >
+      {children}
+    </details>
+  );
+}
+
+export function ArgumentBody({ children, className, ...props }) {
+  return (
+    <div {...props} className={cn("nx-p-2", className)}>
+      {children}
+    </div>
+  );
+}
+
+export function ArgumentExtra({ children, className, ...props }) {
+  return (
+    <span {...props} className={cn("ml-4 text-neutral-500", className)}>
+      {children}
+    </span>
+  );
+}
+
+export function TabbedData({ type, keys = [] }) {
+  return (
+    <Tabs items={keys}>
+      {keys.map((key, i) => (
+        <Tabs.Tab key={i}>
+          {type === "status" ? ThreadStatuses[key] : ThreadExceptions[key]}
+        </Tabs.Tab>
+      ))}
+    </Tabs>
+  );
+}
+
+export function Text({ children, className, ...props }) {
+  return (
+    <p {...props} className={cn("nx-mt-0", className)}>
+      {children}
+    </p>
+  );
+}
+
+# Parallel Processing Documentation
+
+Documentation for `thread.ParallelProcessing`.
+
+## Why Parallel Processing?
+
+Parallel Processing is used to speed up the data processing of large datasets by splitting workflow into multiple threads.
+
+Traditionally, this is achieved with a for loop.
+
+```py
+my_dataset = [] # Large dataset
+def my_data_processor(Data_In) -> Data_Out:
+  ...
+
+processed_data = []
+for data in my_dataset:
+  processed_data = my_data_processor(data)
+
+print(processed_data) # Processed data
+```
+
+While this is simple and decent enough for a small dataset, this is not ideal for large datasets, especially when runtime matters.
+By using `thread.ParallelProcessing` we can split the large dataset into multiple chunks and process each chunk simultaneously.
+
+<Callout>
+  Parallel Processing is not True Parallel. Learn more
+  [here](/learn/cautions/parallelism).
+</Callout>
+
+## How It Works
+
+<Steps>
+
+### Determine Thread Count
+
+The number of threads used is determined by the following formula:
+
+```py
+thread_count = min(max_threads, len(dataset))
+```
+
+This ensures that the number of threads used will always be less than or equal to the length of the dataset,
+which prevents redundant threads to be initialized for small datasets.
+
+### Chunking
+
+The dataset is split as evenly as possible into chunks, preserving the order of data.
+Chunks follow the structure:
+
+```py
+chunks = [[1, 2, 3, ...], [50, 51, 52, ...], ...]
+```
+
+Let $N$ be the length of the dataset
+and let $M$ be the number of threads.
+
+The individual chunk lengths decrease down the chunk list.
+The length of each chunk will can be either $\lfloor{N/M + 0.5}\rfloor + 1$ or $N/M$.
+
+<Callout type="warning">
+  The chunks generated are not generators, meaning they will exist alongside
+  `dataset` and take up memory. This will change to more memory-efficient
+  generators in `v1.0.1`.
+</Callout>
+
+</Steps>
+
+## Importing the class
+
+```py
+import thread
+thread.ParallelProcessing
+
+from thread import ParallelProcessing
+```
+
+## Quick Start
+
+There are main 2 ways of initializing a parallel processing object.
+
+### On-Demand
+
+You can create a simple process by initializing `thread.ParallelProcessing` and passing the `function` and `dataset`.
+
+```py
+def my_data_processor(Data_In) -> Data_Out: ...
+
+# Recommended way
+my_processor = ParallelProcessing(
+  function = my_data_processor,
+  dataset = [i in range(0, n)]
+)
+
+# OR
+# Not the recommended way
+my_processor = ParallelProcessing(my_data_processor, [i in range(0, n)])
+```
+
+It can be ran by invoking the `start()` method
+
+```py
+my_processor.start()
+```
+
+### Decorated Function
+
+You can decorate a function with `thread.processor` which uses `thread.ParallelProcessing`.
+When the decorated function is invoked, it will automatically be ran in a new thread each time and return a `thread.ParallelProcessing` object.
+
+A decorated function's signature is overwritten, replacing the first argument to require a sequence of the `Data_In` type.
+
+```python
+import thread
+
+@thread.processor
+def my_target(Data_In, arg1, arg2, *, arg3: bool = False) -> Data_Out: ...
+
+dataset: Sequence[type[Data_In]]
+worker = my_target(dataset, arg1, arg2, arg3 = True) # thread.ParallelProcessing()
+```
+
+<Callout type='info'>
+  Did you know?
+
+Decorators can take in keyword arguments that change the behavior of the thread.
+
+```py
+import thread
+
+@thread.processor(name = 'my_thread', suppress_errors = True)
+def my_target(): ...
+```
+
+See the full list of arguments [here](#initialization)
+
+</Callout>
+
+### Compatibility
+
+Data processing is usually achieved with external libraries like `pandas`.
+However, there is no native support for dataset objects without both of the **\_\_len\_\_()** and **\_\_getitem\_\_()** methods.
+
+#### This is primarily because:
+
+- The `__len__()` method is used to determine the length of the dataset using the `len(dataset)` method.
+- The `__getitem__()` method is used to access the dataset using the `dataset[index]` method.
+
+This is also why `thread.ParallelProcessing` does not support `Generator` objects or `Iterator` objects.
+
+#### Work-arounds
+
+The following outlines how you may use `thread.ParallelProcessing` with these libraries.
+
+<ArgumentWrapper>
+  <summary>
+    <strong className='text-lg'>
+      thread v1.0.1 and below
+    </strong>
+  </summary>
+  <ArgumentBody>
+    We recommend first converting the dataset to a supported dataset type like a `list` or `tuple` before using `thread.ParallelProcessing`.
+    ```py
+    from thread import ParallelProcessing
+
+    myDataFrame: ...
+
+    compatibleDataset = [ ... ] # Convert to a supported dataset type
+
+    process = ParallelProcessing(function = lambda x: x + 1, dataset = compatibleDataset)
+    ```
+
+  </ArgumentBody>
+</ArgumentWrapper>
+
+<ArgumentWrapper>
+  <summary>
+    <strong className='text-lg'>
+      thread v1.1.0 and above
+    </strong>
+  </summary>
+  <ArgumentBody>
+    We now non-natively support all most dataset types.
+
+    We stopped explicitly supporting the `Sequence` type and instead now use `Protocol`s to check if `__len__()` or `__getitem__()` are implemented.
+    We also added context-specific optional/required `_length` and `_get_value` arguments when initializing `thread.ParallelProcessing`.
+
+    You can find out more about the valid __length_ and _get_value_ arguments [here](#optional).
+
+    ##### Mapping
+    <Text className='flex flex-row items-center gap-1 nx-my-2 mt-4'><DotFilledIcon className='w-5 h-5 mr-4' /> <Cross2Icon className='w-5 h-5' /> <Cross2Icon className='w-5 h-5 mr-2' /> Has `__len__` and `__getitem__`</Text>
+    <Text className='flex flex-row items-center gap-1 mx-my-2 mt-2'><DotFilledIcon className='w-5 h-5 mr-4' /> <CheckIcon className='w-5 h-5 text-green-600' /> <CheckIcon className='w-5 h-5 text-blue-600 mr-2' /> Does not have `__len__` and `__getitem__`</Text>
+    <Text className='flex flex-row items-center gap-1 mx-my-2 mt-2'><DotFilledIcon className='w-5 h-5 mr-4' /> <CheckIcon className='w-5 h-5 text-green-600' /> <Cross2Icon className='w-5 h-5 mr-2' /> Does not have `__len__` and has `__getitem__`</Text>
+    <Text className='flex flex-row items-center gap-1 mx-my-2 mt-2'><DotFilledIcon className='w-5 h-5 mr-4' /> <Cross2Icon className='w-5 h-5' /> <CheckIcon className='w-5 h-5 text-blue-600 mr-2' /> Has `__len__` and does not have `__getitem__`</Text>
+
+    <div className='flex flex-wrap gap-4 mt-4'>
+      <Text className='flex flex-row gap-1 text-sm'><CheckIcon className='w-4 h-4 my-auto text-green-600' /> **_length** Required</Text>
+      <Text className='flex flex-row gap-1 text-sm'><CheckIcon className='w-4 h-4 my-auto text-blue-600' /> **_get_value** Required</Text>
+    </div>
+
+    ##### Example
+    Now you do not have to pre-convert the dataset to a supported dataset type.
+
+    ```py
+    from thread import ParallelProcessing
+
+    myDataFrame: ...
+
+    process = ParallelProcessing(
+      function = lambda x: x + 1,
+      dataset = myDataFrame,
+      _length = myDataFrame.getLength(),
+      _get_value = lambda d, i: d.getIndex(i)
+    )
+    ```
+
+    <Callout type='info'>
+      Static type checking will reflect the whether `_length` and `_get_value` are required or optional depending on the dataset type.
+    </Callout>
+
+  </ArgumentBody>
+</ArgumentWrapper>
+
+## Initialization
+
+This will cover the required and optional arguments initializing a parallel process.
+
+### Required
+
+<ArgumentWrapper>
+  <summary>
+    <strong className='text-lg'>
+      function
+      <ArgumentExtra>(Data_In, *args, **kwargs) -&gt; Data_Out</ArgumentExtra>
+    </strong>
+  </summary>
+  <ArgumentBody>
+    This should be a function that takes in a data from the `dataset` with/without overloads and returns Data_Out.
+
+    Arguments and keyword arguments excluding the first argument parsed to the `function` can be parsed through `args` and `kwargs`.
+    `Data_Out` will be written to the generated thread&apos;s `Thread._returned_value` and can be accessed via `ParallelProcessing.results` or `ParallelProcessing.get_return_values()`.
+
+    `function` can be parsed as the first argument to `ParallelProcessing.__init__()`, although it is recommended to use only keyword arguments.
+    ```py
+    import thread
+
+    thread.ParallelProcessing(lambda x: x + 1, [])
+    thread.ParallelProcessing(function = lambda x: x + 1, dataset = [])
+    ```
+
+    <Callout type='info'>
+      Best Practices
+
+      While you can use a lambda function, it is best to use a normal function for your LSP/Linter to infer types.
+      ```py
+      from thread import ParallelProcessing
+
+      worker = ParallelProcessing(function = lambda x: x + 1, dataset = [1, 2, 3])
+      worker.start()
+      worker.join()
+
+      worker.results # This will be inferred as Unknown by your LSP/Linter
+      ```
+      ```py
+      from thread import ParallelProcessing
+
+      def my_target(x: int) -> int:
+        return x + 1
+
+      worker = ParallelProcessing(function = my_target, dataset = [1, 2, 3])
+      worker.start()
+      worker.join()
+
+      worker.results # This will be inferred as a list[int]
+      ```
+    </Callout>
+
+  </ArgumentBody>
+</ArgumentWrapper>
+
+<ArgumentWrapper>
+  <summary>
+    <strong className='text-lg'>
+      dataset
+      <ArgumentExtra>Dataset[Data_In]</ArgumentExtra>
+    </strong>
+  </summary>
+  <ArgumentBody>
+    This should be an interable sequence of data parsed as the first argument to `function`.
+
+    <Callout type='info'>
+      This can be of any type if you pass the according `_length` and `_get_value` arguments in **v1.1.0+**. See [here](#compatibility) for more details.
+    </Callout>
+
+    ```py
+    import thread
+
+    def my_function(x: int) -> int:
+      ...
+
+    thread.ParallelProcessing(function = my_function, dataset = [1, 2, 3])
+    thread.ParallelProcessing(function = my_function, dataset = ('hi')) # This will be highlighted by your LSP/Linter
+    ```
+
+  </ArgumentBody>
+</ArgumentWrapper>
+
+### Optional
+
+<ArgumentWrapper>
+  <summary>
+    <strong className='text-lg'>
+      max_threads
+      <ArgumentExtra>int</ArgumentExtra>
+      <ArgumentExtra>(default: 8)</ArgumentExtra>
+    </strong>
+  </summary>
+  <ArgumentBody>
+    This is the maximum number of threads that will be created by `thread.ParallelProcessing`.
+
+    <Callout type='warning'>
+      This value is not always the number of threads created. See [here](#determine-thread-count) for more details.
+    </Callout>
+
+  </ArgumentBody>
+</ArgumentWrapper>
+
+<ArgumentWrapper>
+  <summary>
+    <strong className='text-lg'>
+      _get_value
+      <ArgumentExtra>(Dataset, int) -&gt; Data_Out</ArgumentExtra>
+      <ArgumentExtra>(default: None)</ArgumentExtra>
+    </strong>
+  </summary>
+  <ArgumentBody>
+    <Callout type='info'>This is only available in v1.1.0+</Callout>
+    <Callout type='warning'>This can be a **required** argument depending on the `dataset` type. See [here](#compatibility) for more details.</Callout>
+
+    This is invoked every time a value is retrieved from the dataset.
+    ```py
+    from thread import ParallelProcessing
+
+    dataset: MyDatasetType = ...
+
+    ParallelProcessing(
+      function = my_function,
+      dataset = dataset,
+      _get_value = lambda d, index: d[index],
+    )
+
+    ParallelProcessing(
+      function = my_function,
+      dataset = dataset,
+      _get_value = lambda d, index: d.getIndex(index),
+    )
+    ```
+
+  </ArgumentBody>
+</ArgumentWrapper>
+
+<ArgumentWrapper>
+  <summary>
+    <strong className='text-lg'>
+      _length
+      <ArgumentExtra>int | (Dataset) -&gt; Data_In</ArgumentExtra>
+      <ArgumentExtra>(default: dataset.__len__)</ArgumentExtra>
+    </strong>
+  </summary>
+  <ArgumentBody>
+    <Callout type='info'>This is only available in v1.1.0+</Callout>
+    <Callout type='warning'>This can be a **required** argument depending on the `dataset` type. See [here](#compatibility) for more details.</Callout>
+
+    This is the length of the dataset that will be processed by `thread.ParallelProcessing`.
+
+    This is invoked only once when `thread.ParallelProcessing` is initialized.
+    ```py
+    from thread import ParallelProcessing
+
+    dataset: MyDatasetType = ...
+
+    ParallelProcessing(
+      function = my_function,
+      dataset = dataset,
+      _length = 5,
+    )
+
+    def get_length(dataset: MyDatasetType) -> int: ...
+    ParallelProcessing(
+      function = my_function,
+      dataset = dataset,
+      _length = get_length,
+    )
+    ```
+
+  </ArgumentBody>
+</ArgumentWrapper>
+
+<ArgumentWrapper>
+  <summary>
+    <strong className='text-lg'>
+      *args / **kwargs
+      <ArgumentExtra>(default: None)</ArgumentExtra>
+      <ArgumentExtra>Any / Mapping[str, Any]</ArgumentExtra>
+    </strong>
+  </summary>
+  <ArgumentBody>
+    These overloads are parsed to `thread.Thread.__init__()`, then `threading.Thread.__init__()`.
+
+    <Callout type='info'>
+      If kwargs contain an argument named `args`, then it will automatically be removed from kwargs and joined with `ParallelProcessing.__init__().args`.
+    </Callout>
+
+    See [`thread.Thread` documentation](/docs/thread-class#optional) for more details.<br />
+    See [`threading` documentation](https://docs.python.org/3/library/threading.html#threading.Thread) for more details.
+
+  </ArgumentBody>
+</ArgumentWrapper>
+
+## Properties
+
+### Attributes
+
+These are attributes of `thread.ParallelProcessing` class.
+
+<ArgumentWrapper>
+  <summary>
+    <strong className="text-lg">
+      results
+      <ArgumentExtra>List[Data_Out]</ArgumentExtra>
+    </strong>
+  </summary>
+  <ArgumentBody>
+    This is a list of the data that was returned by the `function` in
+    `thread.ParallelProcessing`.
+    <Callout>
+      <TabbedData
+        type="exception"
+        keys={[
+          "ThreadStillRunningError",
+          "ThreadNotInitializedError",
+          "ThreadNotRunningError",
+        ]}
+      />
+    </Callout>
+  </ArgumentBody>
+</ArgumentWrapper>
+
+<ArgumentWrapper>
+  <summary>
+    <strong className='text-lg'>
+      status
+      <ArgumentExtra>thread.ThreadStatus</ArgumentExtra>
+    </strong>
+  </summary>
+  <ArgumentBody>
+    This is the current status of the thread.
+
+    <Callout type='info'>
+      These Are The Possible Values
+      <TabbedData type='status' keys={Statuses} />
+    </Callout>
+
+  </ArgumentBody>
+</ArgumentWrapper>
+
+### Methods
+
+These are methods of `thread.ParallelProcessing` class.
+
+<ArgumentWrapper>
+  <summary>
+    <strong className='text-lg'>
+      start
+      <ArgumentExtra>() -&gt; None</ArgumentExtra>
+    </strong>
+  </summary>
+  <ArgumentBody>
+    This starts the processing.
+
+    Simply invoke `ParallelProcessing.start()` on a ParallelProcessing object.
+    ```py
+    import thread
+
+    worker = thread.ParallelProcessing(function = my_func, dataset = [1, 2, 3])
+    worker.start()
+    ```
+
+    <Callout>
+      Exceptions Raised
+      <TabbedData type='exception' keys={['ThreadStillRunningError']} />
+    </Callout>
+
+  </ArgumentBody>
+</ArgumentWrapper>
+
+<ArgumentWrapper>
+  <summary>
+    <strong className='text-lg'>
+      is_alive
+      <ArgumentExtra>() -&gt; bool</ArgumentExtra>
+    </strong>
+  </summary>
+  <ArgumentBody>
+    This indicates whether the threads are still alive.
+
+    Simply invoke `ParallelProcessing.is_alive()` on a ParallelProcessing object.
+    ```py
+    import thread
+
+    worker = thread.ParallelProcessing(function = my_func, dataset = [1, 2, 3])
+    worker.is_alive()
+    ```
+
+    <Callout>
+      Exceptions Raised
+      <TabbedData type='exception' keys={['ThreadNotInitializedError']} />
+    </Callout>
+
+  </ArgumentBody>
+</ArgumentWrapper>
+
+<ArgumentWrapper>
+  <summary>
+    <strong className='text-lg'>
+      get_return_values
+      <ArgumentExtra>() -&gt; List[Data_Out]</ArgumentExtra>
+    </strong>
+  </summary>
+  <ArgumentBody>
+    This halts the current thread execution until the processing completes and returns the value returned by `function`.
+
+    Simply invoke `ParallelProcessing.get_return_values()` on a thread object.
+    ```py
+    import thread
+
+    worker = thread.ParallelProcessing(function = my_func, dataset = [1, 2, 3])
+    worker.get_return_values()
+    ```
+
+    <Callout>
+      Exceptions Raised
+      <TabbedData type='exception' keys={['ThreadNotInitializedError', 'ThreadNotRunningError']} />
+    </Callout>
+
+  </ArgumentBody>
+</ArgumentWrapper>
+
+<ArgumentWrapper>
+  <summary>
+    <strong className='text-lg'>
+      join
+      <ArgumentExtra>(timeout: float = None) -&gt; bool</ArgumentExtra>
+    </strong>
+  </summary>
+  <ArgumentBody>
+    This halts the current thread execution until the `ParallelProcessing` completes or exceeds the timeout.
+
+    A None value for timeout will have the same effect as passing `float("inf")` as a timeout.
+    The boolean returned by `ParallelProcessing.join()` is `True` if the threads complete within the timeout and `False` if otherwise.
+
+    Simply invoke `ParallelProcessing.join()` on a ParallelProcessing object.
+    ```py
+    import thread
+    worker = thread.ParallelProcessing(function = my_func, dataset = [1, 2, 3])
+    worker.join(5)
+    worker.join()
+    ```
+
+    <Callout>
+      Exceptions Raised
+      <TabbedData type='exception' keys={['ThreadNotInitializedError', 'ThreadNotRunningError']} />
+    </Callout>
+
+  </ArgumentBody>
+</ArgumentWrapper>
+
+<ArgumentWrapper>
+  <summary>
+    <strong className='text-lg'>
+      kill
+      <ArgumentExtra>(yielding: bool = False, timeout: float = 5) -&gt; bool</ArgumentExtra>
+    </strong>
+  </summary>
+  <ArgumentBody>
+    This schedules the threads to be killed.
+
+    If yielding is True, it halts the current thread execution until the threads are killed or the timeout is exceeded.
+    Similar to `ParallelProcessing.join()`, a None value for timeout will have the same effect as passing `float("inf")` as a timeout.
+
+    Simply invoke `ParallelProcessing.kill()` on a ParallelProcessing object.
+    ```py
+    import thread
+
+    worker = thread.ParallelProcessing(function = my_func, dataset = [1, 2, 3])
+    worker.kill(True, 10)
+    worker.kill(False)
+    worker.kill()
+    ```
+
+    <Callout>
+      Exceptions Raised
+      <TabbedData type='exception' keys={['ThreadNotInitializedError', 'ThreadNotRunningError']} />
+    </Callout>
+
+    <Callout type='warning'>
+      This only schedules the threads to be killed, and does not immediately kill the threads.
+
+      Meaning that if `function` has a long `time.wait()` call, it will only be killed after it moves onto the next line.
+    </Callout>
+
+  </ArgumentBody>
+</ArgumentWrapper>

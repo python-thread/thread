@@ -1,0 +1,112 @@
+import { cn } from "@utils";
+import { Callout } from "nextra/components";
+
+export function ArgumentWrapper({ children, className, ...props }) {
+  return (
+    <details
+      {...props}
+      className={cn(
+        "last-of-type:mb-0 rounded-lg bg-neutral-50 dark:bg-neutral-800 p-2 mt-4",
+        className,
+      )}
+    >
+      {children}
+    </details>
+  );
+}
+
+export function ArgumentBody({ children, className, ...props }) {
+  return (
+    <div {...props} className={cn("nx-p-2", className)}>
+      {children}
+    </div>
+  );
+}
+
+export function ArgumentExtra({ children, className, ...props }) {
+  return (
+    <span {...props} className={cn("ml-4 text-neutral-500", className)}>
+      {children}
+    </span>
+  );
+}
+
+# Configuration
+
+Documentation for configuration options.
+
+## Importing Settings
+
+This is how you import the settings.
+
+```py
+from thread import Settings
+```
+
+## Configuration Options
+
+<ArgumentWrapper>
+  <summary>
+    <strong className='text-lg'>
+      GRACEFUL_EXIT_ENABLED
+      <ArgumentExtra>bool</ArgumentExtra>
+      <ArgumentExtra>(default: True)</ArgumentExtra>
+    </strong>
+  </summary>
+  <ArgumentBody>
+    Graceful exit schedules non-daemonized threads to be killed with `Thread.kill()` when the program receives a `SIGINT` or `SIGTERM`.
+
+    Simply invoke `Settings.set_graceful_exit(enabled)` to enable/disable graceful exit.
+    ```py
+    from thread import Settings
+
+    Settings.get_graceful_exit(True)
+    Settings.get_graceful_exit(False)
+    ```
+
+    <Callout type='info'>
+      This will only affect threads created from `thread.Thread`.
+    </Callout>
+
+  </ArgumentBody>
+</ArgumentWrapper>
+
+<ArgumentWrapper>
+  <summary>
+    <strong className='text-lg'>
+      VERBOSITY
+      <ArgumentExtra>VerbosityLevel</ArgumentExtra>
+      <ArgumentExtra>(default: &apos;normal&apos;)</ArgumentExtra>
+    </strong>
+  </summary>
+  <ArgumentBody>
+    Adjust what is printed to the terminal.
+    <Callout type='info'>
+      This feature is only available in `thread ^v1.0.1`
+    </Callout>
+
+      Simply invoke `Setting.set_verbosity(level)` to set the verbosity level.
+      ```py
+      from thread import Settings
+
+      Settings.set_verbosity(1)
+      Settings.set_verbosity('normal')
+      ```
+
+      `Settings.VERBOSITY` can be compared against strings and integers and other `Verbosity` objects.
+      ```py
+      from thread.utils.config import Verbosity, Settings
+
+      # Mapping
+      Verbosity(0) == Verbosity('quiet')
+      Verbosity(1) == Verbosity('normal')
+      Verbosity(2) == Verbosity('verbose')
+
+      # Comparison
+      Verbosity(0) < 1          # True
+      Verbosity(1) < 'verbose'  # True
+      Verbosity(2) == 'verbose' # True
+      ```
+
+  </ArgumentBody>
+</ArgumentWrapper>

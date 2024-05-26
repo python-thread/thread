@@ -77,19 +77,23 @@ Please ensure that tests are updated and pass before merging a Pull Request.
 
 ```sh
 # To test your code, run:
-pytest
+npm test
+
+# Or
+pytest -sv .
 ```
 
 ### Linting
 
-We use [Ruff](https://docs.astral.sh/ruff/)
+We use [Ruff](https://docs.astral.sh/ruff/),
+[Eslint](https://eslint.org/) and [Prettier](https://prettier.io/)
 to ensure that code is consistent and follows our [code style](./.github/CODESTYLE.md).
 Please ensure that your code passes linting before merging a Pull Request.
 
 ```sh
 # To lint your code, run:
-ruff check
+npm run lint
 
 # To fix any linting errors, run:
-ruff format
+npm run lint:fix
 ```

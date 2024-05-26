@@ -1,0 +1,44 @@
+import { Callout } from "nextra/components";
+
+# Parallelism
+
+<Callout type="warning">This is a Python intended default behaviour.</Callout>
+
+### The Scope
+
+At present, this affects everything in **thread**.
+
+### Why Is This So?
+
+This is due to Python's **GIL** (Global Interpreter Lock).
+At present, we only extend the featureset for the built-in `threading` library which means we are limited and bound by the **GIL**.
+
+Check out this video by [Tech With Tim](https://www.youtube.com/@TechWithTim) for a more in-depth explanation:
+
+<div className='mt-5'>
+  <iframe
+    className='aspect-video w-full'
+    src='https://www.youtube.com/embed/XVcRQ6T9RHo'
+    allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
+    allowFullScreen
+  />
+
+  <span className='text-sm text-center'>
+    (Thanks Tim for letting us embed your video!)
+  </span>
+</div>
+
+### What Does This Mean?
+
+This means that threaded processes will only be able to fully utilise the one main Interpreter.
+Threaded processes still are able to run simultaneously with other processes, just limited to one Interpreter.
+
+### What If I Want True Parallel?
+
+As outlined in the video above, you can achieve this with Python's built-in `multiprocessing` library.
+
+### Are There Plans to Provide True Parallelism in the Future?
+
+Yes, and we are planning to add support for this in the future.
+
+If you would like to help us with this or are simply interested, find out more [here](/#contributing).

@@ -1,0 +1,635 @@
+import { cn } from "@utils";
+import { Tabs, Callout } from "nextra/components";
+import {
+  Statuses,
+  ThreadStatuses,
+  ThreadExceptions,
+} from "@components/typedata";
+
+export function ArgumentWrapper({ children, className, ...props }) {
+  return (
+    <details
+      {...props}
+      className={cn(
+        "last-of-type:mb-0 rounded-lg bg-neutral-50 dark:bg-neutral-800 p-2 mt-4",
+        className,
+      )}
+    >
+      {children}
+    </details>
+  );
+}
+
+export function ArgumentBody({ children, className, ...props }) {
+  return (
+    <div {...props} className={cn("nx-p-2", className)}>
+      {children}
+    </div>
+  );
+}
+
+export function ArgumentExtra({ children, className, ...props }) {
+  return (
+    <span {...props} className={cn("ml-4 text-neutral-500", className)}>
+      {children}
+    </span>
+  );
+}
+
+export function TabbedData({ type, keys = [] }) {
+  return (
+    <Tabs items={keys}>
+      {keys.map((key, i) => (
+        <Tabs.Tab key={i}>
+          {type === "status" ? ThreadStatuses[key] : ThreadExceptions[key]}
+        </Tabs.Tab>
+      ))}
+    </Tabs>
+  );
+}
+
+# Thread Class Documentation
+
+Documentation for `thread.Thread`.
+
+## Importing the class
+
+Here are some ways of importing the `Thread` class.
+
+```python
+import thread
+thread.Thread
+
+from thread import Thread
+```
+
+## Quick Start
+
+There are main 2 ways of initializing a thread.
+
+### On-Demand
+
+You can create a simple thread by initializing `thread.Thread` and passing the `target` function.
+
+```python
+def my_target(): ...
+
+# Recommended way
+my_thread = Thread(
+  target = my_target
+)
+
+# OR
+# Not the recommended way
+my_thread = Thread(my_target)
+```
+
+A thread can be ran by invoking the `start()` method
+
+```py
+my_thread.start()
+```
+
+### Decoratored Function
+
+You can decorate a function with `thread.threaded` which uses `thread.Thread`.
+When the decorated function is invoked, it will automatically be ran in a new thread each time and return a `thread.Thread` object.
+
+```python
+import thread
+
+@thread.threaded
+def my_target(): ...
+
+worker = my_target() # thread.Thread()
+```
+
+<Callout type='info'>
+  Did you know?
+
+Decorators can take in keyword arguments that change the behavior of the thread.
+
+```py
+import thread
+
+@thread.threaded(name = 'my_thread', suppress_errors = True)
+def my_target(): ...
+```
+
+See the full list of arguments [here](#initialization)
+
+</Callout>
+
+## Initialization
+
+This will cover the required and optional arguments initializing a thread.
+
+### Required
+
+<ArgumentWrapper>
+  <summary>
+    <strong className='text-lg'>
+      target
+      <ArgumentExtra>(*args, **kwargs) -&gt; Data_Out</ArgumentExtra>
+    </strong>
+  </summary>
+  <ArgumentBody>
+    This should be a function which takes in any arguments and returns anything.
+
+    Any arguments and keyword arguments parsed to the `target` function can be parsed through `args` and `kwargs`.
+    `Data_Out` will be written to `Thread._returned_value` and can be accessed via `Thread.result` or `Thread.get_return_value()`.
+
+    `target` can be parsed as the first argument to `Thread.__init__()`, although it is recommended to use only keyword arguments.
+    ```py
+    import thread
+
+    thread.Thread(lambda x: x + 1)
+    thread.Thread(target = lambda x: x + 1)
+    ```
+
+    <Callout type='info'>
+      Best Practices
+
+      While you can use a lambda function, it is best to use a normal function for your LSP/Linter to infer types.
+      ```py
+      from thread import Thread
+
+      worker = Thread(target = lambda x: x + 1)
+      worker.start()
+      worker.join()
+
+      worker.result # This will be inferred as Unknown by your LSP/Linter
+      ```
+      ```py
+      from thread import Thread
+
+      def my_target(x: int) -> int:
+        return x + 1
+
+      worker = Thread(target = my_target)
+      worker.start()
+      worker.join()
+
+      worker.result # This will be inferred as int
+      ```
+    </Callout>
+
+  </ArgumentBody>
+</ArgumentWrapper>
+
+### Optional
+
+<ArgumentWrapper>
+  <summary>
+    <strong className='text-lg'>
+      args
+      <ArgumentExtra>Sequence[Data_In]</ArgumentExtra>
+      <ArgumentExtra>(default: ())</ArgumentExtra>
+    </strong>
+  </summary>
+  <ArgumentBody>
+    This should be an iterable sequence of arguments parsed to the `target` function.
+
+    For example:
+    ```py
+    import thread
+
+    thread.Thread(target = my_target, args = ('foo', 'bar'))
+    thread.Thread(target = my_target, args = ['foo', 'bar'])
+    ```
+
+    <Callout type='warning'>
+      Args used in `Thread.__init__()` cannot offer static type checking. [Learn More](/learn/cautions/type-safety)
+    </Callout>
+
+  </ArgumentBody>
+</ArgumentWrapper>
+
+<ArgumentWrapper>
+  <summary>
+    <strong className='text-lg'>
+      kwargs
+      <ArgumentExtra>Mapping[str, Data_In]</ArgumentExtra>
+      <ArgumentExtra>(default: {})</ArgumentExtra>
+    </strong>
+  </summary>
+  <ArgumentBody>
+    This should be a mapping of kwargs passed to the `target` function.
+
+    For example:
+    ```py
+    import thread
+
+    thread.Thread(target = my_target, kwargs = {'foo': 'bar'})
+    thread.Thread(target = my_target, kwargs = dict(foo = 'bar'))
+    ```
+
+    <Callout type='warning'>
+      Kwargs used in `Thread.__init__()` cannot offer static type checking. [Learn More](/learn/cautions/type-safety)
+    </Callout>
+
+  </ArgumentBody>
+</ArgumentWrapper>
+
+<ArgumentWrapper>
+  <summary>
+    <strong className='text-lg'>
+      ignore_errors
+      <ArgumentExtra>Sequence[type[Exception]]</ArgumentExtra>
+      <ArgumentExtra>(default: ())</ArgumentExtra>
+    </strong>
+  </summary>
+  <ArgumentBody>
+    This should be an iterable sequence of all types of exceptions to ignore.
+    Ignored errors are not propagated or logged to `Thread.errors`.
+
+    The `Exception` class can be parsed to ignore all exceptions.
+
+    For example:
+    ```py
+    import thread
+
+    # This ignores all exceptions
+    # thread.errors = []
+    # hooks begin execution
+    thread.Thread(target = raiseRuntimeError, ignore_errors = (Exception,))
+
+    # This propagates the exception
+    # thread.errors = [RuntimeError]
+    # thread is killed
+    thread.Thread(target = raiseRuntimeError, ignore_errors = [TypeError])
+
+    # This ignores RuntimeError
+    # thread.errors = []
+    # hooks begin execution
+    thread.Thread(target = raiseRuntimeError, ignore_errors = [RuntimeError])
+    ```
+
+    <Callout type='info'>
+      Ignored exceptions may cause unintended skipped code execution.
+      ```py
+      import thread
+
+      def my_target():
+        print('Before raise')
+        raise Exception('oh no!')
+        print('After raise')
+
+      thread.Thread(target = my_target, ignore_errors = (Exception,))
+      thread.start()
+
+      # > Before raise
+      # Program End
+      ```
+    </Callout>
+
+  </ArgumentBody>
+</ArgumentWrapper>
+
+<ArgumentWrapper>
+  <summary>
+    <strong className='text-lg'>
+      suppress_errors
+      <ArgumentExtra>bool</ArgumentExtra>
+      <ArgumentExtra>(default: False)</ArgumentExtra>
+    </strong>
+  </summary>
+  <ArgumentBody>
+    This should be a boolean indicating whether non-ignored exceptions will be propagated.
+
+    <Callout type='info'>
+      Non-ignored exceptions will be logged to `Thread.errors` without propagating.
+    </Callout>
+
+    ```py
+    import thread
+
+    # Thread.errors = [RuntimeError]
+    # hooks begin execution
+    thread.Thread(target = raiseRuntimeError, suppress_errors = True)
+    ```
+
+  </ArgumentBody>
+</ArgumentWrapper>
+
+<ArgumentWrapper>
+  <summary>
+    <strong className='text-lg'>
+      name
+      <ArgumentExtra>str</ArgumentExtra>
+      <ArgumentExtra>(default: None)</ArgumentExtra>
+    </strong>
+  </summary>
+  <ArgumentBody>
+    This should be a string name of the thread.
+
+    **_By default, a unique name is constructed of the form "Thread-N" where N is a small decimal number, or "Thread-N (target)" where "target" is target.\_\_name\_\_ if the target argument is specified._**
+    ~ Python threading docs.
+
+    ```py
+    import thread
+
+    thread.Thread(target = my_target, name = 'my_thread')
+    ```
+
+    See [`threading` documentation](https://docs.python.org/3/library/threading.html#threading.Thread) for more details.
+
+  </ArgumentBody>
+</ArgumentWrapper>
+
+<ArgumentWrapper>
+  <summary>
+    <strong className='text-lg'>
+      daemon
+      <ArgumentExtra>bool</ArgumentExtra>
+      <ArgumentExtra>(default: False)</ArgumentExtra>
+    </strong>
+  </summary>
+  <ArgumentBody>
+    This should be a boolean indicating whether the thread should be a daemon thread.
+
+    See [`threading` documentation](https://docs.python.org/3/library/threading.html#threading.Thread) for more details.
+
+  </ArgumentBody>
+</ArgumentWrapper>
+
+<ArgumentWrapper>
+  <summary>
+    <strong className='text-lg'>
+      *args / **kwargs
+      <ArgumentExtra>(default: None)</ArgumentExtra>
+      <ArgumentExtra>Any / Mapping[str, Any]</ArgumentExtra>
+    </strong>
+  </summary>
+  <ArgumentBody>
+    These overloads are parsed to `threading.Thread.__init__()`
+
+    See [`threading` documentation](https://docs.python.org/3/library/threading.html#threading.Thread) for more details.
+
+  </ArgumentBody>
+</ArgumentWrapper>
+
+## Properties
+
+### Attributes
+
+These are attributes of `thread.Thread` class.
+
+<ArgumentWrapper>
+  <summary>
+    <strong className='text-lg'>
+      result
+      <ArgumentExtra>Data_Out</ArgumentExtra>
+    </strong>
+  </summary>
+  <ArgumentBody>
+    This is what is returned from the target function.
+
+    <Callout>
+      Exceptions Raised
+      <TabbedData type='exception' keys={['ThreadNotInitializedError', 'ThreadNotRunningError', 'ThreadStillRunningError']} />
+    </Callout>
+
+  </ArgumentBody>
+</ArgumentWrapper>
+
+<ArgumentWrapper>
+  <summary>
+    <strong className='text-lg'>
+      status
+      <ArgumentExtra>thread.ThreadStatus</ArgumentExtra>
+    </strong>
+  </summary>
+  <ArgumentBody>
+    This is the current status of the thread.
+
+    <Callout type='info'>
+      These Are The Possible Values
+      <TabbedData type='status' keys={Statuses} />
+    </Callout>
+
+  </ArgumentBody>
+</ArgumentWrapper>
+
+<ArgumentWrapper>
+  <summary>
+    <strong className='text-lg'>
+      errors
+      <ArgumentExtra>List[Exception]</ArgumentExtra>
+    </strong>
+  </summary>
+  <ArgumentBody>
+    This is the list of errors raised by the thread.
+
+    Only non-ignored errors are logged to this list.
+    ```py
+    import thread
+
+    worker = thread.Thread(target = my_target)
+    worker.errors
+    ```
+
+  </ArgumentBody>
+</ArgumentWrapper>
+
+<ArgumentWrapper>
+  <summary>
+    <strong className='text-lg'>
+      hooks
+      <ArgumentExtra>List[(Data_Out) -&gt; Any | None]</ArgumentExtra>
+    </strong>
+  </summary>
+  <ArgumentBody>
+    This is the list of hooks added to the thread.
+
+    Hooks will be executed in the same order as they are added to the list.
+    ```py
+    import thread
+
+    worker = thread.Thread(target = my_target)
+    worker.hooks
+    ```
+
+  </ArgumentBody>
+</ArgumentWrapper>
+
+### Methods
+
+These are methods of `thread.Thread` class.
+
+<ArgumentWrapper>
+  <summary>
+    <strong className='text-lg'>
+      start
+      <ArgumentExtra>() -&gt; None</ArgumentExtra>
+    </strong>
+  </summary>
+  <ArgumentBody>
+    This starts the thread.
+
+    Simply invoke `Thread.start()` on a thread object.
+    ```py
+    import thread
+
+    worker = thread.Thread(target = my_target)
+    worker.start()
+    ```
+
+    <Callout>
+      Exceptions Raised
+      <TabbedData type='exception' keys={['ThreadStillRunningError']} />
+    </Callout>
+
+  </ArgumentBody>
+</ArgumentWrapper>
+
+<ArgumentWrapper>
+  <summary>
+    <strong className='text-lg'>
+      is_alive
+      <ArgumentExtra>() -&gt; bool</ArgumentExtra>
+    </strong>
+  </summary>
+  <ArgumentBody>
+    This indicates whether the thread is still alive.
+
+    Simply invoke `Thread.is_alive()` on a thread object.
+    ```py
+    import thread
+
+    worker = thread.Thread(target = my_target)
+    worker.is_alive()
+    ```
+
+    <Callout>
+      Exceptions Raised
+      <TabbedData type='exception' keys={['ThreadNotInitializedError']} />
+    </Callout>
+
+  </ArgumentBody>
+</ArgumentWrapper>
+
+<ArgumentWrapper>
+  <summary>
+    <strong className='text-lg'>
+      add_hook
+      <ArgumentExtra>((Data_Out) -&gt; Any | None) -&gt; None</ArgumentExtra>
+    </strong>
+  </summary>
+  <ArgumentBody>
+    This adds a hook to the thread.
+
+    Hooks are invoked in the worker thread after the thread successfully completes, passing `Data_Out` as the first argument.
+    If a hook errors, the exception is recorded to `Thread.errors`, and is only propagated in the main thread when `Thread.join()`, `Thread.get_return_value()` or `Thread.result` is invoked.
+
+    Simply invoke `Thread.add_hook(hook)` on a thread object.
+    ```py
+    import thread
+
+    worker = thread.Thread(target = lambda x: x+1, args = (2,))
+    worker.add_hook(lambda x: print(f'Worker Hook: {x}')
+    worker.start()
+
+    # > Worker Hook: 3
+    # Program ends
+    ```
+
+    <Callout>
+      Exceptions Raised
+      <TabbedData type='exception' keys={['ThreadNotInitializedError', 'ThreadNotRunningError']} />
+    </Callout>
+
+  </ArgumentBody>
+</ArgumentWrapper>
+
+<ArgumentWrapper>
+  <summary>
+    <strong className='text-lg'>
+      get_return_value
+      <ArgumentExtra>() -&gt; Data_Out</ArgumentExtra>
+    </strong>
+  </summary>
+  <ArgumentBody>
+    This halts the current thread execution until the thread completes and returns the value returned by the target function.
+
+    Simply invoke `Thread.get_return_value()` on a thread object.
+    ```py
+    import thread
+
+    worker = thread.Thread(target = my_target)
+    worker.get_return_value()
+    ```
+
+    <Callout>
+      Exceptions Raised
+      <TabbedData type='exception' keys={['ThreadNotInitializedError', 'ThreadNotRunningError']} />
+    </Callout>
+
+  </ArgumentBody>
+</ArgumentWrapper>
+
+<ArgumentWrapper>
+  <summary>
+    <strong className='text-lg'>
+      join
+      <ArgumentExtra>(timeout: float = None) -&gt; bool</ArgumentExtra>
+    </strong>
+  </summary>
+  <ArgumentBody>
+    This halts the current thread execution until the thread completes or exceeds the timeout.
+
+    A None value for timeout will have the same effect as passing `float("inf")` as a timeout.
+    The boolean returned by `Thread.join()` is `True` if the thread completed within the timeout and `False` if otherwise.
+
+    Simply invoke `Thread.join()` on a thread object.
+    ```py
+    import thread
+    worker = thread.Thread(target = my_target)
+    worker.join(5)
+    worker.join()
+    ```
+
+    <Callout>
+      Exceptions Raised
+      <TabbedData type='exception' keys={['ThreadNotInitializedError', 'ThreadNotRunningError']} />
+    </Callout>
+
+  </ArgumentBody>
+</ArgumentWrapper>
+
+<ArgumentWrapper>
+  <summary>
+    <strong className='text-lg'>
+      kill
+      <ArgumentExtra>(yielding: bool = False, timeout: float = 5) -&gt; bool</ArgumentExtra>
+    </strong>
+  </summary>
+  <ArgumentBody>
+    This schedules the thread to be killed.
+
+    If yielding is True, it halts the current thread execution until the thread is killed or the timeout is exceeded.
+    Similar to `Thread.join()`, a None value for timeout will have the same effect as passing `float("inf")` as a timeout.
+
+    Simply invoke `Thread.kill()` on a thread object.
+    ```py
+    import thread
+
+    worker = thread.Thread(target = my_target)
+    worker.kill(True, 10)
+    worker.kill(False)
+    worker.kill()
+    ```
+
+    <Callout>
+      Exceptions Raised
+      <TabbedData type='exception' keys={['ThreadNotInitializedError', 'ThreadNotRunningError']} />
+    </Callout>
+
+    <Callout type='warning'>
+      This only schedules the thread to be killed, and does not immediately kill the thread.
+
+      Meaning that if your `target` has a long `time.wait()` call, it will only be killed after it moves onto the next line.
+    </Callout>
+
+  </ArgumentBody>
+</ArgumentWrapper>

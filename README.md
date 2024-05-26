@@ -1,15 +1,19 @@
+<!-- Allow HTML -->
+<!-- markdownlint-disable MD033 -->
+
+<!-- Allow HTML top-level heading -->
+<!-- markdownlint-disable MD041 -->
+
 <a name="readme-top"></a>
-
-
 
 <!-- PROJECT SHIELDS -->
 <div align="center">
 
-  <a href="[pypi-url]">[![PYPI - Version][version-shield]][pypi-url]</a>
-  <a href="[pypi-url]">[![PYPI - Downloads][downloads-shield]][pypi-url]</a>
-  <a href="[forks-url]">[![Forks][forks-shield]][forks-url]</a>
-  <a href="[stars-url]">[![Stargazers][stars-shield]][stars-url]</a>
-  <a href="[license-url]">[![BSD-3-Clause License][license-shield]][license-url]</a>
+<a href="[pypi-url]">[![PYPI - Version][version-shield]][pypi-url]</a>
+<a href="[pypi-url]">[![PYPI - Downloads][downloads-shield]][pypi-url]</a>
+<a href="[forks-url]">[![Forks][forks-shield]][forks-url]</a>
+<a href="[stars-url]">[![Stargazers][stars-shield]][stars-url]</a>
+<a href="[license-url]">[![BSD-3-Clause License][license-shield]][license-url]</a>
 
 </div>
 
@@ -34,16 +38,18 @@
   </p>
 </div>
 
-
-
 <!-- ABOUT THE PROJECT -->
+
 ## About The Project
 
 [![Social Card][socialcard]](https://thread.ngjx.org)
 
-Strictly type-safe and Wraps around the python threading library and provides extra functionality
+Strictly type-safe and Wraps around the python threading library
+and provides extra functionality
 
-Fully compatible with the threading library, this project hopes to provide a more out-of-the-box solution with multi-threaded processing and fetching values from a completed thread, etc.
+Fully compatible with the threading library, this project hopes to
+provide a more out-of-the-box solution with multi-threaded processing
+and fetching values from a completed thread, etc.
 
 <br />
 
@@ -56,9 +62,8 @@ I hope thread will become your threading solution! ♡⸜(˶˃ ᵕ ˂˶)⸝♡
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-
-
 <!-- GETTING STARTED -->
+
 ## Getting Started
 
 This is an example of how you can set up your project locally.
@@ -66,32 +71,38 @@ To get a local copy up and running follow these simple example steps.
 
 ### Prerequisites
 
-* Python 3.9+
+- Python 3.9+
 
 ### Installation
 
 _Below is an example of how you can install and use thread._
 
-1. Install the package
-   ```sh
-   pip install -U thread
-   ```
-2. Import thread into your library!
-   ```py
-   import thread
-   from thread import Thread, ConcurrentProcessing
-   ```
+#### 1. Install the package
+
+```sh
+pip install -U thread
+```
+
+#### 2. Import thread into your library
+
+```py
+import thread
+from thread import Thread, ConcurrentProcessing
+```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-
-
 <!-- CONTRIBUTING -->
+
 ## Contributing
 
-Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**. ( ˶ˆᗜˆ˵ )
+Contributions are what make the open source community
+such an amazing place to learn, inspire, and create.
+Any contributions you make are **greatly appreciated**. ( ˶ˆᗜˆ˵ )
 
-If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
+If you have a suggestion that would make this better,
+please fork the repo and create a pull request.
+You can also simply open an issue with the tag "enhancement".
 Don't forget to give the project a star! Thanks again!
 
 1. Fork the Project
@@ -100,43 +111,42 @@ Don't forget to give the project a star! Thanks again!
 4. Push to the Branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
+Read our [contributing guide](./CONTRIBUTING.md) for more information.
+
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
 
 <!-- LICENSE -->
+
 ## License
 
-Distributed under the BSD-3-Clause License. See [LICENSE.txt](./LICENSE.txt) for more information.
+Distributed under the BSD-3-Clause License.
+See [LICENSE.txt](./LICENSE.txt) for more information.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-
-
 <!-- CONTACT -->
+
 ## Contact
 
 Alex - [contact@thread.ngjx.org](mailto:contact@thread.ngjx.org)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-
-
 <!-- ACKNOWLEDGMENTS -->
+
 ## Acknowledgments
 
-* [Choose an Open Source License](https://choosealicense.com)
-* [GitHub Emoji Cheat Sheet](https://www.webpagefx.com/tools/emoji-cheat-sheet)
-* [Malven's Flexbox Cheatsheet](https://flexbox.malven.co/)
-* [Malven's Grid Cheatsheet](https://grid.malven.co/)
-* [Img Shields](https://shields.io)
+- [Choose an Open Source License](https://choosealicense.com)
+- [GitHub Emoji Cheat Sheet](https://www.webpagefx.com/tools/emoji-cheat-sheet)
+- [Malven's Flexbox Cheatsheet](https://flexbox.malven.co/)
+- [Malven's Grid Cheatsheet](https://grid.malven.co/)
+- [Img Shields](https://shields.io)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-
-
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
+
 [version-shield]: https://img.shields.io/pypi/v/thread.svg?style=for-the-badge&color=efd0cd
 [downloads-shield]: https://img.shields.io/pypi/dm/thread.svg?style=for-the-badge
 [pypi-url]: https://pypi.org/project/thread/

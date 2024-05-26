@@ -1,0 +1,85 @@
+import { Callout } from "nextra/components";
+
+# Type Safety Cautions
+
+## 1. Types Are Not Enforced at Runtime
+
+<Callout type="info">This is not a bug, but rather a feature.</Callout>
+
+### The Scope
+
+This affects everything in **thread**.
+
+### Why Not?
+
+Although **thread** is intended to be used with strict type checking,
+we want to follow Python's design of **"optional types"**.
+This allows **thread** to be compatible with different projects which may follow different architectural conventions.
+
+### What Does This Mean?
+
+In other words, types are only enforced at the LSP/Linting level.
+
+This means that you can annotate your code with types and still run it with while passing the wrong types.
+Your LSP/Linter will detect the type error and scream at you, **thread** will not validate types at runtime.
+
+### Simple example
+
+Consider the following code;
+
+`threaded_function` takes 1 integer as it's first argument and returns an integer.
+The parsed argument, `"a"`, is not an integer. Thread **will not** raise a type error, however,
+a type error will be raised at runtime due to the invalid opperand between a string and an integer.
+
+## 2. Args and Kwargs do not provide static type checking
+
+<Callout type="warning">
+  This is unfortunately due to Python&gt;s typing library
+</Callout>
+
+### The Scope
+
+This only affects **args** and **kwargs** in `thread.Thread()` initialization.
+
+```py
+import thread
+
+def draw(x: int, y: int) -> bool: ...
+worker = thread.Thread(target=draw, args=(thread,), kwargs={'y': ':<'}) # This will not be underlined by your LSP/linter
+
+# Other methods from Thread are not affected
+worker.result # Will be typed as bool
+```
+
+### Why is this so?
+
+`thread.Thread()` uses Python's typing library's `ParamSpec` to determine the arguments types of the `target` function.
+Due to ParamSpec.args and ParamSpec.kwargs requirement to be used as argument overloads, we cannot assign it to the `args` and `kwargs` arguments of `thread.Thread()`.
+
+```py
+P = ParamSpec('P')
+T = TypeVar('T')
+
+# What is required by ParamSpec.args and ParamSpec.kwargs
+def __init__(
+  self,
+  target: Callable[P, T],
+  *args: P.args,
+  **kwargs: P.kwargs
+) -> None: ...
+
+# What we need
+def __init__(
+  self,
+  target: Callable[P, T],
+  args: P.args,
+  kwargs: P.kwargs,
+  *threadingArgs,
+  **threadKwargs
+) -> None: ...
+```
+
+### Is this fixable?
+
+Yes, if we change how we write `thread.Thread()`'s initialization.
+However, we want to make migrating to **thread** easy from the default threading library, and thus we will not change this for now and focus on adding new features.

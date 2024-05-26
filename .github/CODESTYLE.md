@@ -16,7 +16,7 @@ follow throughout the development of your contribution.
   as specified in [PEP 287](https://peps.python.org/pep-0287/)
 - Private attributes are to be prefixed with an underscore
 - Use of [typing](https://docs.python.org/3/library/typing.html) type hints
-- All files are to use 2 space indenting
+- All files are to use 4 space indenting
 
 ```python
 class ExampleClass:
@@ -31,28 +31,28 @@ class ExampleClass:
     public_attribute   : int # type hint for integer is defined here
 
     def __init__(
-      self,
-      public_attribute: int # type hint for parameters
+        self,
+        public_attribute: int # type hint for parameters
     ) -> None: # the expected return value of method
-      """
-      Initializes a ExampleClass
+        """
+        Initializes a ExampleClass
 
-      Parameters
-      ----------
-      :param public_attribute: example attribute
-      """
-      self.public_attribute = public_attribute
-      self.private_attribute = square(public_attribute)
+        Parameters
+        ----------
+        :param public_attribute: example attribute
+        """
+        self.public_attribute = public_attribute
+        self.private_attribute = square(public_attribute)
 
     def square(self, value: int) -> int:
-      """
-      Example method that square roots a value
+        """
+        Example method that square roots a value
 
-      Parameters
-      ----------
-      :param value: value that you want squared
-      """
-      return value**2
+        Parameters
+        ----------
+        :param value: value that you want squared
+        """
+        return value**2
 ```
 
 ## Markdown Guidelines
@@ -68,27 +68,26 @@ Currently, documentation for this project resides in markdown files.
 
 ```markdown
 <!--example markdown document-->
+
 # Section
+
 Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-sed do eiusmod tempor incididunt ut labore et dolore 
-magna aliqua. Ut enim ad minim veniam, quis nostrud 
-exercitation ullamco laboris nisi ut aliquip ex ea 
-commodo consequat. Duis aute irure dolor in 
-reprehenderit in voluptate velit esse cillum dolore eu 
-fugiat nulla pariatur. Excepteur sint occaecat cupidatat 
-non proident, sunt in culpa qui officia deserunt mollit 
+sed do eiusmod tempor incididunt ut labore et dolore
+magna aliqua. Ut enim ad minim veniam, quis nostrud
+exercitation ullamco laboris nisi ut aliquip ex ea
+commodo consequat. Duis aute irure dolor in
+reprehenderit in voluptate velit esse cillum dolore eu
+fugiat nulla pariatur. Excepteur sint occaecat cupidatat
+non proident, sunt in culpa qui officia deserunt mollit
 anim id est laborum. found [Lorem Ipsum Generator]
 
-
-
 # Section 2
+
 <ul>
   <li> Apple
   <li> Orange
   <li> Pineapple
 </ul>
-
-
 
 [Lorem Ipsum Generator]: https://loremipsum.io/generator/
 ```

@@ -1,0 +1,119 @@
+---
+title: Thread v2.0.2
+---
+
+import Link from "next/link";
+
+import { ChevronDownIcon, ArrowRightIcon } from "@radix-ui/react-icons";
+import { PackageManager } from "@components/typewriter";
+
+export function SmoothScroll({ scrollTo, children, ...props }) {
+  return (
+    <button
+      {...props}
+      onClick={() =>
+        document
+          .getElementById(scrollTo)
+          ?.scrollIntoView({ behavior: "smooth" })
+      }
+    >
+      {children}
+    </button>
+  );
+}
+
+export function Feature({
+  title,
+  description,
+  version = false,
+  href = false,
+  ...props
+}) {
+  return (
+    <div
+      {...props}
+      className="flex flex-col h-96 w-72 pt-20 border dark:border-neutral-800 bg-neutral-100/90 dark:bg-neutral-900/80 relative rounded px-4 py-6 bg-[linear-gradient(45deg,transparent_25%,rgba(68,68,68,.2)_50%,transparent_75%,transparent_100%)] bg-[length:250%_250%,100%_100%] overflow-hidden bg-[position:-100%_0,0_0] bg-no-repeat hover:transition-[background-position_0s_ease] hover:bg-[position:200%_0,0_0] hover:duration-[1500ms]"
+    >
+      {version ? (
+        <p className="nx-mt-0 mb-1 text-xs bg-clip-text text-transparent bg-gradient-radial from-pink-500 to-violet-500">
+          {version}
+        </p>
+      ) : (
+        <div className="nx-mt-0 h-4 mb-1"></div>
+      )}
+      <p className="nx-mt-0 mb-2 text-2xl font-bold">{title}</p>
+      <p className="nx-mt-0 text-sm font-normal text-neutral-600 dark:text-neutral-300">
+        {description}
+      </p>
+      {href && (
+        <Link
+          href={href}
+          className="absolute bottom-4 right-4 text-neutral-600/80 dark:text-neutral-300/80 hover:text-neutral-600 dark:hover:text-neutral-300 flex items-center gap-1 hover:gap-2 hover:right-3 transition-all"
+        >
+          <span>Read More</span>
+          <ArrowRightIcon />
+        </Link>
+      )}
+    </div>
+  );
+}
+
+<div className="flex-col flex">
+
+{/* Section 1 */}
+
+<section id="top">
+  <div
+    className="h-full justify-center pb-16 text-center items-center flex flex-col gap-4"
+    style={{ height: "calc(100vh - 64px)" }}
+  >
+    <h1 className="text-4xl font-bold">
+      <span className="bg-clip-text text-transparent bg-gradient-to-r from-pink-500 to-violet-500">
+        Thread
+      </span>
+      - v2.0.2
+    </h1>
+    <div className="text-center">
+      <PackageManager />
+    </div>
+    <Link
+      href="/docs"
+      className="block mt-8 transition-all bg-neutral-800 dark:bg-neutral-200 text-white dark:text-black hover:bg-neutral-800/90 dark:hover:bg-neutral-200/90 active:bg-neutral-800/80 dark:active:bg-neutral-200/80 px-4 py-2 rounded"
+    >
+      Get Started
+    </Link>
+  </div>
+  <SmoothScroll
+    scrollTo="features"
+    className="absolute flex left-1/2 -translate-x-1/2 items-center justify-center"
+    style={{ top: "calc(100vh - 64px)" }}
+  >
+    <ChevronDownIcon className="w-8 h-8" />
+  </SmoothScroll>
+</section>
+
+{/* Section 2 */}
+
+<section id="features">
+  <div
+    className="py-4 flex flex-col gap-4 justify-center items-center"
+    style={{ height: "calc(100vh - 64px)" }}
+  >
+    <h2 className="text-5xl font-bold mb-10 text-center">Features</h2>
+    <div className="flex flex-wrap gap-8 justify-center">
+      <Feature
+        title="Graceful shutdown"
+        description="Automatically kill threads before exiting the program"
+        href="/docs/latest/configuration"
+        version="^v0.1.2"
+      />
+      <Feature
+        title="Concurrent Processing"
+        description="Utilize multiple threads to process large amounts of data"
+        href="/docs/latest/concurrent-processing"
+      />
+    </div>
+  </div>
+</section>
+
+</div>
