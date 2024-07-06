@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "thread"
-version = "2.0.3"
+version = "2.0.4"
 description = "Threading module extension"
 authors = ["Alex <contact@ngjx.org>"]
 license = "BSD-3-Clause"
@@ -30,7 +30,7 @@ classifiers = [
 
 [tool.poetry.urls]
 Homepage = "https://thread.ngjx.org"
-Documentation = "https://thread.ngjx.org/docs/v2.0.3"
+Documentation = "https://thread.ngjx.org/docs/v2.0.4"
 Source = "https://github.com/python-thread/thread"
 Download = "https://pypi.org/project/thread/#files"
 "Release Notes" = "https://github.com/python-thread/thread/releases"
