@@ -529,7 +529,7 @@ class ConcurrentProcessing(Generic[_Target_P, _Target_T, _Dataset_T]):
             *args: _Target_P.args,
             **kwargs: _Target_P.kwargs,
         ) -> List[_Target_T]:
-            computed: List[Data_Out] = []
+            computed: List[_Target_T] = []
 
             i = 0
             for data_entry in data_chunk:
@@ -547,7 +547,7 @@ class ConcurrentProcessing(Generic[_Target_P, _Target_T, _Dataset_T]):
         return wrapper
 
     @property
-    def results(self) -> List[_Dataset_T]:
+    def results(self) -> List[_Target_T]:
         """
         The return value of the threads if completed
 
@@ -560,7 +560,7 @@ class ConcurrentProcessing(Generic[_Target_P, _Target_T, _Dataset_T]):
         if len(self._threads) == 0:
             raise exceptions.ThreadNotInitializedError()
 
-        results: List[Data_Out] = []
+        results: List[_Target_T] = []
         for entry in self._threads:
             results += entry.thread.result
         return results
@@ -577,7 +577,7 @@ class ConcurrentProcessing(Generic[_Target_P, _Target_T, _Dataset_T]):
             raise exceptions.ThreadNotInitializedError()
         return any(entry.thread.is_alive() for entry in self._threads)
 
-    def get_return_values(self) -> List[_Dataset_T]:
+    def get_return_values(self) -> List[_Target_T]:
         """
         Halts the current thread execution until the thread completes
 
@@ -585,7 +585,7 @@ class ConcurrentProcessing(Generic[_Target_P, _Target_T, _Dataset_T]):
         -------
         :returns Any: The return value of the target function
         """
-        results: List[Data_Out] = []
+        results: List[_Target_T] = []
         for entry in self._threads:
             entry.thread.join()
             results += entry.thread.result
