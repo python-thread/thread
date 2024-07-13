@@ -1,4 +1,2 @@
-from .utils.meta import metadata
-
-__version__ = metadata.version('thread')
+__version__ = '2.0.5'
 __all__ = ['__version__']

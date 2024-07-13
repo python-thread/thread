@@ -9,11 +9,11 @@ identifiers:
     value: 10.5281/zenodo.10799219
     description: This is the collection of archived snapshots of all versions of thread.
   - type: url
-    value: https://github.com/python-thread/thread/releases/tag/v2.0.4
-    description: The GitHub release URL of tag v2.0.4.
+    value: https://github.com/python-thread/thread/releases/tag/v2.0.5
+    description: The GitHub release URL of tag v2.0.5.
   - type: url
-    value: https://pypi.org/project/thread/2.0.4
-    description: The PyPI release URL of tag v2.0.4.
+    value: https://pypi.org/project/thread/2.0.5
+    description: The PyPI release URL of tag v2.0.5.
 cff-version: 1.2.0
 date-released: 2024-03-07
 keywords:
@@ -32,5 +32,5 @@ repository-code: https://github.com/python-thread/thread
 repository-artifact: https://pypi.org/project/thread
 title: thread
 type: software
-version: 2.0.4
+version: 2.0.5
 url: https://thread.ngjx.org

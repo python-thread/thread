@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "thread"
-version = "2.0.4"
+version = "2.0.5"
 description = "Threading module extension"
 authors = ["Alex <contact@ngjx.org>"]
 license = "BSD-3-Clause"
@@ -30,7 +30,7 @@ classifiers = [
 
 [tool.poetry.urls]
 Homepage = "https://thread.ngjx.org"
-Documentation = "https://thread.ngjx.org/docs/v2.0.4"
+Documentation = "https://thread.ngjx.org/docs/v2.0.5"
 Source = "https://github.com/python-thread/thread"
 Download = "https://pypi.org/project/thread/#files"
 "Release Notes" = "https://github.com/python-thread/thread/releases"
@@ -42,7 +42,6 @@ thread = "thread.__main__:app"
 [tool.poetry.dependencies]
 python = "^3.9"
 typing-extensions = "^4.9.0"
-importlib-metadata = { version = ">=4.4", python = "<3.10" }
 
 [tool.poetry.group.dev.dependencies]
 pytest = ">=7.4.3,<9.0.0"
