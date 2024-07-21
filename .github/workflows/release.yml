@@ -12,10 +12,31 @@ jobs:
   pypi-publish:
     name: Upload release to PyPI
     runs-on: ubuntu-latest
+    environment:
+      name: release
+      url: https://pypi.org/project/thread
+    permissions:
+      id-token: write
 
     steps:
-      - uses: actions/checkout@v4
-      - name: Build and publish
-        uses: JRubics/poetry-publish@v2.0
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.x
+        uses: actions/setup-python@v5
         with:
-          pypi_token: ${{ secrets.PYPI_TOKEN }}
+          python-version: 3.x
+
+      - name: Install dependencies
+        run: |
+          set -xe
+          python -m pip install poetry
+          python -m poetry install
+
+      - name: Build Thread
+        run: |
+          set -xe
+          python -m poetry build
+
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
