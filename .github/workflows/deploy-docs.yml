@@ -2,12 +2,39 @@ name: Deploy Documentation
 
 on:
   push:
+    branches:
+      - main
   pull_request:
   workflow_dispatch:
 
 jobs:
+  changed-files:
+    name: Changed Files
+    runs-on: ubuntu-latest
+    outputs:
+      docs-change: ${{ steps.changed-files.outputs.docs-change_any_modified == 'true' }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 50 # Assume PRs are less than 50 commits
+
+      - name: Find changed files
+        uses: tj-actions/changed-files@v44
+        id: changed-files
+        with:
+          files_yaml: |
+            docs-change:
+              - .github/workflows/deploy-docs.yml
+              - docs/**
+              - package.json
+              - package-lock.json
+
   vercel:
     runs-on: ubuntu-latest
+    needs: [changed-files]
+    if: ${{ needs.changed-files.outputs.docs-change == 'true' }}
 
     steps:
       - name: Checkout Code
