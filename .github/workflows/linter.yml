@@ -1,14 +1,63 @@
 name: Linting
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - main
+  pull_request:
 
 env:
   PIP_DISABLE_PIP_VERSION_CHECK: 1
 
 jobs:
+  changed-files:
+    name: Changed Files
+    runs-on: ubuntu-latest
+    outputs:
+      docs-change: ${{ steps.changed-files.outputs.docs-change_any_modified == 'true' }}
+      python-change: ${{ steps.changed-files.outputs.python-change_any_modified == 'true' }}
+      project-change: ${{ steps.changed-files.outputs.project-change_any_modified == 'true' }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 50 # Assume PRs are less than 50 commits
+
+      - name: Find changed files
+        uses: tj-actions/changed-files@v44
+        id: changed-files
+        with:
+          files_yaml: |
+            common: &common
+              - .github/workflows/linter.yml
+
+            docs-change:
+              - *common
+              - docs/**
+              - package.json
+              - package-lock.json
+
+            python-change:
+              - *common
+              - src/**
+              - tests/**
+              - ruff.toml
+              - poetry.lock
+              - pyproject.toml
+
+            project-change:
+              - *common
+              - package.json
+              - .prettierignore
+              - .github/ISSUE_TEMPLATE/**
+              - .github/*.md
+
   lint-python:
     name: Python
     runs-on: ubuntu-latest
+    needs: [changed-files]
+    if: ${{ needs.changed-files.outputs.python-change == 'true' }}
 
     steps:
       - name: Checkout repository
@@ -33,6 +82,8 @@ jobs:
   lint-docs:
     name: Docs
     runs-on: ubuntu-latest
+    needs: [changed-files]
+    if: ${{ needs.changed-files.outputs.docs-change == 'true' }}
 
     steps:
       - name: Checkout repository
@@ -56,6 +107,8 @@ jobs:
   lint-project:
     name: Project
     runs-on: ubuntu-latest
+    needs: [changed-files]
+    if: ${{ needs.changed-files.outputs.project-change == 'true' }}
 
     steps:
       - name: Checkout repository
@@ -86,4 +139,5 @@ jobs:
       - name: Whether the whole linting suite passed
         uses: re-actors/alls-green@v1.2.2
         with:
+          allowed-skips: ${{ toJSON(needs) }}
           jobs: ${{ toJSON(needs) }}
