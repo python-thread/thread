@@ -48,7 +48,7 @@ jobs:
           restore-keys: ${{ runner.os }}-node-
 
       - name: Setup node
-        uses: actions/setup-node@v4.0.4
+        uses: actions/setup-node@v4.3.0
         with:
           cache: npm
 
