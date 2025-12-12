@@ -42,8 +42,8 @@ def test_chunking_dynamic():
         chunk_length = expected_chunk_length_low + int(expected_chunk_high > 0)
         b = i + chunk_length
 
-        assert (
-            next(gen) == (i, b)
-        ), f'\nIndex: {i}\nLength: {dataset_length}\nThreads: {thread_count}\nExpected: {(i, b)}\nActual: {next(gen)}'
+        assert next(gen) == (i, b), (
+            f'\nIndex: {i}\nLength: {dataset_length}\nThreads: {thread_count}\nExpected: {(i, b)}\nActual: {next(gen)}'
+        )
         expected_chunk_high -= 1
         i = b

@@ -7,6 +7,6 @@ def test_versionIsString():
 
 
 def test_versionIsSemVer():
-    assert re.match(
-        r'^\d+\.\d+\..+$', thread.__version__
-    ), 'thread.__version__ is not a semver'
+    assert re.match(r'^\d+\.\d+\..+$', thread.__version__), (
+        'thread.__version__ is not a semver'
+    )
