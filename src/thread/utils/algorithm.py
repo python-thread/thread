@@ -35,9 +35,9 @@ def chunk_split(
     ------
     AssertionError: The number of chunks specified is larger than the dataset size
     """
-    assert (
-        dataset_length >= number_of_chunks
-    ), 'The number of chunks specified is larger than the dataset size'
+    assert dataset_length >= number_of_chunks, (
+        'The number of chunks specified is larger than the dataset size'
+    )
 
     chunk_count = dataset_length // number_of_chunks
     overflow = dataset_length % number_of_chunks
