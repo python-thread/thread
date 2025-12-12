@@ -15,7 +15,7 @@
     "type": "menu",
     "items": {
       "latest-release": {
-        "title": "2.0.5 Latest Release",
+        "title": "2.0.6 Latest Release",
         "href": "/docs/latest"
       },
       "v1-release": {

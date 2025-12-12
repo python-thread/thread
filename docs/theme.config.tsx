@@ -50,7 +50,7 @@ const Head = () => {
   const { route } = useRouter();
 
   const pageTitle =
-    route === "/" || !title ? "Thread v2.0.5" : `${title} | Thread v2.0.5`;
+    route === "/" || !title ? "Thread v2.0.6" : `${title} | Thread v2.0.6`;
   const socialImage = "https://thread.ngjx.org/socialcard-white.jpg";
 
   return (
@@ -125,7 +125,7 @@ const config: DocsThemeConfig = {
     const { asPath } = useRouter();
     if (asPath !== "/") {
       return {
-        titleTemplate: "%s | Thread v2.0.5",
+        titleTemplate: "%s | Thread v2.0.6",
       };
     }
   },
